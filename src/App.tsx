@@ -402,7 +402,7 @@ const SteamSection = () => {
               </div>
               
               <button 
-                className="w-full py-2 rounded-lg text-sm font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0"
+                className="w-full py-2 rounded-lg text-sm font-bold text-white transition-opacity"
                 style={{ backgroundColor: field.color }}
               >
                 Learn More
@@ -626,7 +626,7 @@ const Labs = () => {
                 <h3 className="text-2xl font-bold text-white mb-2">{lab.title}</h3>
                 <p className="text-gray-300 max-w-md mb-4 line-clamp-2">{lab.desc}</p>
                 
-                <div className="flex items-center gap-4 mt-auto opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0">
+                <div className="flex items-center gap-4 mt-auto">
                   <span className="text-white font-bold text-sm bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
                     Explore Lab
                   </span>
