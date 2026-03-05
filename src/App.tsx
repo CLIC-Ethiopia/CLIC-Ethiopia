@@ -181,7 +181,7 @@ const Hero = () => {
       {/* Background Image with Overlay */}
       <div className="absolute inset-0 z-0">
         <img 
-          src="https://picsum.photos/seed/ethiopia-education/1920/1080?blur=2" 
+          src="https://loremflickr.com/1920/1080/technology,education,africa" 
           alt="Ethiopian Students Learning" 
           className="w-full h-full object-cover opacity-40"
           referrerPolicy="no-referrer"
@@ -301,7 +301,7 @@ const About = () => {
           >
             <div className="aspect-square rounded-3xl overflow-hidden relative">
               <img 
-                src="https://picsum.photos/seed/ethiopia-innovation/800/800" 
+                src="https://loremflickr.com/800/800/innovation,africa,business" 
                 alt="Innovation in Ethiopia" 
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
@@ -471,7 +471,10 @@ const IESection = () => {
             className="bg-[var(--color-clic-light)] rounded-3xl p-8 md:p-12 border border-gray-100 hover:shadow-xl transition-all relative overflow-hidden group cursor-pointer"
             onClick={() => setSelectedItem(ieData.innovation)}
           >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-clic-orange)]/10 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110 duration-500"></div>
+            <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
+               <img src="https://loremflickr.com/600/400/idea,technology" alt="Innovation" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+            </div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-clic-orange)]/10 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110 duration-500 z-0"></div>
             
             <div className="relative z-10">
               <div className="w-16 h-16 rounded-2xl bg-white text-[var(--color-clic-orange)] flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
@@ -506,7 +509,10 @@ const IESection = () => {
             className="bg-[var(--color-clic-light)] rounded-3xl p-8 md:p-12 border border-gray-100 hover:shadow-xl transition-all relative overflow-hidden group cursor-pointer"
             onClick={() => setSelectedItem(ieData.entrepreneurship)}
           >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-clic-green)]/10 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110 duration-500"></div>
+            <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
+               <img src="https://loremflickr.com/600/400/startup,business" alt="Entrepreneurship" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+            </div>
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-clic-green)]/10 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110 duration-500 z-0"></div>
             
             <div className="relative z-10">
               <div className="w-16 h-16 rounded-2xl bg-white text-[var(--color-clic-green)] flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
@@ -552,7 +558,7 @@ const Labs = () => {
       icon: BookOpen,
       color: 'var(--color-clic-blue)',
       desc: 'The Future of Classrooms. E-learning platforms for remote classes, using VR & AR as new training methods.',
-      image: 'https://picsum.photos/seed/digital-lab/600/400',
+      image: 'https://loremflickr.com/600/400/computer,code,classroom',
       stats: [{ label: 'Students', value: '500+' }, { label: 'Courses', value: '25' }, { label: 'VR Units', value: '50' }],
       detailedContent: 'Digital Labs are designed for learning skills using digital means. Includes Basic Literacy Skills (Language, Computer HW/SW) and Theoretical Skills delivered via virtual classrooms. Features a Data Center for digital solutions, IoT, and AI.'
     },
@@ -561,7 +567,7 @@ const Labs = () => {
       icon: Factory,
       color: 'var(--color-clic-orange)',
       desc: 'Smart workshops for practical lessons. Prototyping & small scale production labs using smart fabrication technologies.',
-      image: 'https://picsum.photos/seed/fab-lab/600/400',
+      image: 'https://loremflickr.com/600/400/robotics,factory,workshop',
       stats: [{ label: 'Machines', value: '15+' }, { label: 'Tools', value: '200+' }, { label: 'Safety', value: '100%' }],
       detailedContent: 'Workshops for hands-on skills using state-of-the-art tools. Covers Basic Tools Skills, Design & Fabrication (CAD/CAM), and Prototyping & Manufacturing. Learn to manufacture, distribute, and market products.'
     },
@@ -570,7 +576,7 @@ const Labs = () => {
       icon: Sprout,
       color: 'var(--color-clic-green)',
       desc: 'State of the Art field projects. On-the-job hands-on practical trainings and large scale production plants.',
-      image: 'https://picsum.photos/seed/field-lab/600/400',
+      image: 'https://loremflickr.com/600/400/agriculture,solar,farm',
       stats: [{ label: 'Sites', value: '10' }, { label: 'Projects', value: '15' }, { label: 'Impact', value: 'High' }],
       detailedContent: 'Includes Field Workshops for digital learning in the field, Practical Attachment for on-the-job training with professionals, and On-the-Job Trainings for short-term assignments on field projects.'
     },
@@ -579,7 +585,7 @@ const Labs = () => {
       icon: Building2,
       color: 'var(--color-clic-purple)',
       desc: 'A place for 10,000 to 100,000 innovators per region! Smart houses, smart factories, and smart businesses.',
-      image: 'https://picsum.photos/seed/smart-city/600/400',
+      image: 'https://loremflickr.com/600/400/smartcity,architecture,modern',
       stats: [{ label: 'Capacity', value: '10k+' }, { label: 'Zones', value: '3' }, { label: 'Vision', value: '2025' }],
       detailedContent: 'Smart industrial cities built as a business & manufacturing hub. Features Smart Industry (Smart factories, R&D), Smart Business (Data centers, Incubation), and Smart Living (Budget housing, Smart energy, Smart farming).'
     }
@@ -782,7 +788,7 @@ const Donate = () => {
             
             <div className="relative hidden lg:block">
               <img 
-                src="https://picsum.photos/seed/ethiopia-community/800/1000" 
+                src="https://loremflickr.com/800/1000/community,africa,happy" 
                 alt="Community Support" 
                 className="absolute inset-0 w-full h-full object-cover"
                 referrerPolicy="no-referrer"
