@@ -5,7 +5,8 @@ import {
   ChevronRight, ArrowRight, BookOpen, Factory, 
   Sprout, Building2, HeartHandshake, UserPlus, Menu, X,
   Globe, Lightbulb, GraduationCap, Target, Rocket, Briefcase,
-  BarChart3, Clock, Users, Trophy, Zap, Microscope, Hammer
+  BarChart3, Clock, Users, Trophy, Zap, Microscope, Hammer,
+  Car, Coins, Home, Recycle, Server, Landmark
 } from 'lucide-react';
 
 // --- Components ---
@@ -688,6 +689,54 @@ const Projects = () => {
       items: ['3D House Printing', 'Modular Prefabrication', 'Digital Construction Mgmt'],
       stats: [{ label: 'Speed', value: 'Fast' }, { label: 'Cost', value: 'Affordable' }, { label: 'Eco', value: 'Friendly' }],
       detailedContent: 'Use of state-of-the-art technologies to build smart industrial villages. Resource efficient tools including 3D house printing machineries and modular concrete prefabrication technologies for rural areas.'
+    },
+    { 
+      category: 'Smart Mobility', count: '5 Projects', color: 'var(--color-clic-purple)', icon: Car,
+      items: ['Electric UTVs/ATVs', 'Solar Powered Batteries', 'Smart Traffic Systems'],
+      stats: [{ label: 'Cost', value: '-40%' }, { label: 'Emission', value: '0%' }, { label: 'Range', value: '150km' }],
+      detailedContent: 'Modular city mobility solutions and electric utility vehicles for rural Ethiopia. Powered by efficient battery packs and solar charging. Includes conversion kits for old engines to electric.'
+    },
+    { 
+      category: 'Smart Energy', count: '5 Projects', color: 'var(--color-clic-green)', icon: Zap,
+      items: ['Modular Wind Energy', 'Micro Hydropower', 'Off-grid Metering'],
+      stats: [{ label: 'Power', value: '24/7' }, { label: 'Green', value: '100%' }, { label: 'Cost', value: 'Low' }],
+      detailedContent: 'Harvesting green energy using modular systems. Bringing electricity to villages not connected to the national grid using solar, wind, and hydro sources. Smart off-grid metering systems.'
+    },
+    { 
+      category: 'Smart Finance', count: '6 Projects', color: 'var(--color-clic-red)', icon: Coins,
+      items: ['Digital Coins', 'Smart POS Systems', 'Mobile Payments'],
+      stats: [{ label: 'Speed', value: 'Instant' }, { label: 'Security', value: 'High' }, { label: 'Access', value: 'All' }],
+      detailedContent: 'Integration of digital payment solutions and smart POS infrastructures. Enabling safe and secured transactions across all industries and private citizens. Includes crypto currency integration.'
+    },
+    { 
+      category: 'Smart Education', count: '7 Projects', color: 'var(--color-clic-orange)', icon: GraduationCap,
+      items: ['E-learning Platforms', 'VR/AR Classrooms', 'STEM Kits'],
+      stats: [{ label: 'Reach', value: 'Remote' }, { label: 'Content', value: 'Rich' }, { label: 'Skills', value: 'Future' }],
+      detailedContent: 'Smart education delivery including remote areas. Offers highly specialized technical skills and content-oriented practical lessons via digital platforms and virtual reality.'
+    },
+    { 
+      category: 'Smart Lifestyle', count: '3 Projects', color: 'var(--color-clic-blue)', icon: Home,
+      items: ['Smart Cooking Stoves', 'Solar LED Lamps', 'Android TV Systems'],
+      stats: [{ label: 'Smoke', value: '0%' }, { label: 'Power', value: 'Solar' }, { label: 'Life', value: 'Better' }],
+      detailedContent: 'Improving daily life with smart home technologies. Includes smokeless cooking stoves using biodegradable fuel, efficient solar lighting, and educational entertainment systems.'
+    },
+    { 
+      category: 'Smart Environment', count: '4 Projects', color: 'var(--color-clic-purple)', icon: Recycle,
+      items: ['Plastic Recycling', 'Textile Waste Mgmt', 'Bio-fuel Production'],
+      stats: [{ label: 'Waste', value: '-80%' }, { label: 'Value', value: 'Added' }, { label: 'Eco', value: 'Safe' }],
+      detailedContent: 'Small scale recycling plants for textiles and plastic wastes. Converting waste into usable products and energy sources. Environmentally friendly and safe operating atmosphere.'
+    },
+    { 
+      category: 'Smart Infrastructure', count: '12 Projects', color: 'var(--color-clic-green)', icon: Server,
+      items: ['National Data Centers', 'Smart Roads', 'Digital Services'],
+      stats: [{ label: 'Uptime', value: '99.9%' }, { label: 'Connect', value: 'Fast' }, { label: 'Data', value: 'Secure' }],
+      detailedContent: 'Nationally connected data centers and smart road construction technologies for efficient transportation, supply chain, and logistics. Digital services for every industrial sector.'
+    },
+    { 
+      category: 'Smart Governance', count: '15 Projects', color: 'var(--color-clic-red)', icon: Landmark,
+      items: ['Public Service Apps', 'Digital ID Systems', 'Civic Engagement'],
+      stats: [{ label: 'Service', value: 'Fast' }, { label: 'Transp.', value: '100%' }, { label: 'Access', value: 'Easy' }],
+      detailedContent: 'Digitizing public services for better governance. Smart systems for efficient administration, citizen engagement, and smart public projects.'
     },
   ];
 
