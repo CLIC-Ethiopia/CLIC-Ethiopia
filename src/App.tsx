@@ -6,7 +6,7 @@ import {
   Sprout, Building2, HeartHandshake, UserPlus, Menu, X,
   Globe, Lightbulb, GraduationCap, Target, Rocket, Briefcase,
   BarChart3, Clock, Users, Trophy, Zap, Microscope, Hammer,
-  Car, Coins, Home, Recycle, Server, Landmark
+  Car, Coins, Home, Recycle, Server, Landmark, Quote, Play, Youtube
 } from 'lucide-react';
 
 // --- Components ---
@@ -87,10 +87,12 @@ const Navbar = () => {
 
   const navLinks = [
     { name: 'About', href: '#about' },
+    { name: 'Founder', href: '#founder' },
     { name: 'STEAM', href: '#steam' },
     { name: 'IE', href: '#ie' },
     { name: 'Labs', href: '#labs' },
     { name: 'Projects', href: '#projects' },
+    { name: 'News', href: '#news' },
   ];
 
   return (
@@ -316,6 +318,151 @@ const About = () => {
               <div className="text-sm font-bold text-gray-500 uppercase tracking-wider">Ethiopians to be trained by 2025 EC</div>
             </div>
           </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const FounderMessage = () => {
+  return (
+    <section id="founder" className="py-24 bg-gray-50 relative overflow-hidden">
+      {/* Decorative background elements */}
+      <div className="absolute top-0 left-0 w-64 h-64 bg-[var(--color-clic-red)]/5 rounded-br-full -translate-x-1/2 -translate-y-1/2"></div>
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-[var(--color-clic-blue)]/5 rounded-tl-full translate-x-1/3 translate-y-1/3"></div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative"
+          >
+            <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
+              <img 
+                src="https://loremflickr.com/800/1000/professor,ethiopian,man,portrait" 
+                alt="Dr. Ir. Frehun Adefris" 
+                className="w-full h-full object-cover"
+                referrerPolicy="no-referrer"
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-8 text-white">
+                <h3 className="text-2xl font-bold font-serif">Dr. Ir. Frehun Adefris (Prof.)</h3>
+                <p className="text-gray-300">Founder & CEO, CLIC Ethiopia</p>
+              </div>
+            </div>
+            {/* Decorative frame */}
+            <div className="absolute -top-4 -left-4 w-full h-full border-2 border-[var(--color-clic-orange)] rounded-3xl -z-10"></div>
+            <div className="absolute -bottom-4 -right-4 w-full h-full border-2 border-[var(--color-clic-green)] rounded-3xl -z-10"></div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="flex items-center gap-2 mb-6">
+              <Quote className="text-[var(--color-clic-red)] fill-current opacity-20" size={48} />
+              <h2 className="text-4xl font-bold text-gray-900 font-serif">Message from the Founder</h2>
+            </div>
+            
+            <div className="prose prose-lg text-gray-600 mb-8">
+              <p className="italic text-xl text-gray-800 font-medium mb-6">
+                "I am starting this national level NGO called CLIC (Creative Learning in Community) to help Ethiopians get the right education, start the right business and empower their communities."
+              </p>
+              <p className="mb-4">
+                I spent more than 10 years and millions of Birr to conduct NATIONAL research and design the curriculums at CLIC from interdisciplinary STEAM fields. My plan is to train <strong className="text-[var(--color-clic-red)]">1 MILLION ETHIOPIANS BY 2025 EC</strong>.
+              </p>
+              <p>
+                I designed my STEAM curriculum based on Ethiopia's socio-economic situation and the level of adoption of new technology. I wish you join me at CLIC Ethiopia Vision 2025 and build smart citizens for the future of Ethiopia. I also call for every public servant & every government body to help me and help young Ethiopians achieve the ultimate goal!
+              </p>
+            </div>
+
+            <div className="flex flex-wrap gap-4">
+              <a href="#register" className="px-8 py-4 rounded-full text-base font-bold bg-[var(--color-clic-blue)] text-white hover:bg-opacity-90 transition-colors shadow-lg flex items-center gap-2">
+                Join the Vision <ArrowRight size={18} />
+              </a>
+              <a href="#donate" className="px-8 py-4 rounded-full text-base font-bold bg-white text-gray-900 border border-gray-200 hover:bg-gray-50 transition-colors shadow-sm">
+                Support Our Goal
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const NewsVideos = () => {
+  const videos = [
+    { id: '1', title: 'CLIC Ethiopia Official Launch', thumbnail: 'https://loremflickr.com/640/360/conference,ethiopia', duration: '12:45' },
+    { id: '2', title: 'Student Success Stories: Smart Agriculture', thumbnail: 'https://loremflickr.com/640/360/farming,technology', duration: '05:30' },
+    { id: '3', title: 'Tour of the New Fabrication Lab', thumbnail: 'https://loremflickr.com/640/360/laboratory,robotics', duration: '08:15' },
+    { id: '4', title: 'Interview with Dr. Frehun Adefris', thumbnail: 'https://loremflickr.com/640/360/interview,man', duration: '24:10' },
+    { id: '5', title: 'Vision 2025 EC Documentary', thumbnail: 'https://loremflickr.com/640/360/ethiopia,city', duration: '15:00' },
+  ];
+
+  return (
+    <section id="news" className="py-24 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+          <div className="max-w-2xl">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-red-600 rounded-lg text-white">
+                <Youtube size={24} />
+              </div>
+              <h2 className="text-4xl font-bold text-gray-900 font-serif">Latest News & Updates</h2>
+            </div>
+            <p className="text-lg text-gray-600">
+              Stay updated with the latest activities, success stories, and announcements from CLIC Ethiopia.
+            </p>
+          </div>
+          <a href="#" className="flex items-center gap-2 text-[var(--color-clic-red)] font-bold hover:underline">
+            Visit YouTube Channel <ArrowRight size={16} />
+          </a>
+        </div>
+
+        <div className="relative">
+          {/* Horizontal Scroll Container */}
+          <div className="flex overflow-x-auto pb-8 gap-6 snap-x snap-mandatory scrollbar-hide">
+            {videos.map((video, i) => (
+              <motion.div
+                key={video.id}
+                initial={{ opacity: 0, x: 50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.5 }}
+                className="min-w-[300px] md:min-w-[400px] snap-center"
+              >
+                <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-gray-100 group cursor-pointer">
+                  <div className="relative aspect-video overflow-hidden">
+                    <img 
+                      src={video.thumbnail} 
+                      alt={video.title} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                      <div className="w-14 h-14 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
+                        <Play size={24} fill="currentColor" />
+                      </div>
+                    </div>
+                    <div className="absolute bottom-3 right-3 bg-black/80 text-white text-xs font-bold px-2 py-1 rounded">
+                      {video.duration}
+                    </div>
+                  </div>
+                  <div className="p-5">
+                    <h3 className="text-lg font-bold text-gray-900 line-clamp-2 group-hover:text-[var(--color-clic-red)] transition-colors">
+                      {video.title}
+                    </h3>
+                    <p className="text-sm text-gray-500 mt-2">Posted recently</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -977,10 +1124,12 @@ export default function App() {
       <main>
         <Hero />
         <About />
+        <FounderMessage />
         <SteamSection />
         <IESection />
         <Labs />
         <Projects />
+        <NewsVideos />
         <Donate />
         <Register />
       </main>
