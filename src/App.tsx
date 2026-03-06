@@ -9,6 +9,8 @@ import {
   Car, Coins, Home, Recycle, Server, Landmark, Quote, Play, Youtube
 } from 'lucide-react';
 
+import ChatBot from './components/ChatBot';
+
 // --- Components ---
 
 const InfoModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => void; data: any }) => {
@@ -1134,6 +1136,7 @@ export default function App() {
         <Register />
       </main>
       <Footer />
+      <ChatBot />
     </div>
   );
 }
