@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
   FlaskConical, Cpu, Compass, Palette, Calculator, 
@@ -10,6 +10,8 @@ import {
 } from 'lucide-react';
 
 import ChatBot from './components/ChatBot';
+import CurriculumSection from './components/CurriculumSection';
+import NewsSection from './components/NewsSection';
 
 // --- Components ---
 
@@ -92,10 +94,34 @@ const Navbar = () => {
     { name: 'Founder', href: '#founder' },
     { name: 'STEAM', href: '#steam' },
     { name: 'IE', href: '#ie' },
+    { name: 'Curriculum', href: '#curriculum' },
     { name: 'Labs', href: '#labs' },
     { name: 'Projects', href: '#projects' },
     { name: 'News', href: '#news' },
   ];
+
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    setIsMobileMenuOpen(false);
+    
+    // Handle hash links
+    if (href.startsWith('#')) {
+      const element = document.querySelector(href);
+      if (element) {
+        const offset = 80; // Navbar height
+        const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    } else {
+      // Handle external links or other cases
+      window.location.href = href;
+    }
+  };
 
   return (
     <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-4' : 'bg-transparent py-6'}`}>
@@ -122,11 +148,8 @@ const Navbar = () => {
               </a>
             ))}
             <div className="flex gap-4">
-              <a href="#register" className="px-5 py-2.5 rounded-full text-sm font-bold bg-white text-gray-900 hover:bg-gray-100 transition-colors shadow-sm">
-                Register
-              </a>
-              <a href="#donate" className="px-5 py-2.5 rounded-full text-sm font-bold bg-[var(--color-clic-red)] text-white hover:bg-opacity-90 transition-colors shadow-sm">
-                Donate
+              <a href="#get-involved" className="px-6 py-3 rounded-full text-sm font-bold bg-[var(--color-clic-red)] text-white hover:bg-opacity-90 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                Get Involved
               </a>
             </div>
           </div>
@@ -160,17 +183,18 @@ const Navbar = () => {
                   key={link.name} 
                   href={link.href} 
                   className="text-lg font-semibold text-gray-800"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={(e) => scrollToSection(e, link.href)}
                 >
                   {link.name}
                 </a>
               ))}
               <hr className="my-2" />
-              <a href="#register" onClick={() => setIsMobileMenuOpen(false)} className="px-5 py-3 text-center rounded-lg text-base font-bold bg-gray-100 text-gray-900">
-                Register for Courses
-              </a>
-              <a href="#donate" onClick={() => setIsMobileMenuOpen(false)} className="px-5 py-3 text-center rounded-lg text-base font-bold bg-[var(--color-clic-red)] text-white">
-                Support Our Mission
+              <a 
+                href="#get-involved" 
+                onClick={(e) => scrollToSection(e, '#get-involved')}
+                className="px-5 py-3 text-center rounded-lg text-base font-bold bg-[var(--color-clic-red)] text-white"
+              >
+                Get Involved
               </a>
             </div>
           </motion.div>
@@ -212,12 +236,31 @@ const Hero = () => {
             </p>
             
             <div className="flex flex-wrap gap-4">
-              <a href="#register" className="px-8 py-4 rounded-full text-base font-bold bg-white text-gray-900 hover:bg-gray-100 transition-colors flex items-center gap-2">
+              <a href="#get-involved" className="px-8 py-4 rounded-full text-base font-bold bg-white text-gray-900 hover:bg-gray-100 transition-colors flex items-center gap-2">
                 Start Learning <ArrowRight size={18} />
               </a>
               <a href="#about" className="px-8 py-4 rounded-full text-base font-bold bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-colors backdrop-blur-sm">
                 Discover Our Mission
               </a>
+            </div>
+
+            <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-white/10 pt-8">
+              <div>
+                <h3 className="text-4xl font-bold text-[var(--color-clic-red)] font-mono">5k+</h3>
+                <p className="text-sm text-gray-300 uppercase tracking-wider font-semibold mt-1">Students</p>
+              </div>
+              <div>
+                <h3 className="text-4xl font-bold text-[var(--color-clic-green)] font-mono">120+</h3>
+                <p className="text-sm text-gray-300 uppercase tracking-wider font-semibold mt-1">Projects</p>
+              </div>
+              <div>
+                <h3 className="text-4xl font-bold text-[var(--color-clic-blue)] font-mono">15+</h3>
+                <p className="text-sm text-gray-300 uppercase tracking-wider font-semibold mt-1">Partners</p>
+              </div>
+              <div>
+                <h3 className="text-4xl font-bold text-[var(--color-clic-orange)] font-mono">98%</h3>
+                <p className="text-sm text-gray-300 uppercase tracking-wider font-semibold mt-1">Success</p>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -383,10 +426,10 @@ const FounderMessage = () => {
             </div>
 
             <div className="flex flex-wrap gap-4">
-              <a href="#register" className="px-8 py-4 rounded-full text-base font-bold bg-[var(--color-clic-blue)] text-white hover:bg-opacity-90 transition-colors shadow-lg flex items-center gap-2">
+              <a href="#get-involved" className="px-8 py-4 rounded-full text-base font-bold bg-[var(--color-clic-blue)] text-white hover:bg-opacity-90 transition-colors shadow-lg flex items-center gap-2">
                 Join the Vision <ArrowRight size={18} />
               </a>
-              <a href="#donate" className="px-8 py-4 rounded-full text-base font-bold bg-white text-gray-900 border border-gray-200 hover:bg-gray-50 transition-colors shadow-sm">
+              <a href="#get-involved" className="px-8 py-4 rounded-full text-base font-bold bg-white text-gray-900 border border-gray-200 hover:bg-gray-50 transition-colors shadow-sm">
                 Support Our Goal
               </a>
             </div>
@@ -397,79 +440,7 @@ const FounderMessage = () => {
   );
 };
 
-const NewsVideos = () => {
-  const videos = [
-    { id: '1', title: 'CLIC Ethiopia Official Launch', thumbnail: 'https://loremflickr.com/640/360/conference,ethiopia', duration: '12:45' },
-    { id: '2', title: 'Student Success Stories: Smart Agriculture', thumbnail: 'https://loremflickr.com/640/360/farming,technology', duration: '05:30' },
-    { id: '3', title: 'Tour of the New Fabrication Lab', thumbnail: 'https://loremflickr.com/640/360/laboratory,robotics', duration: '08:15' },
-    { id: '4', title: 'Interview with Dr. Frehun Adefris', thumbnail: 'https://loremflickr.com/640/360/interview,man', duration: '24:10' },
-    { id: '5', title: 'Vision 2025 EC Documentary', thumbnail: 'https://loremflickr.com/640/360/ethiopia,city', duration: '15:00' },
-  ];
 
-  return (
-    <section id="news" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
-          <div className="max-w-2xl">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-red-600 rounded-lg text-white">
-                <Youtube size={24} />
-              </div>
-              <h2 className="text-4xl font-bold text-gray-900 font-serif">Latest News & Updates</h2>
-            </div>
-            <p className="text-lg text-gray-600">
-              Stay updated with the latest activities, success stories, and announcements from CLIC Ethiopia.
-            </p>
-          </div>
-          <a href="#" className="flex items-center gap-2 text-[var(--color-clic-red)] font-bold hover:underline">
-            Visit YouTube Channel <ArrowRight size={16} />
-          </a>
-        </div>
-
-        <div className="relative">
-          {/* Horizontal Scroll Container */}
-          <div className="flex overflow-x-auto pb-8 gap-6 snap-x snap-mandatory scrollbar-hide">
-            {videos.map((video, i) => (
-              <motion.div
-                key={video.id}
-                initial={{ opacity: 0, x: 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
-                className="min-w-[300px] md:min-w-[400px] snap-center"
-              >
-                <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all border border-gray-100 group cursor-pointer">
-                  <div className="relative aspect-video overflow-hidden">
-                    <img 
-                      src={video.thumbnail} 
-                      alt={video.title} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      referrerPolicy="no-referrer"
-                    />
-                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                      <div className="w-14 h-14 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
-                        <Play size={24} fill="currentColor" />
-                      </div>
-                    </div>
-                    <div className="absolute bottom-3 right-3 bg-black/80 text-white text-xs font-bold px-2 py-1 rounded">
-                      {video.duration}
-                    </div>
-                  </div>
-                  <div className="p-5">
-                    <h3 className="text-lg font-bold text-gray-900 line-clamp-2 group-hover:text-[var(--color-clic-red)] transition-colors">
-                      {video.title}
-                    </h3>
-                    <p className="text-sm text-gray-500 mt-2">Posted recently</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
 
 const SteamSection = () => {
   const [selectedField, setSelectedField] = useState<any>(null);
@@ -950,114 +921,289 @@ const Projects = () => {
   );
 };
 
-const Donate = () => {
+const DonateContent = () => {
   return (
-    <section id="donate" className="py-24 bg-[var(--color-clic-light)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-2">
-            <div className="p-12 lg:p-16 flex flex-col justify-center">
-              <div className="w-16 h-16 rounded-2xl bg-[var(--color-clic-red)]/10 text-[var(--color-clic-red)] flex items-center justify-center mb-8">
-                <HeartHandshake size={32} />
-              </div>
-              <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">Support Our Mission</h2>
-              <p className="text-lg text-gray-600 mb-8">
-                Your donation helps us build smart creative laboratories, provide course kits, and train the next generation of Ethiopian innovators and entrepreneurs.
-              </p>
-              
-              <div className="grid grid-cols-2 gap-4 mb-8">
-                {[
-                  { amount: 'ETB 500', desc: 'Provides basic course kits' },
-                  { amount: 'ETB 2,500', desc: 'Sponsors one student training' },
-                  { amount: 'ETB 10,000', desc: 'Annual lab membership' },
-                  { amount: 'Custom', desc: 'Any amount helps' }
-                ].map((tier, i) => (
-                  <button key={i} className="p-4 rounded-xl border-2 border-gray-100 hover:border-[var(--color-clic-red)] hover:bg-[var(--color-clic-red)]/5 transition-all text-left group">
-                    <div className="font-bold text-gray-900 group-hover:text-[var(--color-clic-red)]">{tier.amount}</div>
-                    <div className="text-xs text-gray-500 mt-1">{tier.desc}</div>
-                  </button>
-                ))}
-              </div>
-              
-              <button className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-red)] hover:bg-opacity-90 transition-colors shadow-md flex items-center justify-center gap-2">
-                Donate Now <ArrowRight size={18} />
-              </button>
-            </div>
-            
-            <div className="relative hidden lg:block">
-              <img 
-                src="https://loremflickr.com/800/1000/community,africa,happy" 
-                alt="Community Support" 
-                className="absolute inset-0 w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-white via-white/20 to-transparent"></div>
-            </div>
+    <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+      <div className="grid grid-cols-1 lg:grid-cols-2">
+        <div className="p-12 lg:p-16 flex flex-col justify-center">
+          <div className="w-16 h-16 rounded-2xl bg-[var(--color-clic-red)]/10 text-[var(--color-clic-red)] flex items-center justify-center mb-8">
+            <HeartHandshake size={32} />
           </div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-6 font-serif">Support Our Mission</h2>
+          <p className="text-lg text-gray-600 mb-8">
+            Your donation helps us build smart creative laboratories, provide course kits, and train the next generation of Ethiopian innovators and entrepreneurs.
+          </p>
+          
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            {[
+              { amount: 'ETB 500', desc: 'Provides basic course kits' },
+              { amount: 'ETB 2,500', desc: 'Sponsors one student training' },
+              { amount: 'ETB 10,000', desc: 'Annual lab membership' },
+              { amount: 'Custom', desc: 'Any amount helps' }
+            ].map((tier, i) => (
+              <button key={i} className="p-4 rounded-xl border-2 border-gray-100 hover:border-[var(--color-clic-red)] hover:bg-[var(--color-clic-red)]/5 transition-all text-left group">
+                <div className="font-bold text-gray-900 group-hover:text-[var(--color-clic-red)]">{tier.amount}</div>
+                <div className="text-xs text-gray-500 mt-1">{tier.desc}</div>
+              </button>
+            ))}
+          </div>
+          
+          <button className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-red)] hover:bg-opacity-90 transition-colors shadow-md flex items-center justify-center gap-2">
+            Donate Now <ArrowRight size={18} />
+          </button>
+        </div>
+        
+        <div className="relative hidden lg:block">
+          <img 
+            src="https://loremflickr.com/800/1000/community,africa,happy" 
+            alt="Community Support" 
+            className="absolute inset-0 w-full h-full object-cover"
+            referrerPolicy="no-referrer"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/20 to-transparent"></div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
-const Register = () => {
+const RegisterContent = () => {
   return (
-    <section id="register" className="py-24 bg-white">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-[var(--color-clic-blue)]/10 text-[var(--color-clic-blue)] flex items-center justify-center mb-6">
-            <UserPlus size={32} />
+    <div className="max-w-3xl mx-auto">
+      <div className="text-center mb-12">
+        <div className="w-16 h-16 mx-auto rounded-2xl bg-[var(--color-clic-blue)]/10 text-[var(--color-clic-blue)] flex items-center justify-center mb-6">
+          <UserPlus size={32} />
+        </div>
+        <h2 className="text-3xl font-bold text-gray-900 mb-4 font-serif">Student Registration</h2>
+        <p className="text-lg text-gray-600">
+          Register for our STEAM-IE courses and become part of the digital transformation.
+        </p>
+      </div>
+
+      <form className="space-y-6 bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">First Name</label>
+            <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all" placeholder="Abebe" />
           </div>
-          <h2 className="text-4xl font-bold text-gray-900 mb-4 font-serif">Join CLIC Ethiopia</h2>
-          <p className="text-lg text-gray-600">
-            Register for our STEAM-IE courses and become part of the digital transformation.
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Last Name</label>
+            <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all" placeholder="Kebede" />
+          </div>
+        </div>
+        
+        <div>
+          <label className="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
+          <input type="email" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all" placeholder="abebe@example.com" />
+        </div>
+
+        <div>
+          <label className="block text-sm font-bold text-gray-700 mb-2">Membership Type</label>
+          <select className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all bg-white">
+            <option>Youth (High school graduates)</option>
+            <option>Students (Elementary & High school)</option>
+            <option>Graduates (Certificate holders)</option>
+            <option>Professionals (Employed)</option>
+            <option>Businesses (Industrial sector)</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-bold text-gray-700 mb-2">Area of Interest</label>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            {['Science', 'Technology', 'Engineering', 'Arts', 'Mathematics', 'Entrepreneurship'].map((interest) => (
+              <label key={interest} className="flex items-center gap-2 p-3 rounded-lg border border-gray-200 bg-white cursor-pointer hover:bg-gray-50">
+                <input type="checkbox" className="rounded text-[var(--color-clic-blue)] focus:ring-[var(--color-clic-blue)]" />
+                <span className="text-sm text-gray-700">{interest}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <button type="button" className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-blue)] hover:bg-opacity-90 transition-colors shadow-md mt-4">
+          Submit Application
+        </button>
+      </form>
+    </div>
+  );
+};
+
+const MentorContent = () => {
+  return (
+    <div className="max-w-3xl mx-auto">
+      <div className="text-center mb-12">
+        <div className="w-16 h-16 mx-auto rounded-2xl bg-[var(--color-clic-orange)]/10 text-[var(--color-clic-orange)] flex items-center justify-center mb-6">
+          <Lightbulb size={32} />
+        </div>
+        <h2 className="text-3xl font-bold text-gray-900 mb-4 font-serif">Become a Mentor</h2>
+        <p className="text-lg text-gray-600">
+          Share your expertise and help shape the next generation of Ethiopian innovators.
+        </p>
+      </div>
+
+      <form className="space-y-6 bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">First Name</label>
+            <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all" placeholder="Your Name" />
+          </div>
+          <div>
+            <label className="block text-sm font-bold text-gray-700 mb-2">Last Name</label>
+            <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all" placeholder="Surname" />
+          </div>
+        </div>
+        
+        <div>
+          <label className="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
+          <input type="email" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all" placeholder="you@example.com" />
+        </div>
+
+        <div>
+          <label className="block text-sm font-bold text-gray-700 mb-2">Area of Expertise</label>
+          <select className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all bg-white">
+            <option>Engineering & Technology</option>
+            <option>Business & Entrepreneurship</option>
+            <option>Science & Research</option>
+            <option>Arts & Design</option>
+            <option>Education & Pedagogy</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-bold text-gray-700 mb-2">How would you like to help?</label>
+          <textarea className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all h-32" placeholder="Tell us about your experience and how you can contribute..."></textarea>
+        </div>
+
+        <button type="button" className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-orange)] hover:bg-opacity-90 transition-colors shadow-md mt-4">
+          Join as Mentor
+        </button>
+      </form>
+    </div>
+  );
+};
+
+const GetInvolved = () => {
+  const [activeRole, setActiveRole] = useState<'student' | 'mentor' | 'partner' | null>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  const roles = [
+    {
+      id: 'student',
+      title: 'I am a Student',
+      icon: UserPlus,
+      color: 'var(--color-clic-blue)',
+      desc: 'Join our STEAM-IE courses and become an innovator.',
+      cta: 'Register Now'
+    },
+    {
+      id: 'mentor',
+      title: 'I am a Mentor/Expert',
+      icon: Lightbulb,
+      color: 'var(--color-clic-orange)',
+      desc: 'Share your knowledge and guide the next generation.',
+      cta: 'Join as Mentor'
+    },
+    {
+      id: 'partner',
+      title: 'I am a Partner/Donor',
+      icon: HeartHandshake,
+      color: 'var(--color-clic-red)',
+      desc: 'Support our mission and build the future of Ethiopia.',
+      cta: 'Partner with Us'
+    }
+  ];
+
+  useEffect(() => {
+    if (activeRole && contentRef.current) {
+      const offset = 100; // Adjust for navbar + some padding
+      const elementPosition = contentRef.current.getBoundingClientRect().top + window.scrollY;
+      const offsetPosition = elementPosition - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+  }, [activeRole]);
+
+  return (
+    <section id="get-involved" className="py-24 bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">Join Our Ecosystem</h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Whether you want to learn, teach, or support, there is a place for you in the CLIC community.
           </p>
         </div>
 
-        <form className="space-y-6 bg-[var(--color-clic-light)] p-8 rounded-3xl shadow-sm border border-gray-100">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">First Name</label>
-              <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all" placeholder="Abebe" />
-            </div>
-            <div>
-              <label className="block text-sm font-bold text-gray-700 mb-2">Last Name</label>
-              <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all" placeholder="Kebede" />
-            </div>
-          </div>
-          
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
-            <input type="email" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all" placeholder="abebe@example.com" />
-          </div>
+        {/* Role Selection Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          {roles.map((role) => (
+            <motion.div
+              key={role.id}
+              whileHover={{ y: -10 }}
+              className={`bg-white rounded-3xl p-8 shadow-lg cursor-pointer border-2 transition-all ${activeRole === role.id ? 'ring-4 ring-opacity-20' : 'border-transparent hover:border-gray-200'}`}
+              onClick={() => setActiveRole(role.id as any)}
+              style={{ 
+                borderColor: activeRole === role.id ? role.color : undefined,
+                boxShadow: activeRole === role.id ? `0 0 0 4px ${role.color}20` : undefined
+              }}
+            >
+              <div 
+                className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-white shadow-md"
+                style={{ backgroundColor: role.color }}
+              >
+                <role.icon size={32} />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">{role.title}</h3>
+              <p className="text-gray-600 mb-6">{role.desc}</p>
+              <div className="flex items-center font-bold text-sm uppercase tracking-wider" style={{ color: role.color }}>
+                {role.cta} <ArrowRight size={16} className="ml-2" />
+              </div>
+            </motion.div>
+          ))}
+        </div>
 
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">Membership Type</label>
-            <select className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all bg-white">
-              <option>Youth (High school graduates)</option>
-              <option>Students (Elementary & High school)</option>
-              <option>Graduates (Certificate holders)</option>
-              <option>Professionals (Employed)</option>
-              <option>Businesses (Industrial sector)</option>
-            </select>
-          </div>
+        {/* Dynamic Content Section */}
+        <div ref={contentRef}>
+          <AnimatePresence mode="wait">
+            {activeRole === 'student' && (
+              <motion.div
+                key="student"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <RegisterContent />
+              </motion.div>
+            )}
 
-          <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">Area of Interest</label>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {['Science', 'Technology', 'Engineering', 'Arts', 'Mathematics', 'Entrepreneurship'].map((interest) => (
-                <label key={interest} className="flex items-center gap-2 p-3 rounded-lg border border-gray-200 bg-white cursor-pointer hover:bg-gray-50">
-                  <input type="checkbox" className="rounded text-[var(--color-clic-blue)] focus:ring-[var(--color-clic-blue)]" />
-                  <span className="text-sm text-gray-700">{interest}</span>
-                </label>
-              ))}
-            </div>
-          </div>
+            {activeRole === 'mentor' && (
+              <motion.div
+                key="mentor"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <MentorContent />
+              </motion.div>
+            )}
 
-          <button type="button" className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-blue)] hover:bg-opacity-90 transition-colors shadow-md mt-4">
-            Submit Application
-          </button>
-        </form>
+            {activeRole === 'partner' && (
+              <motion.div
+                key="partner"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+              >
+                <DonateContent />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </section>
   );
@@ -1102,9 +1248,9 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-bold mb-6">Get Involved</h4>
             <ul className="space-y-3 text-gray-400">
-              <li><a href="#register" className="hover:text-white transition-colors">Register as Student</a></li>
-              <li><a href="#donate" className="hover:text-white transition-colors">Donate</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Partner with Us</a></li>
+              <li><a href="#get-involved" className="hover:text-white transition-colors">Register as Student</a></li>
+              <li><a href="#get-involved" className="hover:text-white transition-colors">Donate</a></li>
+              <li><a href="#get-involved" className="hover:text-white transition-colors">Partner with Us</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
             </ul>
           </div>
@@ -1129,11 +1275,11 @@ export default function App() {
         <FounderMessage />
         <SteamSection />
         <IESection />
+        <CurriculumSection />
         <Labs />
         <Projects />
-        <NewsVideos />
-        <Donate />
-        <Register />
+        <NewsSection />
+        <GetInvolved />
       </main>
       <Footer />
       <ChatBot />

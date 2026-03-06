@@ -168,7 +168,7 @@ const ChatBot = () => {
                 <Mail size={18} className="text-[var(--color-clic-orange)] mb-1" />
                 <span className="text-[10px] font-medium text-gray-600">Email</span>
               </a>
-              <button onClick={() => { setIsOpen(false); document.getElementById('register')?.scrollIntoView({ behavior: 'smooth' }); }} className="flex flex-col items-center justify-center p-2 bg-white rounded-xl border border-gray-100 shadow-sm active:scale-95 transition-transform">
+              <button onClick={() => { setIsOpen(false); document.getElementById('get-involved')?.scrollIntoView({ behavior: 'smooth' }); }} className="flex flex-col items-center justify-center p-2 bg-white rounded-xl border border-gray-100 shadow-sm active:scale-95 transition-transform">
                 <UserPlus size={18} className="text-[var(--color-clic-blue)] mb-1" />
                 <span className="text-[10px] font-medium text-gray-600">Register</span>
               </button>
