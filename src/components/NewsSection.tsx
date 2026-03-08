@@ -135,11 +135,13 @@ const InnovatorSpotlight = () => {
 };
 
 const NewsSection = () => {
+  const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
+
   const videos = [
-    { id: '1', title: 'CLIC Ethiopia Official Launch', thumbnail: 'https://loremflickr.com/640/360/conference,ethiopia', duration: '12:45' },
-    { id: '2', title: 'Student Success Stories: Smart Agriculture', thumbnail: 'https://loremflickr.com/640/360/farming,technology', duration: '05:30' },
-    { id: '3', title: 'Tour of the New Fabrication Lab', thumbnail: 'https://loremflickr.com/640/360/laboratory,robotics', duration: '08:15' },
-    { id: '4', title: 'Interview with Dr. Frehun Adefris', thumbnail: 'https://loremflickr.com/640/360/interview,man', duration: '24:10' },
+    { id: '1', title: 'CLIC Ethiopia Official Launch', thumbnail: 'https://loremflickr.com/640/360/conference,ethiopia', duration: '12:45', videoId: 'LXb3EKWsInQ' },
+    { id: '2', title: 'Student Success Stories: Smart Agriculture', thumbnail: 'https://loremflickr.com/640/360/farming,technology', duration: '05:30', videoId: 'ysz5S6P_z-U' },
+    { id: '3', title: 'Tour of the New Fabrication Lab', thumbnail: 'https://loremflickr.com/640/360/laboratory,robotics', duration: '08:15', videoId: 'M7lc1UVf-VE' },
+    { id: '4', title: 'Interview with Dr. Frehun Adefris', thumbnail: 'https://loremflickr.com/640/360/interview,man', duration: '24:10', videoId: 'ScMzIvxBSi4' },
   ];
 
   return (
@@ -174,23 +176,41 @@ const NewsSection = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     {videos.map((video) => (
-                        <div key={video.id} className="group cursor-pointer">
-                            <div className="relative aspect-video rounded-xl overflow-hidden mb-3 shadow-md bg-gray-100">
-                                <img 
-                                    src={video.thumbnail} 
-                                    alt={video.title} 
-                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                    referrerPolicy="no-referrer"
-                                />
-                                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
-                                    <div className="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
-                                        <Play size={18} fill="currentColor" />
+                        <div key={video.id} className="group">
+                            {playingVideoId === video.id ? (
+                                <div className="relative aspect-video rounded-xl overflow-hidden mb-3 shadow-md bg-black">
+                                    <iframe
+                                        width="100%"
+                                        height="100%"
+                                        src={`https://www.youtube.com/embed/${video.videoId}?autoplay=1`}
+                                        title={video.title}
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                        className="absolute inset-0 w-full h-full"
+                                    ></iframe>
+                                </div>
+                            ) : (
+                                <div 
+                                    className="relative aspect-video rounded-xl overflow-hidden mb-3 shadow-md bg-gray-100 cursor-pointer"
+                                    onClick={() => setPlayingVideoId(video.id)}
+                                >
+                                    <img 
+                                        src={video.thumbnail} 
+                                        alt={video.title} 
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                        referrerPolicy="no-referrer"
+                                    />
+                                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                                        <div className="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
+                                            <Play size={18} fill="currentColor" />
+                                        </div>
+                                    </div>
+                                    <div className="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
+                                        {video.duration}
                                     </div>
                                 </div>
-                                <div className="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] font-bold px-1.5 py-0.5 rounded">
-                                    {video.duration}
-                                </div>
-                            </div>
+                            )}
                             <h4 className="font-bold text-gray-900 leading-tight group-hover:text-[var(--color-clic-red)] transition-colors line-clamp-2">
                                 {video.title}
                             </h4>

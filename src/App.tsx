@@ -6,7 +6,7 @@ import {
   Sprout, Building2, HeartHandshake, UserPlus, Menu, X,
   Globe, Lightbulb, GraduationCap, Target, Rocket, Briefcase,
   BarChart3, Clock, Users, Trophy, Zap, Microscope, Hammer,
-  Car, Coins, Home, Recycle, Server, Landmark, Quote, Play, Youtube
+  Car, Coins, Home, Recycle, Server, Landmark, Quote, Play, Youtube, ChevronDown
 } from 'lucide-react';
 
 import ChatBot from './components/ChatBot';
@@ -17,8 +17,14 @@ import MerchSection from './components/MerchSection';
 // --- Components ---
 
 const InfoModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => void; data: any }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    setIsPlaying(false);
+  }, [data, isOpen]);
+
   if (!isOpen || !data) return null;
-  const { title, color, icon: Icon, description, detailedContent, stats, image } = data;
+  const { title, color, icon: Icon, description, detailedContent, stats, image, videoId = 'M7lc1UVf-VE' } = data;
   
   return (
     <AnimatePresence>
@@ -94,21 +100,35 @@ const InfoModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => 
                             Video Tour
                         </h3>
                         <div className="rounded-2xl overflow-hidden shadow-lg bg-black aspect-video relative group cursor-pointer">
-                            {/* Placeholder for YouTube */}
-                            <img 
-                                src={`https://loremflickr.com/800/450/${title.split(' ')[0]},video`} 
-                                alt="Video Thumbnail" 
-                                className="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity"
-                                referrerPolicy="no-referrer"
-                            />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-16 h-16 rounded-full bg-red-600 text-white flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-                                    <Play size={32} fill="currentColor" />
+                            {isPlaying ? (
+                                <iframe
+                                    width="100%"
+                                    height="100%"
+                                    src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+                                    title="Video Tour"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                    className="absolute inset-0 w-full h-full"
+                                ></iframe>
+                            ) : (
+                                <div onClick={() => setIsPlaying(true)} className="w-full h-full relative">
+                                    <img 
+                                        src={`https://loremflickr.com/800/450/${title.split(' ')[0]},video`} 
+                                        alt="Video Thumbnail" 
+                                        className="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity"
+                                        referrerPolicy="no-referrer"
+                                    />
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <div className="w-16 h-16 rounded-full bg-red-600 text-white flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+                                            <Play size={32} fill="currentColor" />
+                                        </div>
+                                    </div>
+                                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-white">
+                                         <p className="font-medium">Watch: Introduction to {title}</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-white">
-                                 <p className="font-medium">Watch: Introduction to {title}</p>
-                            </div>
+                            )}
                         </div>
                     </div>
 
@@ -159,6 +179,7 @@ const InfoModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -170,19 +191,26 @@ const Navbar = () => {
 
   const navLinks = [
     { name: 'About', href: '#about' },
-    { name: 'Founder', href: '#founder' },
-    { name: 'STEAM', href: '#steam' },
-    { name: 'IE', href: '#ie' },
-    { name: 'Curriculum', href: '#curriculum' },
-    { name: 'Labs', href: '#labs' },
-    { name: 'Projects', href: '#projects' },
+    { 
+      name: 'Programs', 
+      href: '#',
+      children: [
+        { name: 'STEAM', href: '#steam' },
+        { name: 'IE', href: '#ie' },
+        { name: 'Curriculum', href: '#curriculum' },
+        { name: 'Labs', href: '#labs' },
+        { name: 'Projects', href: '#projects' },
+      ]
+    },
     { name: 'News', href: '#news' },
+    { name: 'Founder', href: '#founder' },
     { name: 'Merch', href: '#merch' },
   ];
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     setIsMobileMenuOpen(false);
+    setActiveDropdown(null);
     
     // Handle hash links
     if (href.startsWith('#')) {
@@ -204,31 +232,60 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-4' : 'bg-transparent py-6'}`}>
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-5'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          <a href="#" className="flex items-center gap-2">
-            <div className="flex">
-              <span className="text-3xl font-black text-[var(--color-clic-red)] tracking-tighter">C</span>
-              <span className="text-3xl font-black text-[var(--color-clic-orange)] tracking-tighter">L</span>
-              <span className="text-3xl font-black text-[var(--color-clic-green)] tracking-tighter">I</span>
-              <span className="text-3xl font-black text-[var(--color-clic-blue)] tracking-tighter">C</span>
+          <a href="#" className="flex items-center gap-2 group">
+            <div className="flex transition-transform group-hover:scale-105">
+              <span className="text-2xl md:text-3xl font-black text-[var(--color-clic-red)] tracking-tighter">C</span>
+              <span className="text-2xl md:text-3xl font-black text-[var(--color-clic-orange)] tracking-tighter">L</span>
+              <span className="text-2xl md:text-3xl font-black text-[var(--color-clic-green)] tracking-tighter">I</span>
+              <span className="text-2xl md:text-3xl font-black text-[var(--color-clic-blue)] tracking-tighter">C</span>
             </div>
             <div className="flex flex-col">
-              <span className={`text-xl font-bold leading-none ${isScrolled ? 'text-gray-900' : 'text-white'}`}>Ethiopia</span>
-              <span className={`text-[0.5rem] font-semibold uppercase tracking-widest ${isScrolled ? 'text-gray-500' : 'text-gray-300'}`}>Creative Learning</span>
+              <span className={`text-lg md:text-xl font-bold leading-none ${isScrolled ? 'text-gray-900' : 'text-white'}`}>Ethiopia</span>
+              <span className={`text-[0.4rem] md:text-[0.5rem] font-semibold uppercase tracking-widest ${isScrolled ? 'text-gray-500' : 'text-gray-300'}`}>Creative Learning</span>
             </div>
           </a>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden lg:flex items-center gap-6">
             {navLinks.map((link) => (
-              <a key={link.name} href={link.href} className={`text-sm font-semibold uppercase tracking-wider hover:opacity-70 transition-opacity ${isScrolled ? 'text-gray-800' : 'text-white'}`}>
-                {link.name}
-              </a>
+              link.children ? (
+                <div key={link.name} className="relative group">
+                  <button 
+                    className={`flex items-center gap-1 text-sm font-bold uppercase tracking-wider hover:opacity-70 transition-opacity ${isScrolled ? 'text-gray-800' : 'text-white'}`}
+                  >
+                    {link.name} <ChevronDown size={14} />
+                  </button>
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform group-hover:translate-y-0 translate-y-2">
+                    <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-2 min-w-[200px] overflow-hidden">
+                      {link.children.map(child => (
+                         <a 
+                           key={child.name}
+                           href={child.href}
+                           onClick={(e) => scrollToSection(e, child.href)}
+                           className="block px-4 py-3 text-sm font-bold text-gray-700 hover:bg-gray-50 hover:text-[var(--color-clic-blue)] rounded-lg transition-colors text-center"
+                         >
+                           {child.name}
+                         </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <a 
+                  key={link.name} 
+                  href={link.href} 
+                  onClick={(e) => scrollToSection(e, link.href)}
+                  className={`text-sm font-bold uppercase tracking-wider hover:opacity-70 transition-opacity ${isScrolled ? 'text-gray-800' : 'text-white'}`}
+                >
+                  {link.name}
+                </a>
+              )
             ))}
             <div className="flex gap-4">
-              <a href="#get-involved" className="px-6 py-3 rounded-full text-sm font-bold bg-[var(--color-clic-red)] text-white hover:bg-opacity-90 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+              <a href="#get-involved" className="px-5 py-2.5 rounded-full text-sm font-bold bg-[var(--color-clic-red)] text-white hover:bg-opacity-90 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
                 Get Involved
               </a>
             </div>
@@ -236,7 +293,7 @@ const Navbar = () => {
 
           {/* Mobile Menu Button */}
           <button 
-            className="md:hidden p-2"
+            className="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? (
@@ -255,24 +312,60 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-t mt-4"
+            className="lg:hidden bg-white border-t overflow-hidden shadow-xl"
           >
-            <div className="px-4 py-6 flex flex-col gap-4">
+            <div className="px-4 py-6 flex flex-col gap-2 max-h-[80vh] overflow-y-auto">
               {navLinks.map((link) => (
-                <a 
-                  key={link.name} 
-                  href={link.href} 
-                  className="text-lg font-semibold text-gray-800"
-                  onClick={(e) => scrollToSection(e, link.href)}
-                >
-                  {link.name}
-                </a>
+                <div key={link.name}>
+                  {link.children ? (
+                    <div className="rounded-xl bg-gray-50 overflow-hidden">
+                      <button 
+                        onClick={() => setActiveDropdown(activeDropdown === link.name ? null : link.name)}
+                        className="w-full flex justify-between items-center px-4 py-3 text-left font-bold text-gray-900"
+                      >
+                        {link.name}
+                        <ChevronDown size={16} className={`transition-transform ${activeDropdown === link.name ? 'rotate-180' : ''}`} />
+                      </button>
+                      <AnimatePresence>
+                        {activeDropdown === link.name && (
+                          <motion.div
+                            initial={{ height: 0 }}
+                            animate={{ height: 'auto' }}
+                            exit={{ height: 0 }}
+                            className="overflow-hidden"
+                          >
+                            <div className="px-4 pb-3 space-y-1">
+                              {link.children.map(child => (
+                                <a 
+                                  key={child.name}
+                                  href={child.href}
+                                  onClick={(e) => scrollToSection(e, child.href)}
+                                  className="block px-4 py-2 text-sm font-medium text-gray-600 hover:text-[var(--color-clic-blue)] hover:bg-gray-100 rounded-lg"
+                                >
+                                  {child.name}
+                                </a>
+                              ))}
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <a 
+                      href={link.href} 
+                      className="block px-4 py-3 text-lg font-bold text-gray-800 hover:bg-gray-50 rounded-xl"
+                      onClick={(e) => scrollToSection(e, link.href)}
+                    >
+                      {link.name}
+                    </a>
+                  )}
+                </div>
               ))}
-              <hr className="my-2" />
+              <hr className="my-4 border-gray-100" />
               <a 
                 href="#get-involved" 
                 onClick={(e) => scrollToSection(e, '#get-involved')}
-                className="px-5 py-3 text-center rounded-lg text-base font-bold bg-[var(--color-clic-red)] text-white"
+                className="px-5 py-4 text-center rounded-xl text-base font-bold bg-[var(--color-clic-red)] text-white shadow-md active:scale-95 transition-transform"
               >
                 Get Involved
               </a>
