@@ -12,63 +12,142 @@ import {
 import ChatBot from './components/ChatBot';
 import CurriculumSection from './components/CurriculumSection';
 import NewsSection from './components/NewsSection';
+import MerchSection from './components/MerchSection';
 
 // --- Components ---
 
 const InfoModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => void; data: any }) => {
   if (!isOpen || !data) return null;
-  const { title, color, icon: Icon, description, detailedContent, stats } = data;
+  const { title, color, icon: Icon, description, detailedContent, stats, image } = data;
   
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div 
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
           onClick={onClose}
         >
           <motion.div 
             initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            className="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl relative"
+            className="bg-white rounded-3xl max-w-6xl w-full max-h-[90vh] shadow-2xl relative flex flex-col md:flex-row overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
-            <button onClick={onClose} className="absolute top-4 right-4 p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
-              <X size={20} className="text-gray-600" />
+            <button onClick={onClose} className="absolute top-4 right-4 z-20 p-2 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md transition-colors text-white">
+              <X size={24} />
             </button>
-            
-            <div className="p-8">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg" style={{ backgroundColor: color }}>
-                  <Icon size={32} />
+
+            {/* Hero / Sidebar Section */}
+            <div className="w-full md:w-2/5 relative bg-gray-900 text-white flex flex-col min-h-[300px] md:min-h-full">
+                {/* Background Image */}
+                <div className="absolute inset-0">
+                    <img 
+                        src={image || `https://loremflickr.com/800/1200/${title.split(' ')[0]},technology`} 
+                        alt={title} 
+                        className="w-full h-full object-cover opacity-60"
+                        referrerPolicy="no-referrer"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
                 </div>
-                <div>
-                  <h3 className="text-3xl font-bold text-gray-900 font-serif">{title}</h3>
-                  <div className="h-1 w-20 rounded-full mt-2" style={{ backgroundColor: color }}></div>
-                </div>
-              </div>
-              
-              <p className="text-xl text-gray-600 mb-8 leading-relaxed">{description}</p>
-              
-              {stats && (
-                <div className="grid grid-cols-3 gap-4 mb-8">
-                  {stats.map((stat: any, i: number) => (
-                    <div key={i} className="bg-gray-50 rounded-xl p-4 text-center border border-gray-100">
-                      <div className="text-2xl font-black mb-1" style={{ color: color }}>{stat.value}</div>
-                      <div className="text-xs font-bold text-gray-500 uppercase tracking-wider">{stat.label}</div>
+
+                <div className="relative z-10 p-8 flex flex-col h-full mt-auto">
+                    <div className="mt-auto">
+                        <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg mb-6 backdrop-blur-md border border-white/20" style={{ backgroundColor: `${color}80` }}>
+                            <Icon size={32} />
+                        </div>
+                        <h2 className="text-4xl font-bold font-serif mb-4 leading-tight">{title}</h2>
+                        <div className="h-1 w-20 rounded-full mb-6" style={{ backgroundColor: color }}></div>
+                        <p className="text-lg text-gray-200 leading-relaxed mb-8">{description}</p>
+                        
+                        {stats && (
+                            <div className="grid grid-cols-3 gap-4 border-t border-white/10 pt-6">
+                                {stats.map((stat: any, i: number) => (
+                                    <div key={i}>
+                                        <div className="text-2xl font-black" style={{ color: color }}>{stat.value}</div>
+                                        <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">{stat.label}</div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
-                  ))}
                 </div>
-              )}
-              
-              <div className="prose prose-lg text-gray-600 bg-gray-50 p-6 rounded-2xl border border-gray-100">
-                <p>{detailedContent}</p>
-              </div>
-              
-              <div className="mt-8 pt-8 border-t border-gray-100 flex justify-end">
-                <button onClick={onClose} className="px-6 py-3 rounded-xl font-bold text-white transition-transform active:scale-95 shadow-md hover:shadow-lg" style={{ backgroundColor: color }}>
-                  Close Details
-                </button>
-              </div>
+            </div>
+
+            {/* Content Section */}
+            <div className="w-full md:w-3/5 bg-white overflow-y-auto max-h-[60vh] md:max-h-[90vh]">
+                <div className="p-8 md:p-12">
+                    {/* Detailed Content */}
+                    <div className="mb-12">
+                        <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <BookOpen size={24} className="text-gray-400" />
+                            Overview
+                        </h3>
+                        <div className="prose prose-lg text-gray-600">
+                            <p>{detailedContent}</p>
+                        </div>
+                    </div>
+
+                    {/* YouTube Section */}
+                    <div className="mb-12">
+                        <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <Youtube size={24} className="text-red-600" />
+                            Video Tour
+                        </h3>
+                        <div className="rounded-2xl overflow-hidden shadow-lg bg-black aspect-video relative group cursor-pointer">
+                            {/* Placeholder for YouTube */}
+                            <img 
+                                src={`https://loremflickr.com/800/450/${title.split(' ')[0]},video`} 
+                                alt="Video Thumbnail" 
+                                className="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity"
+                                referrerPolicy="no-referrer"
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="w-16 h-16 rounded-full bg-red-600 text-white flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+                                    <Play size={32} fill="currentColor" />
+                                </div>
+                            </div>
+                            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-white">
+                                 <p className="font-medium">Watch: Introduction to {title}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Photo Catalogue */}
+                    <div className="mb-12">
+                        <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <Palette size={24} className="text-gray-400" />
+                            Gallery
+                        </h3>
+                        <div className="grid grid-cols-2 gap-4">
+                            {[1, 2, 3, 4].map((i) => (
+                                <div key={i} className="rounded-xl overflow-hidden aspect-[4/3] group cursor-pointer">
+                                    <img 
+                                        src={`https://loremflickr.com/400/300/${title.split(' ')[0]},${i},tech`} 
+                                        alt={`Gallery ${i}`} 
+                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                        referrerPolicy="no-referrer"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Extra Links */}
+                    <div>
+                         <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <Globe size={24} className="text-gray-400" />
+                            Resources
+                        </h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {['Curriculum Guide', 'Student Projects', 'Research Papers', 'Apply Now'].map((link, i) => (
+                                <a key={i} href="#" className="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-gray-300 hover:bg-gray-50 transition-all group">
+                                    <span className="font-semibold text-gray-700">{link}</span>
+                                    <ArrowRight size={16} className="text-gray-400 group-hover:translate-x-1 transition-transform" />
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                </div>
             </div>
           </motion.div>
         </motion.div>
@@ -98,6 +177,7 @@ const Navbar = () => {
     { name: 'Labs', href: '#labs' },
     { name: 'Projects', href: '#projects' },
     { name: 'News', href: '#news' },
+    { name: 'Merch', href: '#merch' },
   ];
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -921,49 +1001,213 @@ const Projects = () => {
   );
 };
 
-const DonateContent = () => {
+const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  const [amount, setAmount] = useState('');
+  const [customAmount, setCustomAmount] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleDonate = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Simulate API call
+    setTimeout(() => {
+      setIsSubmitted(true);
+      setTimeout(() => {
+        setIsSubmitted(false);
+        onClose();
+        setFormData({ name: '', email: '', phone: '', message: '' });
+        setAmount('');
+        setCustomAmount('');
+      }, 3000);
+    }, 1500);
+  };
+
+  const finalAmount = amount === 'Custom' ? customAmount : amount;
+
   return (
-    <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
-      <div className="grid grid-cols-1 lg:grid-cols-2">
-        <div className="p-12 lg:p-16 flex flex-col justify-center">
-          <div className="w-16 h-16 rounded-2xl bg-[var(--color-clic-red)]/10 text-[var(--color-clic-red)] flex items-center justify-center mb-8">
-            <HeartHandshake size={32} />
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div 
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          onClick={onClose}
+        >
+          <motion.div 
+            initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }}
+            className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative"
+            onClick={e => e.stopPropagation()}
+          >
+            {isSubmitted ? (
+              <div className="p-12 text-center">
+                <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <HeartHandshake size={40} />
+                </div>
+                <h3 className="text-3xl font-bold text-gray-900 mb-2">Thank You!</h3>
+                <p className="text-gray-600">Your generous donation has been received. We will send a receipt to your email shortly.</p>
+              </div>
+            ) : (
+              <>
+                <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                  <h3 className="text-xl font-bold font-serif text-gray-900">Make a Donation</h3>
+                  <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full transition-colors">
+                    <X size={20} className="text-gray-600" />
+                  </button>
+                </div>
+                
+                <form onSubmit={handleDonate} className="p-8 space-y-4">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Select Amount</label>
+                    <div className="grid grid-cols-4 gap-2 mb-3">
+                      {['500', '2500', '10000', 'Custom'].map((opt) => (
+                        <button
+                          key={opt}
+                          type="button"
+                          onClick={() => { setAmount(opt); if(opt !== 'Custom') setCustomAmount(''); }}
+                          className={`py-2 px-1 rounded-lg text-sm font-bold border transition-all ${
+                            amount === opt
+                              ? 'bg-[var(--color-clic-red)] text-white border-[var(--color-clic-red)]'
+                              : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
+                          }`}
+                        >
+                          {opt === 'Custom' ? 'Custom' : `ETB ${opt}`}
+                        </button>
+                      ))}
+                    </div>
+                    {amount === 'Custom' && (
+                      <input 
+                        required
+                        type="number" 
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none"
+                        placeholder="Enter amount in ETB"
+                        value={customAmount}
+                        onChange={e => setCustomAmount(e.target.value)}
+                      />
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
+                      <input 
+                        required
+                        type="text" 
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none"
+                        value={formData.name}
+                        onChange={e => setFormData({...formData, name: e.target.value})}
+                        placeholder="Your Name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 mb-1">Phone</label>
+                      <input 
+                        type="tel" 
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none"
+                        value={formData.phone}
+                        onChange={e => setFormData({...formData, phone: e.target.value})}
+                        placeholder="0911..."
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1">Email</label>
+                    <input 
+                      required
+                      type="email" 
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none"
+                      value={formData.email}
+                      onChange={e => setFormData({...formData, email: e.target.value})}
+                      placeholder="you@example.com"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1">Message (Optional)</label>
+                    <textarea 
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none h-24 resize-none"
+                      value={formData.message}
+                      onChange={e => setFormData({...formData, message: e.target.value})}
+                      placeholder="Why are you supporting us?"
+                    />
+                  </div>
+
+                  <button 
+                    type="submit"
+                    disabled={!amount || (amount === 'Custom' && !customAmount)}
+                    className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-red)] hover:bg-opacity-90 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    Donate {finalAmount ? `ETB ${finalAmount}` : ''} <ArrowRight size={18} />
+                  </button>
+                </form>
+              </>
+            )}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const DonateContent = () => {
+  const [isDonateModalOpen, setIsDonateModalOpen] = useState(false);
+
+  return (
+    <>
+      <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+        <div className="grid grid-cols-1 lg:grid-cols-2">
+          <div className="p-12 lg:p-16 flex flex-col justify-center">
+            <div className="w-16 h-16 rounded-2xl bg-[var(--color-clic-red)]/10 text-[var(--color-clic-red)] flex items-center justify-center mb-8">
+              <HeartHandshake size={32} />
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-6 font-serif">Support Our Mission</h2>
+            <p className="text-lg text-gray-600 mb-8">
+              Your donation helps us build smart creative laboratories, provide course kits, and train the next generation of Ethiopian innovators and entrepreneurs.
+            </p>
+            
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              {[
+                { amount: 'ETB 500', desc: 'Provides basic course kits' },
+                { amount: 'ETB 2,500', desc: 'Sponsors one student training' },
+                { amount: 'ETB 10,000', desc: 'Annual lab membership' },
+                { amount: 'Custom', desc: 'Any amount helps' }
+              ].map((tier, i) => (
+                <button 
+                  key={i} 
+                  onClick={() => setIsDonateModalOpen(true)}
+                  className="p-4 rounded-xl border-2 border-gray-100 hover:border-[var(--color-clic-red)] hover:bg-[var(--color-clic-red)]/5 transition-all text-left group"
+                >
+                  <div className="font-bold text-gray-900 group-hover:text-[var(--color-clic-red)]">{tier.amount}</div>
+                  <div className="text-xs text-gray-500 mt-1">{tier.desc}</div>
+                </button>
+              ))}
+            </div>
+            
+            <button 
+              onClick={() => setIsDonateModalOpen(true)}
+              className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-red)] hover:bg-opacity-90 transition-colors shadow-md flex items-center justify-center gap-2"
+            >
+              Donate Now <ArrowRight size={18} />
+            </button>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 font-serif">Support Our Mission</h2>
-          <p className="text-lg text-gray-600 mb-8">
-            Your donation helps us build smart creative laboratories, provide course kits, and train the next generation of Ethiopian innovators and entrepreneurs.
-          </p>
           
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            {[
-              { amount: 'ETB 500', desc: 'Provides basic course kits' },
-              { amount: 'ETB 2,500', desc: 'Sponsors one student training' },
-              { amount: 'ETB 10,000', desc: 'Annual lab membership' },
-              { amount: 'Custom', desc: 'Any amount helps' }
-            ].map((tier, i) => (
-              <button key={i} className="p-4 rounded-xl border-2 border-gray-100 hover:border-[var(--color-clic-red)] hover:bg-[var(--color-clic-red)]/5 transition-all text-left group">
-                <div className="font-bold text-gray-900 group-hover:text-[var(--color-clic-red)]">{tier.amount}</div>
-                <div className="text-xs text-gray-500 mt-1">{tier.desc}</div>
-              </button>
-            ))}
+          <div className="relative hidden lg:block">
+            <img 
+              src="https://loremflickr.com/800/1000/community,africa,happy" 
+              alt="Community Support" 
+              className="absolute inset-0 w-full h-full object-cover"
+              referrerPolicy="no-referrer"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-white via-white/20 to-transparent"></div>
           </div>
-          
-          <button className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-red)] hover:bg-opacity-90 transition-colors shadow-md flex items-center justify-center gap-2">
-            Donate Now <ArrowRight size={18} />
-          </button>
-        </div>
-        
-        <div className="relative hidden lg:block">
-          <img 
-            src="https://loremflickr.com/800/1000/community,africa,happy" 
-            alt="Community Support" 
-            className="absolute inset-0 w-full h-full object-cover"
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/20 to-transparent"></div>
         </div>
       </div>
-    </div>
+      <DonateModal isOpen={isDonateModalOpen} onClose={() => setIsDonateModalOpen(false)} />
+    </>
   );
 };
 
@@ -1010,8 +1254,13 @@ const RegisterContent = () => {
 
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-2">Area of Interest</label>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {['Science', 'Technology', 'Engineering', 'Arts', 'Mathematics', 'Entrepreneurship'].map((interest) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {[
+              'Smart Agriculture', 'Smart Healthcare', 'Smart Manufacturing', 
+              'Smart Construction', 'Smart Mobility', 'Smart Energy', 
+              'Smart Finance', 'Smart Education', 'Smart Lifestyle', 
+              'Smart Environment', 'Smart Infrastructure', 'Smart Governance'
+            ].map((interest) => (
               <label key={interest} className="flex items-center gap-2 p-3 rounded-lg border border-gray-200 bg-white cursor-pointer hover:bg-gray-50">
                 <input type="checkbox" className="rounded text-[var(--color-clic-blue)] focus:ring-[var(--color-clic-blue)]" />
                 <span className="text-sm text-gray-700">{interest}</span>
@@ -1279,6 +1528,7 @@ export default function App() {
         <Labs />
         <Projects />
         <NewsSection />
+        <MerchSection />
         <GetInvolved />
       </main>
       <Footer />
