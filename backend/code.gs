@@ -238,59 +238,65 @@ function fillSampleData() {
  * - type: 'steam', 'ie', 'curriculum', 'labs', 'projects', 'spotlight', 'videos', 'products'
  */
 function doGet(e) {
-  const params = e.parameter;
-  const type = params.type;
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  
-  let sheetName = '';
+  try {
+    const params = e.parameter;
+    const type = params.type;
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    
+    let sheetName = '';
 
-  switch(type) {
-    case 'steam': sheetName = SHEETS.CONTENT_STEAM; break;
-    case 'ie': sheetName = SHEETS.CONTENT_IE; break;
-    case 'curriculum': sheetName = SHEETS.CONTENT_CURRICULUM; break;
-    case 'labs': sheetName = SHEETS.CONTENT_LABS; break;
-    case 'projects': sheetName = SHEETS.CONTENT_PROJECTS; break;
-    case 'spotlight': sheetName = SHEETS.CONTENT_SPOTLIGHT; break;
-    case 'videos': sheetName = SHEETS.CONTENT_VIDEOS; break;
-    case 'products': sheetName = SHEETS.PRODUCTS; break;
-    default: 
-      return ContentService.createTextOutput(JSON.stringify({error: "Invalid or missing 'type' parameter"}))
-        .setMimeType(ContentService.MimeType.JSON);
-  }
-
-  const sheet = ss.getSheetByName(sheetName);
-  if (!sheet) {
-     return ContentService.createTextOutput(JSON.stringify({data: []}))
-        .setMimeType(ContentService.MimeType.JSON);
-  }
-
-  const rows = sheet.getDataRange().getValues();
-  const headers = rows[0];
-  let data = [];
-  
-  for (let i = 1; i < rows.length; i++) {
-    let row = rows[i];
-    let obj = {};
-    for (let j = 0; j < headers.length; j++) {
-      let header = headers[j];
-      let value = row[j];
-      
-      // Parse JSON fields automatically
-      if (header.includes('_json')) {
-        try {
-          obj[header.replace('_json', '')] = JSON.parse(value);
-        } catch (e) {
-          obj[header.replace('_json', '')] = []; // Fallback to empty array/object
-        }
-      } else {
-        obj[header] = value;
-      }
+    switch(type) {
+      case 'steam': sheetName = SHEETS.CONTENT_STEAM; break;
+      case 'ie': sheetName = SHEETS.CONTENT_IE; break;
+      case 'curriculum': sheetName = SHEETS.CONTENT_CURRICULUM; break;
+      case 'labs': sheetName = SHEETS.CONTENT_LABS; break;
+      case 'projects': sheetName = SHEETS.CONTENT_PROJECTS; break;
+      case 'spotlight': sheetName = SHEETS.CONTENT_SPOTLIGHT; break;
+      case 'videos': sheetName = SHEETS.CONTENT_VIDEOS; break;
+      case 'products': sheetName = SHEETS.PRODUCTS; break;
+      default: 
+        return ContentService.createTextOutput(JSON.stringify({status: 'error', message: "Invalid or missing 'type' parameter"}))
+          .setMimeType(ContentService.MimeType.JSON);
     }
-    data.push(obj);
-  }
 
-  return ContentService.createTextOutput(JSON.stringify({data: data}))
-    .setMimeType(ContentService.MimeType.JSON);
+    const sheet = ss.getSheetByName(sheetName);
+    if (!sheet) {
+       return ContentService.createTextOutput(JSON.stringify({status: 'success', data: []}))
+          .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    const rows = sheet.getDataRange().getValues();
+    const headers = rows[0];
+    let data = [];
+    
+    for (let i = 1; i < rows.length; i++) {
+      let row = rows[i];
+      let obj = {};
+      for (let j = 0; j < headers.length; j++) {
+        let header = headers[j];
+        let value = row[j];
+        
+        // Parse JSON fields automatically
+        if (header.includes('_json')) {
+          try {
+            obj[header.replace('_json', '')] = JSON.parse(value);
+          } catch (e) {
+            obj[header.replace('_json', '')] = []; // Fallback to empty array/object
+          }
+        } else {
+          obj[header] = value;
+        }
+      }
+      data.push(obj);
+    }
+
+    return ContentService.createTextOutput(JSON.stringify({status: 'success', data: data}))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({status: 'error', message: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
 /**

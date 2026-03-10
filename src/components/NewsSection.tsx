@@ -81,7 +81,7 @@ const InnovatorSpotlight = () => {
                 {/* Student & Prototype Images */}
                 <div className="flex gap-4 mb-2">
                   <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[var(--color-clic-orange)] flex-shrink-0">
-                    <img src={stories[currentIndex].image} alt={stories[currentIndex].name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                    <img src={stories[currentIndex].image_url} alt={stories[currentIndex].name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                   </div>
                   <div>
                     <h4 className="text-xl font-bold text-white">{stories[currentIndex].name}</h4>
@@ -91,7 +91,7 @@ const InnovatorSpotlight = () => {
 
                 <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm border border-white/10 mb-4">
                    <div className="aspect-video rounded-lg overflow-hidden mb-4 bg-black/50 relative group">
-                      <img src={stories[currentIndex].prototype} alt="Prototype" className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" referrerPolicy="no-referrer" />
+                      <img src={stories[currentIndex].prototype_url} alt="Prototype" className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" referrerPolicy="no-referrer" />
                       <div className="absolute bottom-2 left-2 bg-black/60 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider text-white">Prototype</div>
                    </div>
                    <div className="space-y-4">
@@ -223,7 +223,7 @@ const NewsSection = () => {
                         <p className="text-gray-500">No videos available yet.</p>
                       </div>
                     ) : videos.map((video) => {
-                        const videoId = getYouTubeId(video.videoUrl) || video.videoId; // Fallback to videoId if URL parsing fails
+                        const videoId = getYouTubeId(video.video_id) || video.video_id; // Fallback to video_id if URL parsing fails
                         return (
                         <div key={video.id} className="group">
                             {playingVideoId === video.id ? (
@@ -245,7 +245,7 @@ const NewsSection = () => {
                                     onClick={() => setPlayingVideoId(video.id)}
                                 >
                                     <img 
-                                        src={video.thumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`} 
+                                        src={video.thumbnail_url || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`} 
                                         alt={video.title} 
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                                         referrerPolicy="no-referrer"

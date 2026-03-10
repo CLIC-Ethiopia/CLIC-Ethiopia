@@ -14,7 +14,7 @@ interface Product {
   name: string;
   price: number;
   category: string;
-  image: string;
+  image_url: string;
   description: string;
   options?: ProductOption[];
 }
@@ -39,7 +39,7 @@ const PRODUCTS: Product[] = [
     name: "CLIC 'Future Innovator' Tee",
     price: 450,
     category: "Apparel",
-    image: "https://loremflickr.com/600/600/tshirt,tech,fashion",
+    image_url: "https://loremflickr.com/600/600/tshirt,tech,fashion",
     description: "Premium cotton t-shirt featuring the 'Future Innovator' slogan. Perfect for lab work or casual wear.",
     options: [
       { name: "Size", values: ["XXS", "XS", "S", "M", "L", "XL", "XXL"] },
@@ -51,7 +51,7 @@ const PRODUCTS: Product[] = [
     name: "Official CLIC Hoodie",
     price: 1200,
     category: "Apparel",
-    image: "https://loremflickr.com/600/600/hoodie,streetwear",
+    image_url: "https://loremflickr.com/600/600/hoodie,streetwear",
     description: "Warm and comfortable hoodie with the embroidered CLIC logo. Essential for late-night coding sessions.",
     options: [
       { name: "Size", values: ["XS", "S", "M", "L", "XL", "XXL"] },
@@ -63,7 +63,7 @@ const PRODUCTS: Product[] = [
     name: "STEAM-IE Canvas Tote",
     price: 300,
     category: "Accessories",
-    image: "https://loremflickr.com/600/600/bag,tote",
+    image_url: "https://loremflickr.com/600/600/bag,tote",
     description: "Durable canvas tote bag, spacious enough for your laptop and project materials.",
     options: [
       { name: "Color", values: ["Natural", "Black"] }
@@ -74,7 +74,7 @@ const PRODUCTS: Product[] = [
     name: "Engineering Grid Notebook",
     price: 250,
     category: "Stationery",
-    image: "https://loremflickr.com/600/600/notebook,stationery",
+    image_url: "https://loremflickr.com/600/600/notebook,stationery",
     description: "High-quality grid paper notebook for sketching designs, drafting circuits, and taking notes.",
     options: [
       { name: "Type", values: ["Grid", "Lined", "Blank"] }
@@ -85,7 +85,7 @@ const PRODUCTS: Product[] = [
     name: "CLIC Snapback Cap",
     price: 350,
     category: "Apparel",
-    image: "https://loremflickr.com/600/600/cap,hat",
+    image_url: "https://loremflickr.com/600/600/cap,hat",
     description: "Adjustable snapback cap with 3D puff embroidery. Represents the CLIC community style.",
     options: [
       { name: "Color", values: ["Black", "Navy", "Red"] }
@@ -96,7 +96,7 @@ const PRODUCTS: Product[] = [
     name: "Eco-Metal Water Bottle",
     price: 500,
     category: "Accessories",
-    image: "https://loremflickr.com/600/600/bottle,water",
+    image_url: "https://loremflickr.com/600/600/bottle,water",
     description: "Stainless steel water bottle to keep you hydrated during long workshops. Eco-friendly and durable.",
     options: [
       { name: "Color", values: ["Silver", "Matte Black", "Blue"] }
@@ -309,7 +309,7 @@ const MerchSection = () => {
               >
                 <div className="aspect-square relative overflow-hidden bg-gray-200">
                   <img 
-                    src={product.image} 
+                    src={product.image_url} 
                     alt={product.name} 
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     referrerPolicy="no-referrer"
@@ -364,7 +364,7 @@ const MerchSection = () => {
               <div className="p-8">
                 <div className="flex gap-6 mb-8">
                   <div className="w-24 h-24 rounded-xl bg-gray-100 overflow-hidden flex-shrink-0">
-                    <img src={selectedProduct.image} alt={selectedProduct.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                    <img src={selectedProduct.image_url} alt={selectedProduct.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                   </div>
                   <div>
                     <h4 className="text-xl font-bold text-gray-900 mb-1">{selectedProduct.name}</h4>
@@ -439,7 +439,7 @@ const MerchSection = () => {
                   cart.map(item => (
                     <div key={item.id} className="flex gap-4">
                       <div className="w-20 h-20 rounded-xl bg-gray-100 overflow-hidden flex-shrink-0">
-                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                        <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                       </div>
                       <div className="flex-1">
                         <h4 className="font-bold text-gray-900 line-clamp-1">{item.name}</h4>
