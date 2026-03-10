@@ -1,3 +1,4 @@
+import { GOOGLE_SCRIPT_URL } from './constants';
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { 
@@ -23,8 +24,18 @@ const InfoModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => 
     setIsPlaying(false);
   }, [data, isOpen]);
 
-  if (!isOpen || !data) return null;
-  const { title, color, icon: Icon, description, detailedContent, stats, image, videoId = 'M7lc1UVf-VE' } = data;
+    if (!isOpen || !data) return null;
+  const { title, color, icon: Icon, description, detailedContent, stats, image, videoUrl } = data;
+  
+  // Helper function to extract YouTube video ID from URL
+  const getYouTubeId = (url: string) => {
+    if (!url) return null;
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
+  const videoId = getYouTubeId(videoUrl) || data.videoId || 'M7lc1UVf-VE';
   
   return (
     <AnimatePresence>
@@ -114,10 +125,14 @@ const InfoModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => 
                             ) : (
                                 <div onClick={() => setIsPlaying(true)} className="w-full h-full relative">
                                     <img 
-                                        src={`https://loremflickr.com/800/450/${title.split(' ')[0]},video`} 
+                                        src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`} 
                                         alt="Video Thumbnail" 
                                         className="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity"
                                         referrerPolicy="no-referrer"
+                                        onError={(e) => {
+                                            // Fallback if maxresdefault is not available
+                                            (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                                        }}
                                     />
                                     <div className="absolute inset-0 flex items-center justify-center">
                                         <div className="w-16 h-16 rounded-full bg-red-600 text-white flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
@@ -249,23 +264,23 @@ const Navbar = () => {
           </a>
 
           {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-6">
+          <div className="hidden lg:flex items-center gap-4 xl:gap-6">
             {navLinks.map((link) => (
               link.children ? (
                 <div key={link.name} className="relative group">
                   <button 
-                    className={`flex items-center gap-1 text-sm font-bold uppercase tracking-wider hover:opacity-70 transition-opacity ${isScrolled ? 'text-gray-800' : 'text-white'}`}
+                    className={`flex items-center gap-1 text-xs xl:text-sm font-bold uppercase tracking-wider hover:opacity-70 transition-opacity ${isScrolled ? 'text-gray-800' : 'text-white'}`}
                   >
                     {link.name} <ChevronDown size={14} />
                   </button>
                   <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform group-hover:translate-y-0 translate-y-2">
-                    <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-2 min-w-[200px] overflow-hidden">
+                    <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-2 min-w-[160px] overflow-hidden">
                       {link.children.map(child => (
                          <a 
                            key={child.name}
                            href={child.href}
                            onClick={(e) => scrollToSection(e, child.href)}
-                           className="block px-4 py-3 text-sm font-bold text-gray-700 hover:bg-gray-50 hover:text-[var(--color-clic-blue)] rounded-lg transition-colors text-center"
+                           className="block px-4 py-2 text-xs xl:text-sm font-bold text-gray-700 hover:bg-gray-50 hover:text-[var(--color-clic-blue)] rounded-lg transition-colors text-center"
                          >
                            {child.name}
                          </a>
@@ -278,14 +293,14 @@ const Navbar = () => {
                   key={link.name} 
                   href={link.href} 
                   onClick={(e) => scrollToSection(e, link.href)}
-                  className={`text-sm font-bold uppercase tracking-wider hover:opacity-70 transition-opacity ${isScrolled ? 'text-gray-800' : 'text-white'}`}
+                  className={`text-xs xl:text-sm font-bold uppercase tracking-wider hover:opacity-70 transition-opacity ${isScrolled ? 'text-gray-800' : 'text-white'}`}
                 >
                   {link.name}
                 </a>
               )
             ))}
             <div className="flex gap-4">
-              <a href="#get-involved" className="px-5 py-2.5 rounded-full text-sm font-bold bg-[var(--color-clic-red)] text-white hover:bg-opacity-90 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+              <a href="#get-involved" onClick={(e) => scrollToSection(e, '#get-involved')} className="px-4 py-2 xl:px-5 xl:py-2.5 rounded-full text-xs xl:text-sm font-bold bg-[var(--color-clic-red)] text-white hover:bg-opacity-90 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 whitespace-nowrap">
                 Get Involved
               </a>
             </div>
@@ -1104,20 +1119,51 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
     message: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleDonate = (e: React.FormEvent) => {
+  const handleDonate = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitted(true);
-      setTimeout(() => {
-        setIsSubmitted(false);
-        onClose();
-        setFormData({ name: '', email: '', phone: '', message: '' });
-        setAmount('');
-        setCustomAmount('');
-      }, 3000);
-    }, 1500);
+    setIsLoading(true);
+    setError(null);
+    
+    const finalAmount = amount === 'Custom' ? customAmount : amount;
+
+    try {
+      const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          action: 'donate',
+          amount: finalAmount,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        setIsSubmitted(true);
+        setTimeout(() => {
+          setIsSubmitted(false);
+          onClose();
+          setFormData({ name: '', email: '', phone: '', message: '' });
+          setAmount('');
+          setCustomAmount('');
+        }, 3000);
+      } else {
+        throw new Error(result.message || 'Failed to submit donation');
+      }
+    } catch (err: any) {
+      setError(err.message || 'An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const finalAmount = amount === 'Custom' ? customAmount : amount;
@@ -1231,11 +1277,12 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
 
                   <button 
                     type="submit"
-                    disabled={!amount || (amount === 'Custom' && !customAmount)}
+                    disabled={!amount || (amount === 'Custom' && !customAmount) || isLoading}
                     className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-red)] hover:bg-opacity-90 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
-                    Donate {finalAmount ? `ETB ${finalAmount}` : ''} <ArrowRight size={18} />
+                    {isLoading ? 'Processing...' : `Donate ${finalAmount ? `ETB ${finalAmount}` : ''}`} {!isLoading && <ArrowRight size={18} />}
                   </button>
+                  {error && <p className="text-red-500 text-sm mt-2 text-center">{error}</p>}
                 </form>
               </>
             )}
@@ -1305,6 +1352,83 @@ const DonateContent = () => {
 };
 
 const RegisterContent = () => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    membershipType: 'Youth (High school graduates)',
+    interests: [] as string[]
+  });
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleInterestChange = (interest: string) => {
+    setFormData(prev => ({
+      ...prev,
+      interests: prev.interests.includes(interest)
+        ? prev.interests.filter(i => i !== interest)
+        : [...prev.interests, interest]
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          action: 'register_student',
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          membershipType: formData.membershipType,
+          interests: formData.interests.join(', ')
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        setIsSubmitted(true);
+        setTimeout(() => {
+          setIsSubmitted(false);
+          setFormData({
+            firstName: '',
+            lastName: '',
+            email: '',
+            membershipType: 'Youth (High school graduates)',
+            interests: []
+          });
+        }, 3000);
+      } else {
+        throw new Error(result.message || 'Registration failed');
+      }
+    } catch (err: any) {
+      setError(err.message || 'An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isSubmitted) {
+    return (
+      <div className="max-w-3xl mx-auto text-center py-12">
+        <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+          <UserPlus size={40} />
+        </div>
+        <h3 className="text-3xl font-bold text-gray-900 mb-2">Registration Successful!</h3>
+        <p className="text-gray-600">Welcome to CLIC Ethiopia. We will contact you soon.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-3xl mx-auto">
       <div className="text-center mb-12">
@@ -1317,26 +1441,51 @@ const RegisterContent = () => {
         </p>
       </div>
 
-      <form className="space-y-6 bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
+      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">First Name</label>
-            <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all" placeholder="Abebe" />
+            <input 
+              required
+              type="text" 
+              value={formData.firstName}
+              onChange={e => setFormData({...formData, firstName: e.target.value})}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all" 
+              placeholder="Abebe" 
+            />
           </div>
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Last Name</label>
-            <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all" placeholder="Kebede" />
+            <input 
+              required
+              type="text" 
+              value={formData.lastName}
+              onChange={e => setFormData({...formData, lastName: e.target.value})}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all" 
+              placeholder="Kebede" 
+            />
           </div>
         </div>
         
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
-          <input type="email" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all" placeholder="abebe@example.com" />
+          <input 
+            required
+            type="email" 
+            value={formData.email}
+            onChange={e => setFormData({...formData, email: e.target.value})}
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all" 
+            placeholder="abebe@example.com" 
+          />
         </div>
 
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-2">Membership Type</label>
-          <select className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all bg-white">
+          <select 
+            value={formData.membershipType}
+            onChange={e => setFormData({...formData, membershipType: e.target.value})}
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all bg-white"
+          >
             <option>Youth (High school graduates)</option>
             <option>Students (Elementary & High school)</option>
             <option>Graduates (Certificate holders)</option>
@@ -1355,22 +1504,100 @@ const RegisterContent = () => {
               'Smart Environment', 'Smart Infrastructure', 'Smart Governance'
             ].map((interest) => (
               <label key={interest} className="flex items-center gap-2 p-3 rounded-lg border border-gray-200 bg-white cursor-pointer hover:bg-gray-50">
-                <input type="checkbox" className="rounded text-[var(--color-clic-blue)] focus:ring-[var(--color-clic-blue)]" />
+                <input 
+                  type="checkbox" 
+                  checked={formData.interests.includes(interest)}
+                  onChange={() => handleInterestChange(interest)}
+                  className="rounded text-[var(--color-clic-blue)] focus:ring-[var(--color-clic-blue)]" 
+                />
                 <span className="text-sm text-gray-700">{interest}</span>
               </label>
             ))}
           </div>
         </div>
 
-        <button type="button" className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-blue)] hover:bg-opacity-90 transition-colors shadow-md mt-4">
-          Submit Application
+        <button 
+          type="submit" 
+          disabled={isLoading}
+          className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-blue)] hover:bg-opacity-90 transition-colors shadow-md mt-4 disabled:opacity-50"
+        >
+          {isLoading ? 'Submitting...' : 'Submit Application'}
         </button>
+        {error && <p className="text-red-500 text-sm mt-2 text-center">{error}</p>}
       </form>
     </div>
   );
 };
 
 const MentorContent = () => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    expertise: 'Engineering & Technology',
+    message: ''
+  });
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          action: 'register_mentor',
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          expertise: formData.expertise,
+          message: formData.message
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        setIsSubmitted(true);
+        setTimeout(() => {
+          setIsSubmitted(false);
+          setFormData({
+            firstName: '',
+            lastName: '',
+            email: '',
+            expertise: 'Engineering & Technology',
+            message: ''
+          });
+        }, 3000);
+      } else {
+        throw new Error(result.message || 'Registration failed');
+      }
+    } catch (err: any) {
+      setError(err.message || 'An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (isSubmitted) {
+    return (
+      <div className="max-w-3xl mx-auto text-center py-12">
+        <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+          <Lightbulb size={40} />
+        </div>
+        <h3 className="text-3xl font-bold text-gray-900 mb-2">Thank You!</h3>
+        <p className="text-gray-600">Your application to become a mentor has been received. We will be in touch.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-3xl mx-auto">
       <div className="text-center mb-12">
@@ -1383,26 +1610,51 @@ const MentorContent = () => {
         </p>
       </div>
 
-      <form className="space-y-6 bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
+      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">First Name</label>
-            <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all" placeholder="Your Name" />
+            <input 
+              required
+              type="text" 
+              value={formData.firstName}
+              onChange={e => setFormData({...formData, firstName: e.target.value})}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all" 
+              placeholder="Your Name" 
+            />
           </div>
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Last Name</label>
-            <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all" placeholder="Surname" />
+            <input 
+              required
+              type="text" 
+              value={formData.lastName}
+              onChange={e => setFormData({...formData, lastName: e.target.value})}
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all" 
+              placeholder="Surname" 
+            />
           </div>
         </div>
         
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
-          <input type="email" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all" placeholder="you@example.com" />
+          <input 
+            required
+            type="email" 
+            value={formData.email}
+            onChange={e => setFormData({...formData, email: e.target.value})}
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all" 
+            placeholder="you@example.com" 
+          />
         </div>
 
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-2">Area of Expertise</label>
-          <select className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all bg-white">
+          <select 
+            value={formData.expertise}
+            onChange={e => setFormData({...formData, expertise: e.target.value})}
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all bg-white"
+          >
             <option>Engineering & Technology</option>
             <option>Business & Entrepreneurship</option>
             <option>Science & Research</option>
@@ -1413,12 +1665,23 @@ const MentorContent = () => {
 
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-2">How would you like to help?</label>
-          <textarea className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all h-32" placeholder="Tell us about your experience and how you can contribute..."></textarea>
+          <textarea 
+            required
+            value={formData.message}
+            onChange={e => setFormData({...formData, message: e.target.value})}
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all h-32" 
+            placeholder="Tell us about your experience and how you can contribute..."
+          ></textarea>
         </div>
 
-        <button type="button" className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-orange)] hover:bg-opacity-90 transition-colors shadow-md mt-4">
-          Join as Mentor
+        <button 
+          type="submit" 
+          disabled={isLoading}
+          className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-orange)] hover:bg-opacity-90 transition-colors shadow-md mt-4 disabled:opacity-50"
+        >
+          {isLoading ? 'Submitting...' : 'Join as Mentor'}
         </button>
+        {error && <p className="text-red-500 text-sm mt-2 text-center">{error}</p>}
       </form>
     </div>
   );

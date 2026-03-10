@@ -24,7 +24,8 @@ const SHEETS = {
   CONTENT_CURRICULUM: 'Content_Curriculum',
   CONTENT_LABS: 'Content_Labs',
   CONTENT_PROJECTS: 'Content_Projects',
-  CONTENT_NEWS: 'Content_News',
+  CONTENT_SPOTLIGHT: 'Content_Spotlight',
+  CONTENT_VIDEOS: 'Content_Videos',
   
   // E-commerce
   PRODUCTS: 'Products',
@@ -66,9 +67,14 @@ function setupDatabase() {
     'id', 'category', 'project_count', 'icon_name', 'color_hex', 'items_json', 'stats_json', 'detailed_content_markdown', 'image_url'
   ]);
 
-  // 6. Content: News
-  createSheetIfNotExists(ss, SHEETS.CONTENT_NEWS, [
-    'id', 'title', 'date', 'category', 'image_url', 'summary', 'content_markdown', 'is_published'
+  // 6a. Content: Innovator Spotlight
+  createSheetIfNotExists(ss, SHEETS.CONTENT_SPOTLIGHT, [
+    'id', 'name', 'project', 'image_url', 'prototype_url', 'problem', 'solution', 'impact'
+  ]);
+
+  // 6b. Content: Latest Videos
+  createSheetIfNotExists(ss, SHEETS.CONTENT_VIDEOS, [
+    'id', 'title', 'thumbnail_url', 'duration', 'video_id'
   ]);
 
   // 7. Products (Merch)
@@ -184,19 +190,29 @@ function fillSampleData() {
     projectsData.forEach(row => projectsSheet.appendRow(row));
   }
   
-  // 6. News Data (Innovator Spotlight & Videos)
-  const newsSheet = ss.getSheetByName(SHEETS.CONTENT_NEWS);
-  if (newsSheet.getLastRow() === 1) {
-    const newsData = [
-      ['news_1', 'Betelhem Desalegn - Solar-Smart Irrigation', new Date(), 'Spotlight', 'https://loremflickr.com/400/400/student,ethiopian,woman', 'Developed a low-cost, solar-powered soil moisture sensor that automates irrigation, saving 40% water.', 'Problem: Local farmers were losing 30% of crops due to improper watering and water scarcity.\n\nSolution: Developed a low-cost, solar-powered soil moisture sensor that automates irrigation, saving 40% water.\n\nImpact: Deployed in 5 local farms.', true],
-      ['news_2', 'Yared Haile - 3D Printed Mobility', new Date(), 'Spotlight', 'https://loremflickr.com/400/400/student,ethiopian,man', 'Created a customizable, 3D-printed prosthetic leg using recycled plastics for under $50.', 'Problem: Prosthetic limbs are too expensive for many rural amputees.\n\nSolution: Created a customizable, 3D-printed prosthetic leg using recycled plastics for under $50.\n\nImpact: Helped 12 patients regain mobility.', true],
-      ['news_3', 'Saron & Team - Agri-AI Doctor', new Date(), 'Spotlight', 'https://loremflickr.com/400/400/students,team,africa', 'Built an offline AI app that detects plant diseases from a simple photo and suggests organic remedies.', 'Problem: Crop diseases spread unnoticed, destroying entire harvests.\n\nSolution: Built an offline AI app that detects plant diseases from a simple photo and suggests organic remedies.\n\nImpact: Used by 200+ smallholder farmers.', true],
-      ['news_4', 'CLIC Ethiopia Official Launch', new Date(), 'Video', 'https://loremflickr.com/640/360/conference,ethiopia', 'Official launch event coverage.', 'Duration: 12:45', true],
-      ['news_5', 'Student Success Stories: Smart Agriculture', new Date(), 'Video', 'https://loremflickr.com/640/360/farming,technology', 'Highlighting student achievements in AgriTech.', 'Duration: 05:30', true],
-      ['news_6', 'Tour of the New Fabrication Lab', new Date(), 'Video', 'https://loremflickr.com/640/360/laboratory,robotics', 'A walkthrough of our state-of-the-art facilities.', 'Duration: 08:15', true],
-      ['news_7', 'Interview with Dr. Frehun Adefris', new Date(), 'Video', 'https://loremflickr.com/640/360/interview,man', 'In-depth interview with the founder.', 'Duration: 24:10', true]
+  // 6a. Innovator Spotlight Data
+  const spotlightSheet = ss.getSheetByName(SHEETS.CONTENT_SPOTLIGHT);
+  if (spotlightSheet.getLastRow() === 1) {
+    const spotlightData = [
+      ['1', 'Betelhem Desalegn', 'Solar-Smart Irrigation', 'https://loremflickr.com/400/400/student,ethiopian,woman', 'https://loremflickr.com/400/300/solar,sensor,farm', 'Local farmers were losing 30% of crops due to improper watering and water scarcity.', 'Developed a low-cost, solar-powered soil moisture sensor that automates irrigation, saving 40% water.', 'Deployed in 5 local farms.'],
+      ['2', 'Yared Haile', '3D Printed Mobility', 'https://loremflickr.com/400/400/student,ethiopian,man', 'https://loremflickr.com/400/300/prosthetic,3dprint', 'Prosthetic limbs are too expensive for many rural amputees.', 'Created a customizable, 3D-printed prosthetic leg using recycled plastics for under $50.', 'Helped 12 patients regain mobility.'],
+      ['3', 'Saron & Team', 'Agri-AI Doctor', 'https://loremflickr.com/400/400/students,team,africa', 'https://loremflickr.com/400/300/app,farming,phone', 'Crop diseases spread unnoticed, destroying entire harvests.', 'Built an offline AI app that detects plant diseases from a simple photo and suggests organic remedies.', 'Used by 200+ smallholder farmers.']
     ];
-    newsData.forEach(row => newsSheet.appendRow(row));
+    spotlightData.forEach(row => spotlightSheet.appendRow(row));
+  }
+
+  // 6b. Latest Videos Data
+  const videosSheet = ss.getSheetByName(SHEETS.CONTENT_VIDEOS);
+  if (videosSheet.getLastRow() === 1) {
+    const videosData = [
+      ['1', 'CLIC Ethiopia Official Launch', 'https://loremflickr.com/640/360/conference,ethiopia', '12:45', 'LXb3EKWsInQ'],
+      ['2', 'Student Success Stories: Smart Agriculture', 'https://loremflickr.com/640/360/farming,technology', '05:30', 'ysz5S6P_z-U'],
+      ['3', 'Tour of the New Fabrication Lab', 'https://loremflickr.com/640/360/laboratory,robotics', '08:15', 'M7lc1UVf-VE'],
+      ['4', 'Interview with Dr. Frehun Adefris', 'https://loremflickr.com/640/360/interview,man', '24:10', 'ScMzIvxBSi4'],
+      ['5', 'STEAM Education in Rural Areas', 'https://loremflickr.com/640/360/education,rural', '15:20', 'LXb3EKWsInQ'],
+      ['6', 'Future of Tech in Ethiopia', 'https://loremflickr.com/640/360/tech,future', '45:00', 'ysz5S6P_z-U']
+    ];
+    videosData.forEach(row => videosSheet.appendRow(row));
   }
 
   // 7. Products Data (Merch)
@@ -219,7 +235,7 @@ function fillSampleData() {
 /**
  * Handle GET requests (Read Data)
  * Query Params:
- * - type: 'steam', 'ie', 'curriculum', 'labs', 'projects', 'news', 'products'
+ * - type: 'steam', 'ie', 'curriculum', 'labs', 'projects', 'spotlight', 'videos', 'products'
  */
 function doGet(e) {
   const params = e.parameter;
@@ -234,7 +250,8 @@ function doGet(e) {
     case 'curriculum': sheetName = SHEETS.CONTENT_CURRICULUM; break;
     case 'labs': sheetName = SHEETS.CONTENT_LABS; break;
     case 'projects': sheetName = SHEETS.CONTENT_PROJECTS; break;
-    case 'news': sheetName = SHEETS.CONTENT_NEWS; break;
+    case 'spotlight': sheetName = SHEETS.CONTENT_SPOTLIGHT; break;
+    case 'videos': sheetName = SHEETS.CONTENT_VIDEOS; break;
     case 'products': sheetName = SHEETS.PRODUCTS; break;
     default: 
       return ContentService.createTextOutput(JSON.stringify({error: "Invalid or missing 'type' parameter"}))

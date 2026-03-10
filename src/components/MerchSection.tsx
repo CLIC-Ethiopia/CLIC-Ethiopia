@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ShoppingCart, X, Plus, Minus, Trash2, CheckCircle, ShoppingBag } from 'lucide-react';
+import { ShoppingCart, X, Plus, Minus, Trash2, CheckCircle, ShoppingBag, Loader2 } from 'lucide-react';
+import { GOOGLE_SCRIPT_URL } from '../constants';
 
 // --- Types ---
 interface ProductOption {
@@ -104,10 +105,16 @@ const PRODUCTS: Product[] = [
 ];
 
 const MerchSection = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [orderPlaced, setOrderPlaced] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [currentOptions, setCurrentOptions] = useState<Record<string, string>>({});
   
@@ -117,6 +124,31 @@ const MerchSection = () => {
     phone: '',
     address: ''
   });
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch(`${GOOGLE_SCRIPT_URL}?type=products`);
+        const data = await response.json();
+        if (data.status === 'success') {
+          // Parse options if they are stored as strings
+          const parsedProducts = data.data.map((p: any) => ({
+            ...p,
+            options: p.options ? (typeof p.options === 'string' ? JSON.parse(p.options) : p.options) : undefined
+          }));
+          setProducts(parsedProducts);
+        } else {
+          throw new Error(data.message || 'Failed to fetch products');
+        }
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   // --- Cart Logic ---
   const openProductModal = (product: Product) => {
@@ -173,19 +205,55 @@ const MerchSection = () => {
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   // --- Checkout Logic ---
-  const handleCheckout = (e: React.FormEvent) => {
+  const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate API call
-    setTimeout(() => {
-      setOrderPlaced(true);
-      setCart([]);
-      setFormData({ name: '', email: '', phone: '', address: '' });
-      setTimeout(() => {
-        setOrderPlaced(false);
-        setIsCheckoutOpen(false);
-        setIsCartOpen(false);
-      }, 3000);
-    }, 1500);
+    setIsSubmitting(true);
+    setCheckoutError(null);
+
+    try {
+      const orderData = {
+        action: 'create_order',
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        total: cartTotal.toString(),
+        items: JSON.stringify(cart.map(item => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          options: item.selectedOptions
+        })))
+      };
+
+      const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(orderData),
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        setOrderPlaced(true);
+        setCart([]);
+        setFormData({ name: '', email: '', phone: '', address: '' });
+        setTimeout(() => {
+          setOrderPlaced(false);
+          setIsCheckoutOpen(false);
+          setIsCartOpen(false);
+        }, 3000);
+      } else {
+        throw new Error(result.message || 'Failed to place order');
+      }
+    } catch (err: any) {
+      setCheckoutError(err.message || 'An error occurred. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -215,46 +283,62 @@ const MerchSection = () => {
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {PRODUCTS.map((product) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="bg-gray-50 rounded-3xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all group"
-            >
-              <div className="aspect-square relative overflow-hidden bg-gray-200">
-                <img 
-                  src={product.image} 
-                  alt={product.name} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-gray-800">
-                  {product.category}
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center h-64">
+            <Loader2 className="w-12 h-12 animate-spin text-[var(--color-clic-blue)] mb-4" />
+            <p className="text-gray-500 text-lg">Loading products...</p>
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center h-64 text-center">
+            <p className="text-red-500 text-xl mb-2">Failed to load products</p>
+            <p className="text-gray-500">{error}</p>
+          </div>
+        ) : products.length === 0 ? (
+          <div className="flex flex-col items-center justify-center h-64 text-center">
+            <p className="text-gray-500 text-xl">No products available at the moment.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {products.map((product) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="bg-gray-50 rounded-3xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all group"
+              >
+                <div className="aspect-square relative overflow-hidden bg-gray-200">
+                  <img 
+                    src={product.image} 
+                    alt={product.name} 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    referrerPolicy="no-referrer"
+                  />
+                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-gray-800">
+                    {product.category}
+                  </div>
                 </div>
-              </div>
-              
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-xl font-bold text-gray-900">{product.name}</h3>
-                  <span className="text-lg font-bold text-[var(--color-clic-blue)]">
-                    ETB {product.price}
-                  </span>
-                </div>
-                <p className="text-gray-500 text-sm mb-6 line-clamp-2">{product.description}</p>
                 
-                <button 
-                  onClick={() => openProductModal(product)}
-                  className="w-full py-3 rounded-xl font-bold text-white bg-gray-900 hover:bg-[var(--color-clic-blue)] transition-colors flex items-center justify-center gap-2"
-                >
-                  <Plus size={18} /> Add to Cart
-                </button>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-2">
+                    <h3 className="text-xl font-bold text-gray-900">{product.name}</h3>
+                    <span className="text-lg font-bold text-[var(--color-clic-blue)]">
+                      ETB {product.price}
+                    </span>
+                  </div>
+                  <p className="text-gray-500 text-sm mb-6 line-clamp-2">{product.description}</p>
+                  
+                  <button 
+                    onClick={() => openProductModal(product)}
+                    className="w-full py-3 rounded-xl font-bold text-white bg-gray-900 hover:bg-[var(--color-clic-blue)] transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Plus size={18} /> Add to Cart
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Product Options Modal */}
@@ -491,10 +575,12 @@ const MerchSection = () => {
                     <div className="pt-4">
                       <button 
                         type="submit"
-                        className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-blue)] hover:bg-opacity-90 transition-colors shadow-lg"
+                        disabled={isSubmitting}
+                        className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-blue)] hover:bg-opacity-90 transition-colors shadow-lg disabled:opacity-50"
                       >
-                        Place Order (ETB {cartTotal})
+                        {isSubmitting ? 'Processing...' : `Place Order (ETB ${cartTotal})`}
                       </button>
+                      {checkoutError && <p className="text-red-500 text-sm mt-2 text-center">{checkoutError}</p>}
                     </div>
                   </form>
                 </>
