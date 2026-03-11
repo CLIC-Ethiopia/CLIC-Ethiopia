@@ -162,10 +162,10 @@ function fillSampleData() {
   const labsSheet = ss.getSheetByName(SHEETS.CONTENT_LABS);
   if (labsSheet.getLastRow() === 1) {
     const labsData = [
-      ['lab_1', 'Digital Labs', 'The Future of Classrooms. E-learning platforms for remote classes, using VR & AR as new training methods.', 'BookOpen', '#3b82f6', JSON.stringify(['VR Units', 'Computers', 'IoT Kits']), '500+ Students', JSON.stringify([{label: 'Students', value: '500+'}, {label: 'Courses', value: '25'}, {label: 'VR Units', value: '50'}]), 'Digital Labs are designed for learning skills using digital means. Includes Basic Literacy Skills (Language, Computer HW/SW) and Theoretical Skills delivered via virtual classrooms. Features a Data Center for digital solutions, IoT, and AI.', 'https://loremflickr.com/600/400/computer,code,classroom'],
-      ['lab_2', 'Fabrication Labs', 'Smart workshops for practical lessons. Prototyping & small scale production labs using smart fabrication technologies.', 'Factory', '#f97316', JSON.stringify(['CNC Machines', '3D Printers', 'Laser Cutters']), '200+ Tools', JSON.stringify([{label: 'Machines', value: '15+'}, {label: 'Tools', value: '200+'}, {label: 'Safety', value: '100%'}]), 'Workshops for hands-on skills using state-of-the-art tools. Covers Basic Tools Skills, Design & Fabrication (CAD/CAM), and Prototyping & Manufacturing. Learn to manufacture, distribute, and market products.', 'https://loremflickr.com/600/400/robotics,factory,workshop'],
-      ['lab_3', 'Field Labs', 'State of the Art field projects. On-the-job hands-on practical trainings and large scale production plants.', 'Sprout', '#22c55e', JSON.stringify(['Farm Equipment', 'Solar Arrays', 'Irrigation Systems']), '10 Sites', JSON.stringify([{label: 'Sites', value: '10'}, {label: 'Projects', value: '15'}, {label: 'Impact', value: 'High'}]), 'Includes Field Workshops for digital learning in the field, Practical Attachment for on-the-job training with professionals, and On-the-Job Trainings for short-term assignments on field projects.', 'https://loremflickr.com/600/400/agriculture,solar,farm'],
-      ['lab_4', 'Smart City Labs', 'A place for 10,000 to 100,000 innovators per region! Smart houses, smart factories, and smart businesses.', 'Building2', '#a855f7', JSON.stringify(['Smart Grid', 'Data Center', 'Incubator']), '10k+ Capacity', JSON.stringify([{label: 'Capacity', value: '10k+'}, {label: 'Zones', value: '3'}, {label: 'Vision', value: '2025'}]), 'Smart industrial cities built as a business & manufacturing hub. Features Smart Industry (Smart factories, R&D), Smart Business (Data centers, Incubation), and Smart Living (Budget housing, Smart energy, Smart farming).', 'https://loremflickr.com/600/400/smartcity,architecture,modern']
+      ['lab_1', 'Digital Labs', 'The Future of Classrooms. E-learning platforms for remote classes, using VR & AR as new training methods.', 'BookOpen', '#3b82f6', JSON.stringify(['VR Units', 'Computers', 'IoT Kits']), '500+ Students', JSON.stringify([{label: 'Students', value: '500+'}, {label: 'Courses', value: '25'}, {label: 'VR Units', value: '50'}]), 'Digital Labs are designed for learning skills using digital means. Includes Basic Literacy Skills (Language, Computer HW/SW) and Theoretical Skills delivered via virtual classrooms. Features a Data Center for digital solutions, IoT, and AI.', 'https://loremflickr.com/600/400/computer,code,classroom?lock=1'],
+      ['lab_2', 'Fabrication Labs', 'Smart workshops for practical lessons. Prototyping & small scale production labs using smart fabrication technologies.', 'Factory', '#f97316', JSON.stringify(['CNC Machines', '3D Printers', 'Laser Cutters']), '200+ Tools', JSON.stringify([{label: 'Machines', value: '15+'}, {label: 'Tools', value: '200+'}, {label: 'Safety', value: '100%'}]), 'Workshops for hands-on skills using state-of-the-art tools. Covers Basic Tools Skills, Design & Fabrication (CAD/CAM), and Prototyping & Manufacturing. Learn to manufacture, distribute, and market products.', 'https://loremflickr.com/600/400/robotics,factory,workshop?lock=2'],
+      ['lab_3', 'Field Labs', 'State of the Art field projects. On-the-job hands-on practical trainings and large scale production plants.', 'Sprout', '#22c55e', JSON.stringify(['Farm Equipment', 'Solar Arrays', 'Irrigation Systems']), '10 Sites', JSON.stringify([{label: 'Sites', value: '10'}, {label: 'Projects', value: '15'}, {label: 'Impact', value: 'High'}]), 'Includes Field Workshops for digital learning in the field, Practical Attachment for on-the-job training with professionals, and On-the-Job Trainings for short-term assignments on field projects.', 'https://loremflickr.com/600/400/agriculture,solar,farm?lock=3'],
+      ['lab_4', 'Smart City Labs', 'A place for 10,000 to 100,000 innovators per region! Smart houses, smart factories, and smart businesses.', 'Building2', '#a855f7', JSON.stringify(['Smart Grid', 'Data Center', 'Incubator']), '10k+ Capacity', JSON.stringify([{label: 'Capacity', value: '10k+'}, {label: 'Zones', value: '3'}, {label: 'Vision', value: '2025'}]), 'Smart industrial cities built as a business & manufacturing hub. Features Smart Industry (Smart factories, R&D), Smart Business (Data centers, Incubation), and Smart Living (Budget housing, Smart energy, Smart farming).', 'https://loremflickr.com/600/400/smartcity,architecture,modern?lock=4']
     ];
     labsData.forEach(row => labsSheet.appendRow(row));
   }
@@ -194,9 +194,9 @@ function fillSampleData() {
   const spotlightSheet = ss.getSheetByName(SHEETS.CONTENT_SPOTLIGHT);
   if (spotlightSheet.getLastRow() === 1) {
     const spotlightData = [
-      ['1', 'Betelhem Desalegn', 'Solar-Smart Irrigation', 'https://loremflickr.com/400/400/student,ethiopian,woman', 'https://loremflickr.com/400/300/solar,sensor,farm', 'Local farmers were losing 30% of crops due to improper watering and water scarcity.', 'Developed a low-cost, solar-powered soil moisture sensor that automates irrigation, saving 40% water.', 'Deployed in 5 local farms.'],
-      ['2', 'Yared Haile', '3D Printed Mobility', 'https://loremflickr.com/400/400/student,ethiopian,man', 'https://loremflickr.com/400/300/prosthetic,3dprint', 'Prosthetic limbs are too expensive for many rural amputees.', 'Created a customizable, 3D-printed prosthetic leg using recycled plastics for under $50.', 'Helped 12 patients regain mobility.'],
-      ['3', 'Saron & Team', 'Agri-AI Doctor', 'https://loremflickr.com/400/400/students,team,africa', 'https://loremflickr.com/400/300/app,farming,phone', 'Crop diseases spread unnoticed, destroying entire harvests.', 'Built an offline AI app that detects plant diseases from a simple photo and suggests organic remedies.', 'Used by 200+ smallholder farmers.']
+      ['1', 'Betelhem Desalegn', 'Solar-Smart Irrigation', 'https://loremflickr.com/400/400/student,ethiopian,woman?lock=5', 'https://loremflickr.com/400/300/solar,sensor,farm?lock=6', 'Local farmers were losing 30% of crops due to improper watering and water scarcity.', 'Developed a low-cost, solar-powered soil moisture sensor that automates irrigation, saving 40% water.', 'Deployed in 5 local farms.'],
+      ['2', 'Yared Haile', '3D Printed Mobility', 'https://loremflickr.com/400/400/student,ethiopian,man?lock=7', 'https://loremflickr.com/400/300/prosthetic,3dprint?lock=8', 'Prosthetic limbs are too expensive for many rural amputees.', 'Created a customizable, 3D-printed prosthetic leg using recycled plastics for under $50.', 'Helped 12 patients regain mobility.'],
+      ['3', 'Saron & Team', 'Agri-AI Doctor', 'https://loremflickr.com/400/400/students,team,africa?lock=9', 'https://loremflickr.com/400/300/app,farming,phone?lock=10', 'Crop diseases spread unnoticed, destroying entire harvests.', 'Built an offline AI app that detects plant diseases from a simple photo and suggests organic remedies.', 'Used by 200+ smallholder farmers.']
     ];
     spotlightData.forEach(row => spotlightSheet.appendRow(row));
   }
@@ -205,12 +205,12 @@ function fillSampleData() {
   const videosSheet = ss.getSheetByName(SHEETS.CONTENT_VIDEOS);
   if (videosSheet.getLastRow() === 1) {
     const videosData = [
-      ['1', 'CLIC Ethiopia Official Launch', 'https://loremflickr.com/640/360/conference,ethiopia', '12:45', 'LXb3EKWsInQ'],
-      ['2', 'Student Success Stories: Smart Agriculture', 'https://loremflickr.com/640/360/farming,technology', '05:30', 'ysz5S6P_z-U'],
-      ['3', 'Tour of the New Fabrication Lab', 'https://loremflickr.com/640/360/laboratory,robotics', '08:15', 'M7lc1UVf-VE'],
-      ['4', 'Interview with Dr. Frehun Adefris', 'https://loremflickr.com/640/360/interview,man', '24:10', 'ScMzIvxBSi4'],
-      ['5', 'STEAM Education in Rural Areas', 'https://loremflickr.com/640/360/education,rural', '15:20', 'LXb3EKWsInQ'],
-      ['6', 'Future of Tech in Ethiopia', 'https://loremflickr.com/640/360/tech,future', '45:00', 'ysz5S6P_z-U']
+      ['1', 'CLIC Ethiopia Official Launch', 'https://loremflickr.com/640/360/conference,ethiopia?lock=11', '12:45', 'LXb3EKWsInQ'],
+      ['2', 'Student Success Stories: Smart Agriculture', 'https://loremflickr.com/640/360/farming,technology?lock=12', '05:30', 'ysz5S6P_z-U'],
+      ['3', 'Tour of the New Fabrication Lab', 'https://loremflickr.com/640/360/laboratory,robotics?lock=13', '08:15', 'M7lc1UVf-VE'],
+      ['4', 'Interview with Dr. Frehun Adefris', 'https://loremflickr.com/640/360/interview,man?lock=14', '24:10', 'ScMzIvxBSi4'],
+      ['5', 'STEAM Education in Rural Areas', 'https://loremflickr.com/640/360/education,rural?lock=15', '15:20', 'LXb3EKWsInQ'],
+      ['6', 'Future of Tech in Ethiopia', 'https://loremflickr.com/640/360/tech,future?lock=16', '45:00', 'ysz5S6P_z-U']
     ];
     videosData.forEach(row => videosSheet.appendRow(row));
   }
@@ -219,12 +219,12 @@ function fillSampleData() {
   const prodSheet = ss.getSheetByName(SHEETS.PRODUCTS);
   if (prodSheet.getLastRow() === 1) {
     const prodData = [
-      ['prod_1', "CLIC 'Future Innovator' Tee", 450, "Apparel", "https://loremflickr.com/600/600/tshirt,tech,fashion", "Premium cotton t-shirt featuring the 'Future Innovator' slogan. Perfect for lab work or casual wear.", JSON.stringify([{name:"Size",values:["XXS","XS","S","M","L","XL","XXL"]},{name:"Color",values:["White","Black","Navy Blue"]}]), 'In Stock'],
-      ['prod_2', "Official CLIC Hoodie", 1200, "Apparel", "https://loremflickr.com/600/600/hoodie,streetwear", "Warm and comfortable hoodie with the embroidered CLIC logo. Essential for late-night coding sessions.", JSON.stringify([{name:"Size",values:["XS","S","M","L","XL","XXL"]},{name:"Color",values:["Heather Grey","Black"]}]), 'In Stock'],
-      ['prod_3', "STEAM-IE Canvas Tote", 300, "Accessories", "https://loremflickr.com/600/600/bag,tote", "Durable canvas tote bag, spacious enough for your laptop and project materials.", JSON.stringify([{name:"Color",values:["Natural","Black"]}]), 'In Stock'],
-      ['prod_4', "Engineering Grid Notebook", 250, "Stationery", "https://loremflickr.com/600/600/notebook,stationery", "High-quality grid paper notebook for sketching designs, drafting circuits, and taking notes.", JSON.stringify([{name:"Type",values:["Grid","Lined","Blank"]}]), 'In Stock'],
-      ['prod_5', "CLIC Snapback Cap", 350, "Apparel", "https://loremflickr.com/600/600/cap,hat", "Adjustable snapback cap with 3D puff embroidery. Represents the CLIC community style.", JSON.stringify([{name:"Color",values:["Black","Navy","Red"]}]), 'In Stock'],
-      ['prod_6', "Eco-Metal Water Bottle", 500, "Accessories", "https://loremflickr.com/600/600/bottle,water", "Stainless steel water bottle to keep you hydrated during long workshops. Eco-friendly and durable.", JSON.stringify([{name:"Color",values:["Silver","Matte Black","Blue"]}]), 'In Stock']
+      ['prod_1', "CLIC 'Future Innovator' Tee", 450, "Apparel", "https://loremflickr.com/600/600/tshirt,tech,fashion?lock=17", "Premium cotton t-shirt featuring the 'Future Innovator' slogan. Perfect for lab work or casual wear.", JSON.stringify([{name:"Size",values:["XXS","XS","S","M","L","XL","XXL"]},{name:"Color",values:["White","Black","Navy Blue"]}]), 'In Stock'],
+      ['prod_2', "Official CLIC Hoodie", 1200, "Apparel", "https://loremflickr.com/600/600/hoodie,streetwear?lock=18", "Warm and comfortable hoodie with the embroidered CLIC logo. Essential for late-night coding sessions.", JSON.stringify([{name:"Size",values:["XS","S","M","L","XL","XXL"]},{name:"Color",values:["Heather Grey","Black"]}]), 'In Stock'],
+      ['prod_3', "STEAM-IE Canvas Tote", 300, "Accessories", "https://loremflickr.com/600/600/bag,tote?lock=19", "Durable canvas tote bag, spacious enough for your laptop and project materials.", JSON.stringify([{name:"Color",values:["Natural","Black"]}]), 'In Stock'],
+      ['prod_4', "Engineering Grid Notebook", 250, "Stationery", "https://loremflickr.com/600/600/notebook,stationery?lock=20", "High-quality grid paper notebook for sketching designs, drafting circuits, and taking notes.", JSON.stringify([{name:"Type",values:["Grid","Lined","Blank"]}]), 'In Stock'],
+      ['prod_5', "CLIC Snapback Cap", 350, "Apparel", "https://loremflickr.com/600/600/cap,hat?lock=21", "Adjustable snapback cap with 3D puff embroidery. Represents the CLIC community style.", JSON.stringify([{name:"Color",values:["Black","Navy","Red"]}]), 'In Stock'],
+      ['prod_6', "Eco-Metal Water Bottle", 500, "Accessories", "https://loremflickr.com/600/600/bottle,water?lock=22", "Stainless steel water bottle to keep you hydrated during long workshops. Eco-friendly and durable.", JSON.stringify([{name:"Color",values:["Silver","Matte Black","Blue"]}]), 'In Stock']
     ];
     prodData.forEach(row => prodSheet.appendRow(row));
   }
@@ -308,13 +308,22 @@ function doPost(e) {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   
   try {
-    const postData = JSON.parse(e.postData.contents);
+    let postData;
+    if (e.postData && e.postData.type === 'application/json') {
+      postData = JSON.parse(e.postData.contents);
+    } else {
+      postData = e.parameter;
+    }
     const action = postData.action;
     
     // 1. Create Order
     if (action === 'create_order') {
       const sheet = ss.getSheetByName(SHEETS.ORDERS);
       const orderId = 'ORD-' + Date.now();
+      
+      // If postData came from parameter, items is already a string. If from JSON, it's an object/array.
+      const itemsStr = typeof postData.items === 'string' ? postData.items : JSON.stringify(postData.items);
+      
       const newRow = [
         orderId,
         new Date(),
@@ -323,7 +332,7 @@ function doPost(e) {
         postData.email,
         postData.phone,
         postData.address,
-        JSON.stringify(postData.items),
+        itemsStr,
         postData.total,
         'Manual/Cash'
       ];
@@ -335,6 +344,9 @@ function doPost(e) {
     if (action === 'register_student') {
       const sheet = ss.getSheetByName(SHEETS.STUDENTS);
       const studentId = 'STU-' + Date.now();
+      
+      const interestsStr = typeof postData.interests === 'string' ? postData.interests : JSON.stringify(postData.interests);
+      
       const newRow = [
         studentId,
         new Date(),
@@ -342,7 +354,7 @@ function doPost(e) {
         postData.lastName,
         postData.email,
         postData.membershipType,
-        JSON.stringify(postData.interests), // Array of strings
+        interestsStr,
         'Pending'
       ];
       sheet.appendRow(newRow);

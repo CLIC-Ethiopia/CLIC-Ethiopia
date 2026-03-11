@@ -94,7 +94,7 @@ const InnovatorSpotlight = () => {
                       <img src={stories[currentIndex].prototype_url} alt="Prototype" className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" referrerPolicy="no-referrer" />
                       <div className="absolute bottom-2 left-2 bg-black/60 px-2 py-1 rounded text-[10px] font-bold uppercase tracking-wider text-white">Prototype</div>
                    </div>
-                   <div className="space-y-4">
+                   <div className="space-y-4 max-h-60 overflow-y-auto pr-2">
                       <div>
                           <div className="flex items-center gap-2 mb-1">
                               <div className="w-2 h-2 rounded-full bg-red-500"></div>
@@ -109,6 +109,15 @@ const InnovatorSpotlight = () => {
                           </div>
                           <p className="text-sm text-gray-300 leading-relaxed pl-4 border-l-2 border-white/10">{stories[currentIndex].solution}</p>
                       </div>
+                      {stories[currentIndex].impact && (
+                        <div>
+                            <div className="flex items-center gap-2 mb-1">
+                                <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                                <span className="text-xs font-bold text-gray-300 uppercase tracking-wider">The Impact</span>
+                            </div>
+                            <p className="text-sm text-gray-300 leading-relaxed pl-4 border-l-2 border-white/10">{stories[currentIndex].impact}</p>
+                        </div>
+                      )}
                    </div>
                 </div>
               </motion.div>

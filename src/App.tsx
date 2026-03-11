@@ -37,6 +37,448 @@ const InfoModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => 
 
   const videoId = getYouTubeId(videoUrl) || data.videoId || 'M7lc1UVf-VE';
   
+  // Static content based on chapter/title
+  const getStaticContent = (title: string) => {
+    const defaultTitles = {
+      learningsTitle: "What You'll Learn",
+      modulesTitle: "Curriculum & Modules"
+    };
+
+    switch (title) {
+      // LABS
+      case 'Digital Labs':
+        return {
+          ...defaultTitles,
+          learnings: [
+            'Basic Literacy Skills (Language, Computer HW/SW)',
+            'Virtual Reality & Augmented Reality Navigation',
+            'IoT Fundamentals and Cloud Computing',
+            'Data Center Operations & Digital Solutions'
+          ],
+          curriculum: [
+            { module: 'Module 1', title: 'Intro to Digital Literacy' },
+            { module: 'Module 2', title: 'VR/AR Environments' },
+            { module: 'Module 3', title: 'IoT & Cloud Computing' }
+          ]
+        };
+      case 'Fabrication Labs':
+        return {
+          ...defaultTitles,
+          learnings: [
+            'CAD/CAM Design and 3D Modeling',
+            '3D Printing & Rapid Prototyping',
+            'CNC Machining and Laser Cutting',
+            'Workshop Safety and Manufacturing Processes'
+          ],
+          curriculum: [
+            { module: 'Module 1', title: 'Design Thinking & CAD' },
+            { module: 'Module 2', title: 'Additive Manufacturing' },
+            { module: 'Module 3', title: 'Subtractive Manufacturing' }
+          ]
+        };
+      case 'Field Labs':
+        return {
+          ...defaultTitles,
+          learnings: [
+            'Smart Agriculture and Automated Irrigation',
+            'Solar Energy Systems and Maintenance',
+            'Large Scale Production Plant Operations',
+            'On-the-job Practical Attachments'
+          ],
+          curriculum: [
+            { module: 'Module 1', title: 'Renewable Energy Basics' },
+            { module: 'Module 2', title: 'Smart Farming Tech' },
+            { module: 'Module 3', title: 'Field Project Management' }
+          ]
+        };
+      case 'Smart City Labs':
+        return {
+          ...defaultTitles,
+          learnings: [
+            'Smart Grid Management and Energy Efficiency',
+            'Urban Planning Technologies',
+            'Business Incubation and Startup Strategies',
+            'Sustainable Living and Smart Housing'
+          ],
+          curriculum: [
+            { module: 'Module 1', title: 'Smart Infrastructure' },
+            { module: 'Module 2', title: 'Data Centers & Networks' },
+            { module: 'Module 3', title: 'Startup Incubation' }
+          ]
+        };
+
+      // STEAM
+      case 'Science':
+        return {
+          ...defaultTitles,
+          learnings: [
+            'Scientific Method and Experimental Design',
+            'Biology and Chemistry Fundamentals',
+            'Physics Principles in Real-World Applications',
+            'Data Collection and Analysis'
+          ],
+          curriculum: [
+            { module: 'Module 1', title: 'Intro to Applied Sciences' },
+            { module: 'Module 2', title: 'Laboratory Experiments' },
+            { module: 'Module 3', title: 'Advanced Research Methods' }
+          ]
+        };
+      case 'Technology':
+        return {
+          ...defaultTitles,
+          learnings: [
+            'Programming Fundamentals and Logic',
+            'Software Development Lifecycle',
+            'Networking Basics and Architecture',
+            'Cybersecurity Awareness'
+          ],
+          curriculum: [
+            { module: 'Module 1', title: 'Coding 101' },
+            { module: 'Module 2', title: 'Web & App Development' },
+            { module: 'Module 3', title: 'Systems Architecture' }
+          ]
+        };
+      case 'Engineering':
+        return {
+          ...defaultTitles,
+          learnings: [
+            'Structural Design and Analysis',
+            'CAD Modeling and Simulation',
+            'Mechanics and Electronics Integration',
+            'Complex Problem-Solving Strategies'
+          ],
+          curriculum: [
+            { module: 'Module 1', title: 'Engineering Principles' },
+            { module: 'Module 2', title: 'Prototyping & Testing' },
+            { module: 'Module 3', title: 'Material Science' }
+          ]
+        };
+      case 'Arts':
+        return {
+          ...defaultTitles,
+          learnings: [
+            'Digital Design and Illustration',
+            'Creative Thinking and Ideation',
+            'UI/UX Principles and Human-Centered Design',
+            'Multimedia Production'
+          ],
+          curriculum: [
+            { module: 'Module 1', title: 'Visual Arts & Aesthetics' },
+            { module: 'Module 2', title: 'Digital Media Tools' },
+            { module: 'Module 3', title: 'Design Thinking Process' }
+          ]
+        };
+      case 'Mathematics':
+        return {
+          ...defaultTitles,
+          learnings: [
+            'Applied Mathematics for Engineering',
+            'Statistics and Probability',
+            'Logic, Algorithms, and Computation',
+            'Financial Literacy and Modeling'
+          ],
+          curriculum: [
+            { module: 'Module 1', title: 'Core Mathematical Concepts' },
+            { module: 'Module 2', title: 'Data Science Basics' },
+            { module: 'Module 3', title: 'Algorithmic Logic' }
+          ]
+        };
+
+      // IE (Innovation & Entrepreneurship)
+      case 'Innovation':
+        return {
+          ...defaultTitles,
+          learnings: [
+            'Ideation Techniques and Brainstorming',
+            'Design Thinking Methodologies',
+            'Rapid Prototyping and Iteration',
+            'Market Validation and User Feedback'
+          ],
+          curriculum: [
+            { module: 'Module 1', title: 'Idea Generation' },
+            { module: 'Module 2', title: 'Prototyping Solutions' },
+            { module: 'Module 3', title: 'Market Validation' }
+          ]
+        };
+      case 'Entrepreneurship':
+        return {
+          ...defaultTitles,
+          learnings: [
+            'Business Modeling and Strategy',
+            'Pitching and Fundraising',
+            'Market Research and Competitive Analysis',
+            'Scaling Strategies and Operations'
+          ],
+          curriculum: [
+            { module: 'Module 1', title: 'Business Fundamentals' },
+            { module: 'Module 2', title: 'Startup Funding' },
+            { module: 'Module 3', title: 'Growth & Scaling' }
+          ]
+        };
+
+      // PROJECTS (12 Categories)
+      case 'Smart Agriculture':
+        return {
+          learningsTitle: "Key Innovations",
+          modulesTitle: "Project Phases",
+          learnings: [
+            'Phytoponics & Hydroponics systems',
+            'Vertical agriculture space optimization',
+            'Smart livestock farming automation',
+            'Solar-powered irrigation solutions'
+          ],
+          curriculum: [
+            { module: 'Phase 1', title: 'System Design & Resource Planning' },
+            { module: 'Phase 2', title: 'Hardware & Sensor Integration' },
+            { module: 'Phase 3', title: 'Yield Monitoring & Optimization' }
+          ]
+        };
+      case 'Smart Healthcare':
+        return {
+          learningsTitle: "Key Innovations",
+          modulesTitle: "Project Phases",
+          learnings: [
+            'Portable smart healthcare systems',
+            '4G enabled medical IT infrastructure',
+            'Solar-powered emergency medical kits',
+            'Wearable health monitoring devices'
+          ],
+          curriculum: [
+            { module: 'Phase 1', title: 'Medical Needs Assessment' },
+            { module: 'Phase 2', title: 'Device Prototyping & Connectivity' },
+            { module: 'Phase 3', title: 'Clinical Testing & Deployment' }
+          ]
+        };
+      case 'Smart Manufacturing':
+        return {
+          learningsTitle: "Key Innovations",
+          modulesTitle: "Project Phases",
+          learnings: [
+            'Smart factory automation processes',
+            'Specialty robotics for assembly',
+            'Zero-waste manufacturing techniques',
+            'Computer-Aided Design (CAD) integration'
+          ],
+          curriculum: [
+            { module: 'Phase 1', title: 'Process Flow & Automation Design' },
+            { module: 'Phase 2', title: 'Robotics Assembly & Programming' },
+            { module: 'Phase 3', title: 'Quality Control & Scaling' }
+          ]
+        };
+      case 'Smart Construction':
+        return {
+          learningsTitle: "Key Innovations",
+          modulesTitle: "Project Phases",
+          learnings: [
+            '3D house printing technologies',
+            'Modular concrete prefabrication',
+            'Digital construction management',
+            'Eco-friendly building materials'
+          ],
+          curriculum: [
+            { module: 'Phase 1', title: 'Architectural Modeling & Simulation' },
+            { module: 'Phase 2', title: 'Material Testing & Prefabrication' },
+            { module: 'Phase 3', title: 'On-site Assembly & Management' }
+          ]
+        };
+      case 'Smart Mobility':
+        return {
+          learningsTitle: "Key Innovations",
+          modulesTitle: "Project Phases",
+          learnings: [
+            'Electric UTVs/ATVs development',
+            'Solar-powered battery charging systems',
+            'Smart traffic management solutions',
+            'Engine-to-electric conversion kits'
+          ],
+          curriculum: [
+            { module: 'Phase 1', title: 'Vehicle Dynamics & Battery Sizing' },
+            { module: 'Phase 2', title: 'Powertrain Integration' },
+            { module: 'Phase 3', title: 'Road Testing & Safety Validation' }
+          ]
+        };
+      case 'Smart Energy':
+        return {
+          learningsTitle: "Key Innovations",
+          modulesTitle: "Project Phases",
+          learnings: [
+            'Modular wind energy harvesting',
+            'Micro hydropower plant design',
+            'Smart off-grid metering systems',
+            '24/7 green power distribution'
+          ],
+          curriculum: [
+            { module: 'Phase 1', title: 'Energy Source Assessment' },
+            { module: 'Phase 2', title: 'Grid Design & Metering Setup' },
+            { module: 'Phase 3', title: 'Installation & Maintenance' }
+          ]
+        };
+      case 'Smart Finance':
+        return {
+          learningsTitle: "Key Innovations",
+          modulesTitle: "Project Phases",
+          learnings: [
+            'Digital coin and crypto integration',
+            'Smart POS system infrastructure',
+            'Secure mobile payment gateways',
+            'High-speed transaction processing'
+          ],
+          curriculum: [
+            { module: 'Phase 1', title: 'Financial Architecture & Security' },
+            { module: 'Phase 2', title: 'Software Development & API Integration' },
+            { module: 'Phase 3', title: 'Beta Testing & Rollout' }
+          ]
+        };
+      case 'Smart Education':
+        return {
+          learningsTitle: "Key Innovations",
+          modulesTitle: "Project Phases",
+          learnings: [
+            'E-learning platform development',
+            'VR/AR classroom environments',
+            'Interactive STEM kit creation',
+            'Remote education delivery systems'
+          ],
+          curriculum: [
+            { module: 'Phase 1', title: 'Curriculum & Content Digitization' },
+            { module: 'Phase 2', title: 'Platform & VR Development' },
+            { module: 'Phase 3', title: 'User Testing & Deployment' }
+          ]
+        };
+      case 'Smart Lifestyle':
+        return {
+          learningsTitle: "Key Innovations",
+          modulesTitle: "Project Phases",
+          learnings: [
+            'Smokeless smart cooking stoves',
+            'Efficient solar LED lighting',
+            'Educational Android TV systems',
+            'Biodegradable fuel utilization'
+          ],
+          curriculum: [
+            { module: 'Phase 1', title: 'Home Appliance Prototyping' },
+            { module: 'Phase 2', title: 'Energy Efficiency Optimization' },
+            { module: 'Phase 3', title: 'Consumer Testing & Production' }
+          ]
+        };
+      case 'Smart Environment':
+        return {
+          learningsTitle: "Key Innovations",
+          modulesTitle: "Project Phases",
+          learnings: [
+            'Plastic recycling plant operations',
+            'Textile waste management solutions',
+            'Bio-fuel production processes',
+            'Value-added eco-safe products'
+          ],
+          curriculum: [
+            { module: 'Phase 1', title: 'Waste Collection & Sorting Systems' },
+            { module: 'Phase 2', title: 'Recycling Process Engineering' },
+            { module: 'Phase 3', title: 'Product Manufacturing & Distribution' }
+          ]
+        };
+      case 'Smart Infrastructure':
+        return {
+          learningsTitle: "Key Innovations",
+          modulesTitle: "Project Phases",
+          learnings: [
+            'National data center architecture',
+            'Smart road construction tech',
+            'Digital supply chain logistics',
+            'Secure data transmission networks'
+          ],
+          curriculum: [
+            { module: 'Phase 1', title: 'Infrastructure Planning & Design' },
+            { module: 'Phase 2', title: 'Network & Hardware Installation' },
+            { module: 'Phase 3', title: 'System Integration & Monitoring' }
+          ]
+        };
+      case 'Smart Governance':
+        return {
+          learningsTitle: "Key Innovations",
+          modulesTitle: "Project Phases",
+          learnings: [
+            'Public service application development',
+            'Digital ID system implementation',
+            'Civic engagement platforms',
+            'Transparent administration tools'
+          ],
+          curriculum: [
+            { module: 'Phase 1', title: 'Service Digitization Strategy' },
+            { module: 'Phase 2', title: 'App Development & Security' },
+            { module: 'Phase 3', title: 'Public Launch & Feedback' }
+          ]
+        };
+
+      // SPOTLIGHT PROJECTS
+        return {
+          learningsTitle: "Key Innovations",
+          modulesTitle: "Project Phases",
+          learnings: [
+            'Soil moisture sensing and automation',
+            'Solar power integration for remote areas',
+            'Water conservation techniques',
+            'Hardware assembly and field deployment'
+          ],
+          curriculum: [
+            { module: 'Phase 1', title: 'Research & Sensor Design' },
+            { module: 'Phase 2', title: 'Solar Integration & Prototyping' },
+            { module: 'Phase 3', title: 'Field Testing & Deployment' }
+          ]
+        };
+      case '3D Printed Mobility':
+        return {
+          learningsTitle: "Key Innovations",
+          modulesTitle: "Development Milestones",
+          learnings: [
+            'Advanced 3D printing techniques',
+            'Biomechanics and ergonomic design',
+            'Utilization of recycled plastics',
+            'Patient fitting and rehabilitation'
+          ],
+          curriculum: [
+            { module: 'Phase 1', title: 'Material Sourcing & Testing' },
+            { module: 'Phase 2', title: 'CAD Modeling & Printing' },
+            { module: 'Phase 3', title: 'Clinical Trials & Adjustments' }
+          ]
+        };
+      case 'Agri-AI Doctor':
+        return {
+          learningsTitle: "Key Innovations",
+          modulesTitle: "Project Phases",
+          learnings: [
+            'Machine learning model training',
+            'Image recognition for plant diseases',
+            'Offline mobile app development',
+            'Agricultural pathology and remedies'
+          ],
+          curriculum: [
+            { module: 'Phase 1', title: 'Crop Disease Data Collection' },
+            { module: 'Phase 2', title: 'AI Model Training & Optimization' },
+            { module: 'Phase 3', title: 'Offline App Launch & User Testing' }
+          ]
+        };
+
+      default:
+        return {
+          ...defaultTitles,
+          learnings: [
+            'Core Concepts and Theoretical Foundations',
+            'Practical Application and Hands-on Skills',
+            'Industry Standards and Best Practices',
+            'Team Collaboration and Project Management'
+          ],
+          curriculum: [
+            { module: 'Module 1', title: 'Introduction & Fundamentals' },
+            { module: 'Module 2', title: 'Advanced Techniques' },
+            { module: 'Module 3', title: 'Final Project & Assessment' }
+          ]
+        };
+    }
+  };
+
+  const staticContent = getStaticContent(title);
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -144,6 +586,47 @@ const InfoModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => 
                                     </div>
                                 </div>
                             )}
+                        </div>
+                    </div>
+
+                    {/* What You'll Learn */}
+                    <div className="mb-12">
+                        <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <Target size={24} className="text-[var(--color-clic-blue)]" />
+                            {staticContent.learningsTitle}
+                        </h3>
+                        <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+                            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {staticContent.learnings.map((learning, idx) => (
+                                    <li key={idx} className="flex items-start gap-3">
+                                        <div className="mt-1 bg-green-100 text-green-600 rounded-full p-1">
+                                            <ChevronRight size={16} />
+                                        </div>
+                                        <span className="text-gray-700 font-medium">{learning}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+
+                    {/* Curriculum & Modules */}
+                    <div className="mb-12">
+                        <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <GraduationCap size={24} className="text-[var(--color-clic-orange)]" />
+                            {staticContent.modulesTitle}
+                        </h3>
+                        <div className="space-y-4">
+                            {staticContent.curriculum.map((item, idx) => (
+                                <div key={idx} className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all bg-white">
+                                    <div className="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center text-gray-500 font-bold">
+                                        {idx + 1}
+                                    </div>
+                                    <div>
+                                        <div className="text-sm text-[var(--color-clic-orange)] font-bold mb-1">{item.module}</div>
+                                        <div className="text-gray-900 font-medium">{item.title}</div>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
 

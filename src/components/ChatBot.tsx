@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MessageCircle, X, Send, Minimize2, User, Bot, Loader2, Phone, Mail, UserPlus } from 'lucide-react';
+import { MessageCircle, X, Send, Minimize2, User, Bot, Loader2, Phone, Mail, UserPlus, Sparkles, BookOpen, Lightbulb, Compass, HelpCircle, Languages, ExternalLink } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
 
 const SYSTEM_INSTRUCTION = `
@@ -34,17 +34,30 @@ Key Information about CLIC Ethiopia:
 5.  **Projects**: Over 200 applied industrial projects in sectors like Smart Agriculture, Healthcare, Manufacturing, Construction, Mobility, Energy, Finance, Education, Lifestyle, Environment, Infrastructure, and Governance.
 6.  **Founder**: Dr. Ir. Frehun Adefris. He spent over 10 years researching and designing this curriculum.
 
+Additional Capabilities:
+- If asked to "Generate a project idea", invent a practical, Ethiopia-specific STEAM project.
+- If asked to "Find my path", ask 3 quick questions about their interests, wait for their reply, then recommend a CLIC Lab or Project Sector.
+- If asked for a "Quiz", ask a multiple-choice trivia question about Ethiopian industrialization or STEAM. Wait for their answer, then tell them if they are right.
+- If asked to "Translate to Amharic", translate your previous response into Amharic.
+
 Answer questions based on this context. If asked about something outside this scope, politely steer the conversation back to CLIC Ethiopia, STEAM education, or national development.
 Always encourage the user to "Join the Vision" or "Register" for courses.
 `;
 
 const SUGGESTION_CHIPS = [
   "What is CLIC Ethiopia?",
+  "What is the 2025 EC Vision?",
   "How can I register?",
-  "Tell me about STEAM-IE",
-  "Who is Prof. Frehun?",
-  "What are the 12 project sectors?",
-  "Where are the labs located?"
+  "How do the Fabrication Labs work?",
+  "Tell me about Smart Mobility.",
+  "What is the Agri-AI Doctor project?"
+];
+
+const CREATIVE_ACTIONS = [
+  { icon: Lightbulb, label: "Project Idea", prompt: "Generate a new, practical STEAM project idea for Ethiopia." },
+  { icon: Compass, label: "Find My Path", prompt: "I want to find my career path. Ask me 3 questions to recommend a CLIC Lab." },
+  { icon: HelpCircle, label: "Quiz Mode", prompt: "Ask me a multiple-choice trivia question about Ethiopian industrialization or STEAM." },
+  { icon: Languages, label: "Amharic", prompt: "Translate your last response to Amharic." }
 ];
 
 const ChatBot = () => {
@@ -135,12 +148,30 @@ const ChatBot = () => {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-0 right-0 sm:bottom-24 sm:right-6 z-50 w-full sm:max-w-md bg-white sm:rounded-2xl shadow-2xl overflow-hidden border border-gray-100 flex flex-col h-[100dvh] sm:h-[80vh] sm:max-h-[600px]"
+            className="fixed bottom-0 right-0 sm:bottom-24 sm:right-6 z-50 w-full sm:max-w-md bg-slate-900 sm:rounded-2xl shadow-2xl shadow-indigo-500/10 overflow-hidden border border-slate-700 flex flex-col h-[100dvh] sm:h-[85vh] sm:max-h-[700px]"
           >
+            <style>{`
+              .custom-scrollbar::-webkit-scrollbar {
+                height: 6px;
+                width: 6px;
+              }
+              .custom-scrollbar::-webkit-scrollbar-track {
+                background: rgba(15, 23, 42, 1);
+              }
+              .custom-scrollbar::-webkit-scrollbar-thumb {
+                background: rgba(51, 65, 85, 1);
+                border-radius: 10px;
+              }
+              .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                background: rgba(71, 85, 105, 1);
+              }
+            `}</style>
+
             {/* Header */}
-            <div className="bg-gradient-to-r from-[var(--color-clic-blue)] to-[var(--color-clic-purple)] p-4 text-white flex justify-between items-center shrink-0">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center overflow-hidden border-2 border-white/50">
+            <div className="bg-slate-950 border-b border-slate-800 p-4 text-white flex justify-between items-center shrink-0 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 z-0 pointer-events-none"></div>
+              <div className="flex items-center gap-3 relative z-10">
+                <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center overflow-hidden border border-indigo-500/50 shadow-[0_0_10px_rgba(99,102,241,0.3)]">
                   <img 
                     src="https://loremflickr.com/100/100/professor,man,portrait" 
                     alt="Prof. Fad" 
@@ -149,33 +180,40 @@ const ChatBot = () => {
                   />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg leading-none">Prof. Fad</h3>
-                  <p className="text-xs text-white/80 font-medium mt-1">The digital twin of Prof. Frehun</p>
+                  <h3 className="font-bold text-lg leading-none text-slate-100 flex items-center gap-2">
+                    Prof. Fad
+                    <span className="px-1.5 py-0.5 rounded text-[8px] font-mono bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 uppercase tracking-wider">Online</span>
+                  </h3>
+                  <p className="text-xs text-slate-400 font-mono mt-1">Digital Twin v2.0</p>
                 </div>
               </div>
-              <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-white/10 rounded-lg transition-colors">
+              <button onClick={() => setIsOpen(false)} className="p-2 hover:bg-slate-800 rounded-lg transition-colors relative z-10 text-slate-400 hover:text-white">
                 <X size={24} />
               </button>
             </div>
 
-            {/* Quick Actions (Mobile Only) */}
-            <div className="grid grid-cols-3 gap-2 p-2 bg-gray-50 sm:hidden border-b border-gray-100 shrink-0">
-              <a href="tel:+251911692277" className="flex flex-col items-center justify-center p-2 bg-white rounded-xl border border-gray-100 shadow-sm active:scale-95 transition-transform">
-                <Phone size={18} className="text-[var(--color-clic-green)] mb-1" />
-                <span className="text-[10px] font-medium text-gray-600">Call</span>
-              </a>
-              <a href="mailto:frehun@fadlab.tech" className="flex flex-col items-center justify-center p-2 bg-white rounded-xl border border-gray-100 shadow-sm active:scale-95 transition-transform">
-                <Mail size={18} className="text-[var(--color-clic-orange)] mb-1" />
-                <span className="text-[10px] font-medium text-gray-600">Email</span>
-              </a>
-              <button onClick={() => { setIsOpen(false); document.getElementById('get-involved')?.scrollIntoView({ behavior: 'smooth' }); }} className="flex flex-col items-center justify-center p-2 bg-white rounded-xl border border-gray-100 shadow-sm active:scale-95 transition-transform">
-                <UserPlus size={18} className="text-[var(--color-clic-blue)] mb-1" />
-                <span className="text-[10px] font-medium text-gray-600">Register</span>
-              </button>
+            {/* AI Resources Toolbar */}
+            <div className="flex bg-slate-900 border-b border-slate-800 p-2 gap-2 overflow-x-auto custom-scrollbar shrink-0">
+               <a href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-500/10 text-indigo-400 rounded-lg border border-indigo-500/20 hover:bg-indigo-500/20 text-xs font-mono transition-colors whitespace-nowrap">
+                 <Sparkles size={14} /> Prof. Fad's Gems <ExternalLink size={12} />
+               </a>
+               <a href="https://notebooklm.google.com/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 text-emerald-400 rounded-lg border border-emerald-500/20 hover:bg-emerald-500/20 text-xs font-mono transition-colors whitespace-nowrap">
+                 <BookOpen size={14} /> NotebookLM Guide <ExternalLink size={12} />
+               </a>
+            </div>
+
+            {/* Creative Actions */}
+            <div className="grid grid-cols-4 gap-2 p-2 bg-slate-900 border-b border-slate-800 shrink-0">
+               {CREATIVE_ACTIONS.map((action, idx) => (
+                 <button key={idx} onClick={() => handleSendMessage(action.prompt)} disabled={isLoading} className="flex flex-col items-center justify-center p-2 bg-slate-800 rounded-xl border border-fuchsia-500/30 hover:border-fuchsia-400 hover:bg-slate-800 hover:shadow-[0_0_15px_rgba(232,121,249,0.3)] transition-all group disabled:opacity-50 disabled:cursor-not-allowed">
+                    <action.icon size={18} className="text-fuchsia-400 group-hover:text-fuchsia-300 mb-1 transition-colors drop-shadow-[0_0_5px_rgba(232,121,249,0.5)] group-hover:drop-shadow-[0_0_8px_rgba(232,121,249,0.8)]" />
+                    <span className="text-[9px] font-mono text-fuchsia-400 group-hover:text-fuchsia-300 text-center leading-tight transition-colors drop-shadow-[0_0_2px_rgba(232,121,249,0.5)]">{action.label}</span>
+                 </button>
+               ))}
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 bg-gray-50 space-y-4">
+            <div className="flex-1 overflow-y-auto p-4 bg-slate-900 space-y-4 custom-scrollbar">
               {messages.map((msg, idx) => (
                 <div 
                   key={idx} 
@@ -184,8 +222,8 @@ const ChatBot = () => {
                   <div 
                     className={`max-w-[85%] p-3 rounded-2xl ${
                       msg.role === 'user' 
-                        ? 'bg-[var(--color-clic-blue)] text-white rounded-br-none' 
-                        : 'bg-white text-gray-800 border border-gray-100 rounded-bl-none shadow-sm'
+                        ? 'bg-indigo-600 text-white rounded-br-none shadow-[0_4px_14px_0_rgba(79,70,229,0.39)]' 
+                        : 'bg-slate-800 text-slate-200 border border-slate-700 rounded-bl-none shadow-sm'
                     }`}
                   >
                     <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.text}</p>
@@ -194,9 +232,9 @@ const ChatBot = () => {
               ))}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-white p-3 rounded-2xl rounded-bl-none border border-gray-100 shadow-sm flex items-center gap-2">
-                    <Loader2 size={16} className="animate-spin text-[var(--color-clic-blue)]" />
-                    <span className="text-xs text-gray-500">Prof. Fad is thinking...</span>
+                  <div className="bg-slate-800 p-3 rounded-2xl rounded-bl-none border border-slate-700 shadow-sm flex items-center gap-2">
+                    <Loader2 size={16} className="animate-spin text-indigo-400" />
+                    <span className="text-xs font-mono text-slate-400">Processing...</span>
                   </div>
                 </div>
               )}
@@ -204,14 +242,14 @@ const ChatBot = () => {
             </div>
 
             {/* Suggestion Chips */}
-            <div className="px-4 py-2 bg-gray-50 border-t border-gray-100 overflow-x-auto whitespace-nowrap shrink-0 no-scrollbar">
+            <div className="px-4 py-3 bg-slate-900 border-t border-slate-800 overflow-x-auto whitespace-nowrap shrink-0 custom-scrollbar">
               <div className="flex gap-2">
                 {SUGGESTION_CHIPS.map((chip, idx) => (
                   <button
                     key={idx}
                     onClick={() => handleSendMessage(chip)}
                     disabled={isLoading}
-                    className="inline-flex items-center px-3 py-1.5 rounded-full bg-white border border-[var(--color-clic-blue)]/20 text-[var(--color-clic-blue)] text-xs font-medium hover:bg-[var(--color-clic-blue)] hover:text-white transition-colors disabled:opacity-50 whitespace-nowrap"
+                    className="inline-flex items-center px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 text-indigo-400 text-xs font-mono hover:bg-indigo-900/40 hover:border-indigo-500/50 hover:text-indigo-300 transition-all disabled:opacity-50 whitespace-nowrap shadow-sm"
                   >
                     {chip}
                   </button>
@@ -220,28 +258,29 @@ const ChatBot = () => {
             </div>
 
             {/* Input Area */}
-            <div className="p-4 bg-white border-t border-gray-100 shrink-0 safe-area-bottom">
+            <div className="p-4 bg-slate-950 border-t border-slate-800 shrink-0 safe-area-bottom">
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyDown={handleKeyPress}
-                  placeholder="Ask Prof. Fad a question..."
-                  className="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all text-sm"
+                  placeholder="Initialize query..."
+                  className="flex-1 px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all text-sm font-mono"
                   disabled={isLoading}
                 />
                 <button 
                   onClick={() => handleSendMessage()}
                   disabled={!inputValue.trim() || isLoading}
-                  className="p-3 rounded-xl bg-[var(--color-clic-blue)] text-white hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="p-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_4px_14px_0_rgba(79,70,229,0.39)]"
                 >
                   <Send size={20} />
                 </button>
               </div>
-              <div className="text-center mt-2">
-                <p className="text-[10px] text-gray-400">
-                  Powered by Gemini AI. Prof. Fad may make mistakes.
+              <div className="text-center mt-2 flex items-center justify-center gap-1">
+                <Sparkles size={10} className="text-slate-500" />
+                <p className="text-[10px] font-mono text-slate-500 uppercase tracking-wider">
+                  Powered by Gemini AI
                 </p>
               </div>
             </div>
