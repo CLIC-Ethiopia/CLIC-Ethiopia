@@ -7,21 +7,82 @@ import {
   Sprout, Building2, HeartHandshake, UserPlus, Menu, X,
   Globe, Lightbulb, GraduationCap, Target, Rocket, Briefcase,
   BarChart3, Clock, Users, Trophy, Zap, Microscope, Hammer,
-  Car, Coins, Home, Recycle, Server, Landmark, Quote, Play, Youtube, ChevronDown
+  Car, Coins, Home, Recycle, Server, Landmark, Quote, Play, Youtube, ChevronDown, Moon, Sun, ArrowUp, CheckCircle
 } from 'lucide-react';
 
 import ChatBot from './components/ChatBot';
 import CurriculumSection from './components/CurriculumSection';
 import NewsSection from './components/NewsSection';
 import MerchSection from './components/MerchSection';
+import ImpactSection from './components/ImpactSection';
+
+// --- Localization ---
+export type Language = 'en' | 'am';
+export const LanguageContext = React.createContext<{lang: Language, setLang: (l: Language) => void}>({lang: 'en', setLang: () => {}});
+
+export const translations = {
+  en: {
+    home: 'Home',
+    about: 'About',
+    founder: 'Founder',
+    programs: 'Programs',
+    news: 'News',
+    merch: 'Merch',
+    getInvolved: 'Get Involved',
+    heroTitle1: 'Empowering',
+    heroTitle2: 'Ethiopia\'s',
+    heroTitle3: 'Future Innovators',
+    heroSubtitle: 'A visionary initiative by the Ministry of Innovation and Technology to transform education through STEAM and Innovation & Entrepreneurship.',
+    explorePrograms: 'Explore Programs',
+    watchVideo: 'Watch Video',
+    firstName: 'First Name',
+    lastName: 'LastName',
+    email: 'Email Address',
+    submit: 'Submit',
+    success: 'Success!',
+    close: 'Close',
+  },
+  am: {
+    home: 'መነሻ',
+    about: 'ስለ እኛ',
+    founder: 'መስራች',
+    programs: 'ፕሮግራሞች',
+    news: 'ዜና',
+    merch: 'መደብር',
+    getInvolved: 'ተሳተፍ',
+    heroTitle1: 'የኢትዮጵያን',
+    heroTitle2: 'የነገ',
+    heroTitle3: 'ፈጣሪዎች ማብቃት',
+    heroSubtitle: 'በኢኖቬሽን እና ቴክኖሎጂ ሚኒስቴር የትምህርት ስርዓትን በSTEAM እና በፈጠራና ስራ ፈጠራ ለመቀየር የተጀመረ ራዕይ ያለው ተነሳሽነት።',
+    explorePrograms: 'ፕሮግራሞችን ያስሱ',
+    watchVideo: 'ቪዲዮ ይመልከቱ',
+    firstName: 'ስም',
+    lastName: 'የአባት ስም',
+    email: 'ኢሜይል',
+    submit: 'አስገባ',
+    success: 'ተሳክቷል!',
+    close: 'ዝጋ',
+  }
+};
+
+export const useTranslation = () => {
+  const { lang } = React.useContext(LanguageContext);
+  return { t: translations[lang], lang };
+};
 
 // --- Components ---
 
 const InfoModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => void; data: any }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsPlaying(false);
+    if (isOpen) {
+      setIsLoading(true);
+      const timer = setTimeout(() => setIsLoading(false), 800);
+      return () => clearTimeout(timer);
+    }
   }, [data, isOpen]);
 
     if (!isOpen || !data) return null;
@@ -498,173 +559,221 @@ const InfoModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => 
 
             {/* Hero / Sidebar Section */}
             <div className="w-full md:w-2/5 relative bg-gray-900 text-white flex flex-col min-h-[300px] md:min-h-full">
-                {/* Background Image */}
-                <div className="absolute inset-0">
-                    <img 
-                        src={image || `https://loremflickr.com/800/1200/${title.split(' ')[0]},technology`} 
-                        alt={title} 
-                        className="w-full h-full object-cover opacity-60"
-                        referrerPolicy="no-referrer"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
-                </div>
+                {isLoading ? (
+                  <div className="absolute inset-0 flex flex-col justify-end p-8 bg-gray-800 animate-pulse">
+                    <div className="w-16 h-16 rounded-2xl bg-gray-700 mb-6"></div>
+                    <div className="h-10 bg-gray-700 rounded w-3/4 mb-4"></div>
+                    <div className="h-1 w-20 bg-gray-700 rounded-full mb-6"></div>
+                    <div className="h-4 bg-gray-700 rounded w-full mb-2"></div>
+                    <div className="h-4 bg-gray-700 rounded w-5/6 mb-8"></div>
+                    <div className="grid grid-cols-3 gap-4 border-t border-gray-700 pt-6">
+                      <div className="h-8 bg-gray-700 rounded w-full"></div>
+                      <div className="h-8 bg-gray-700 rounded w-full"></div>
+                      <div className="h-8 bg-gray-700 rounded w-full"></div>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {/* Background Image */}
+                    <div className="absolute inset-0">
+                        <img 
+                            src={image || `https://loremflickr.com/800/1200/${title.split(' ')[0]},technology`} 
+                            alt={title} 
+                            className="w-full h-full object-cover opacity-60"
+                            referrerPolicy="no-referrer"
+                            loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
+                    </div>
 
-                <div className="relative z-10 p-8 flex flex-col h-full mt-auto">
-                    <div className="mt-auto">
-                        <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg mb-6 backdrop-blur-md border border-white/20" style={{ backgroundColor: `${color}80` }}>
-                            <Icon size={32} />
-                        </div>
-                        <h2 className="text-4xl font-bold font-serif mb-4 leading-tight">{title}</h2>
-                        <div className="h-1 w-20 rounded-full mb-6" style={{ backgroundColor: color }}></div>
-                        <p className="text-lg text-gray-200 leading-relaxed mb-8">{description}</p>
-                        
-                        {stats && (
-                            <div className="grid grid-cols-3 gap-4 border-t border-white/10 pt-6">
-                                {stats.map((stat: any, i: number) => (
-                                    <div key={i}>
-                                        <div className="text-2xl font-black" style={{ color: color }}>{stat.value}</div>
-                                        <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">{stat.label}</div>
-                                    </div>
-                                ))}
+                    <div className="relative z-10 p-8 flex flex-col h-full mt-auto">
+                        <div className="mt-auto">
+                            <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-white shadow-lg mb-6 backdrop-blur-md border border-white/20" style={{ backgroundColor: `${color}80` }}>
+                                <Icon size={32} />
                             </div>
-                        )}
-                    </div>
-                </div>
-            </div>
-
-            {/* Content Section */}
-            <div className="w-full md:w-3/5 bg-white overflow-y-auto max-h-[60vh] md:max-h-[90vh]">
-                <div className="p-8 md:p-12">
-                    {/* Detailed Content */}
-                    <div className="mb-12">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                            <BookOpen size={24} className="text-gray-400" />
-                            Overview
-                        </h3>
-                        <div className="prose prose-lg text-gray-600">
-                            <p>{detailedContent}</p>
-                        </div>
-                    </div>
-
-                    {/* YouTube Section */}
-                    <div className="mb-12">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                            <Youtube size={24} className="text-red-600" />
-                            Video Tour
-                        </h3>
-                        <div className="rounded-2xl overflow-hidden shadow-lg bg-black aspect-video relative group cursor-pointer">
-                            {isPlaying ? (
-                                <iframe
-                                    width="100%"
-                                    height="100%"
-                                    src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
-                                    title="Video Tour"
-                                    frameBorder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                    allowFullScreen
-                                    className="absolute inset-0 w-full h-full"
-                                ></iframe>
-                            ) : (
-                                <div onClick={() => setIsPlaying(true)} className="w-full h-full relative">
-                                    <img 
-                                        src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`} 
-                                        alt="Video Thumbnail" 
-                                        className="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity"
-                                        referrerPolicy="no-referrer"
-                                        onError={(e) => {
-                                            // Fallback if maxresdefault is not available
-                                            (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
-                                        }}
-                                    />
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <div className="w-16 h-16 rounded-full bg-red-600 text-white flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-                                            <Play size={32} fill="currentColor" />
+                            <h2 className="text-4xl font-bold font-serif mb-4 leading-tight">{title}</h2>
+                            <div className="h-1 w-20 rounded-full mb-6" style={{ backgroundColor: color }}></div>
+                            <p className="text-lg text-gray-200 leading-relaxed mb-8">{description}</p>
+                            
+                            {stats && (
+                                <div className="grid grid-cols-3 gap-4 border-t border-white/10 pt-6">
+                                    {stats.map((stat: any, i: number) => (
+                                        <div key={i}>
+                                            <div className="text-2xl font-black" style={{ color: color }}>{stat.value}</div>
+                                            <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">{stat.label}</div>
                                         </div>
-                                    </div>
-                                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-white">
-                                         <p className="font-medium">Watch: Introduction to {title}</p>
-                                    </div>
+                                    ))}
                                 </div>
                             )}
                         </div>
                     </div>
+                  </>
+                )}
+            </div>
 
-                    {/* What You'll Learn */}
-                    <div className="mb-12">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                            <Target size={24} className="text-[var(--color-clic-blue)]" />
-                            {staticContent.learningsTitle}
-                        </h3>
-                        <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
-                            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                {staticContent.learnings.map((learning, idx) => (
-                                    <li key={idx} className="flex items-start gap-3">
-                                        <div className="mt-1 bg-green-100 text-green-600 rounded-full p-1">
-                                            <ChevronRight size={16} />
+            {/* Content Section */}
+            <div className="w-full md:w-3/5 bg-white dark:bg-gray-900 overflow-y-auto max-h-[60vh] md:max-h-[90vh]">
+                <div className="p-8 md:p-12">
+                    {isLoading ? (
+                      <div className="animate-pulse">
+                        <div className="mb-12">
+                          <div className="h-8 bg-gray-200 dark:bg-gray-800 rounded w-1/3 mb-4"></div>
+                          <div className="space-y-3">
+                            <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
+                            <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-5/6"></div>
+                            <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-4/6"></div>
+                          </div>
+                        </div>
+                        <div className="mb-12">
+                          <div className="h-8 bg-gray-200 dark:bg-gray-800 rounded w-1/3 mb-4"></div>
+                          <div className="w-full aspect-video bg-gray-200 dark:bg-gray-800 rounded-2xl"></div>
+                        </div>
+                        <div className="mb-12">
+                          <div className="h-8 bg-gray-200 dark:bg-gray-800 rounded w-1/3 mb-4"></div>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="h-12 bg-gray-200 dark:bg-gray-800 rounded"></div>
+                            <div className="h-12 bg-gray-200 dark:bg-gray-800 rounded"></div>
+                            <div className="h-12 bg-gray-200 dark:bg-gray-800 rounded"></div>
+                            <div className="h-12 bg-gray-200 dark:bg-gray-800 rounded"></div>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        {/* Detailed Content */}
+                        <div className="mb-12">
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                <BookOpen size={24} className="text-gray-400" />
+                                Overview
+                            </h3>
+                            <div className="prose prose-lg text-gray-600 dark:text-gray-300">
+                                <p>{detailedContent}</p>
+                            </div>
+                        </div>
+
+                        {/* YouTube Section */}
+                        <div className="mb-12">
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                <Youtube size={24} className="text-red-600" />
+                                Video Tour
+                            </h3>
+                            <div className="rounded-2xl overflow-hidden shadow-lg bg-black aspect-video relative group cursor-pointer">
+                                {isPlaying ? (
+                                    <iframe
+                                        width="100%"
+                                        height="100%"
+                                        src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+                                        title="Video Tour"
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                        className="absolute inset-0 w-full h-full"
+                                    ></iframe>
+                                ) : (
+                                    <div onClick={() => setIsPlaying(true)} className="w-full h-full relative">
+                                        <img 
+                                            src={`https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`} 
+                                            alt="Video Thumbnail" 
+                                            className="w-full h-full object-cover opacity-80 group-hover:opacity-60 transition-opacity"
+                                            referrerPolicy="no-referrer"
+                                            loading="lazy"
+                                            onError={(e) => {
+                                                // Fallback if maxresdefault is not available
+                                                (e.target as HTMLImageElement).src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+                                            }}
+                                        />
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                            <div className="w-16 h-16 rounded-full bg-red-600 text-white flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
+                                                <Play size={32} fill="currentColor" />
+                                            </div>
                                         </div>
-                                        <span className="text-gray-700 font-medium">{learning}</span>
-                                    </li>
+                                        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-white">
+                                             <p className="font-medium">Watch: Introduction to {title}</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* What You'll Learn */}
+                        <div className="mb-12">
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                <Target size={24} className="text-[var(--color-clic-blue)]" />
+                                {staticContent.learningsTitle}
+                            </h3>
+                            <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700">
+                                <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {staticContent.learnings.map((learning, idx) => (
+                                        <li key={idx} className="flex items-start gap-3">
+                                            <div className="mt-1 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full p-1">
+                                                <ChevronRight size={16} />
+                                            </div>
+                                            <span className="text-gray-700 dark:text-gray-300 font-medium">{learning}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
+
+                        {/* Curriculum & Modules */}
+                        <div className="mb-12">
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                <GraduationCap size={24} className="text-[var(--color-clic-orange)]" />
+                                {staticContent.modulesTitle}
+                            </h3>
+                            <div className="space-y-4">
+                                {staticContent.curriculum.map((item, idx) => (
+                                    <div key={idx} className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-gray-200 dark:hover:border-gray-600 hover:shadow-sm transition-all bg-white dark:bg-gray-800">
+                                        <div className="w-12 h-12 rounded-lg bg-gray-50 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 font-bold">
+                                            {idx + 1}
+                                        </div>
+                                        <div>
+                                            <div className="text-sm text-[var(--color-clic-orange)] font-bold mb-1">{item.module}</div>
+                                            <div className="text-gray-900 dark:text-white font-medium">{item.title}</div>
+                                        </div>
+                                    </div>
                                 ))}
-                            </ul>
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Curriculum & Modules */}
-                    <div className="mb-12">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                            <GraduationCap size={24} className="text-[var(--color-clic-orange)]" />
-                            {staticContent.modulesTitle}
-                        </h3>
-                        <div className="space-y-4">
-                            {staticContent.curriculum.map((item, idx) => (
-                                <div key={idx} className="flex items-center gap-4 p-4 rounded-xl border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all bg-white">
-                                    <div className="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center text-gray-500 font-bold">
-                                        {idx + 1}
+                        {/* Photo Catalogue */}
+                        <div className="mb-12">
+                            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                <Palette size={24} className="text-gray-400" />
+                                Gallery
+                            </h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                {[1, 2, 3, 4].map((i) => (
+                                    <div key={i} className="rounded-xl overflow-hidden aspect-[4/3] group cursor-pointer">
+                                        <img 
+                                            src={`https://loremflickr.com/400/300/${title.split(' ')[0]},${i},tech`} 
+                                            alt={`Gallery ${i}`} 
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                            referrerPolicy="no-referrer"
+                                            loading="lazy"
+                                        />
                                     </div>
-                                    <div>
-                                        <div className="text-sm text-[var(--color-clic-orange)] font-bold mb-1">{item.module}</div>
-                                        <div className="text-gray-900 font-medium">{item.title}</div>
-                                    </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Photo Catalogue */}
-                    <div className="mb-12">
-                        <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                            <Palette size={24} className="text-gray-400" />
-                            Gallery
-                        </h3>
-                        <div className="grid grid-cols-2 gap-4">
-                            {[1, 2, 3, 4].map((i) => (
-                                <div key={i} className="rounded-xl overflow-hidden aspect-[4/3] group cursor-pointer">
-                                    <img 
-                                        src={`https://loremflickr.com/400/300/${title.split(' ')[0]},${i},tech`} 
-                                        alt={`Gallery ${i}`} 
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                        referrerPolicy="no-referrer"
-                                    />
-                                </div>
-                            ))}
+                        {/* Extra Links */}
+                        <div>
+                             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                <Globe size={24} className="text-gray-400" />
+                                Resources
+                            </h3>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {['Curriculum Guide', 'Student Projects', 'Research Papers', 'Apply Now'].map((link, i) => (
+                                    <a key={i} href="#" className="flex items-center justify-between p-4 rounded-xl border border-gray-100 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all group bg-white dark:bg-gray-800">
+                                        <span className="font-semibold text-gray-700 dark:text-gray-300">{link}</span>
+                                        <ArrowRight size={16} className="text-gray-400 group-hover:translate-x-1 transition-transform" />
+                                    </a>
+                                ))}
+                            </div>
                         </div>
-                    </div>
-
-                    {/* Extra Links */}
-                    <div>
-                         <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                            <Globe size={24} className="text-gray-400" />
-                            Resources
-                        </h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            {['Curriculum Guide', 'Student Projects', 'Research Papers', 'Apply Now'].map((link, i) => (
-                                <a key={i} href="#" className="flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-gray-300 hover:bg-gray-50 transition-all group">
-                                    <span className="font-semibold text-gray-700">{link}</span>
-                                    <ArrowRight size={16} className="text-gray-400 group-hover:translate-x-1 transition-transform" />
-                                </a>
-                            ))}
-                        </div>
-                    </div>
+                      </>
+                    )}
                 </div>
             </div>
           </motion.div>
@@ -674,10 +783,12 @@ const InfoModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => 
   );
 };
 
-const Navbar = () => {
+const Navbar = ({ isDarkMode, setIsDarkMode }: { isDarkMode: boolean, setIsDarkMode: (val: boolean) => void }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const { t, lang } = useTranslation();
+  const { setLang } = React.useContext(LanguageContext);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -688,9 +799,10 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: 'About', href: '#about' },
+    { name: t.about, href: '#about' },
+    { name: t.founder, href: '#founder' },
     { 
-      name: 'Programs', 
+      name: t.programs, 
       href: '#',
       children: [
         { name: 'STEAM', href: '#steam' },
@@ -700,9 +812,8 @@ const Navbar = () => {
         { name: 'Projects', href: '#projects' },
       ]
     },
-    { name: 'News', href: '#news' },
-    { name: 'Founder', href: '#founder' },
-    { name: 'Merch', href: '#merch' },
+    { name: t.news, href: '#news' },
+    { name: t.merch, href: '#merch' },
   ];
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -730,7 +841,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-5'}`}>
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white dark:bg-gray-900 shadow-md py-3' : 'bg-transparent py-5'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <a href="#" className="flex items-center gap-2 group">
@@ -741,8 +852,8 @@ const Navbar = () => {
               <span className="text-2xl md:text-3xl font-black text-[var(--color-clic-blue)] tracking-tighter">C</span>
             </div>
             <div className="flex flex-col">
-              <span className={`text-lg md:text-xl font-bold leading-none ${isScrolled ? 'text-gray-900' : 'text-white'}`}>Ethiopia</span>
-              <span className={`text-[0.4rem] md:text-[0.5rem] font-semibold uppercase tracking-widest ${isScrolled ? 'text-gray-500' : 'text-gray-300'}`}>Creative Learning</span>
+              <span className={`text-lg md:text-xl font-bold leading-none ${isScrolled ? 'text-gray-900 dark:text-white' : 'text-white'}`}>Ethiopia</span>
+              <span className={`text-[0.4rem] md:text-[0.5rem] font-semibold uppercase tracking-widest ${isScrolled ? 'text-gray-500 dark:text-gray-400' : 'text-gray-300'}`}>Creative Learning</span>
             </div>
           </a>
 
@@ -752,18 +863,18 @@ const Navbar = () => {
               link.children ? (
                 <div key={link.name} className="relative group">
                   <button 
-                    className={`flex items-center gap-1 text-xs xl:text-sm font-bold uppercase tracking-wider hover:opacity-70 transition-opacity ${isScrolled ? 'text-gray-800' : 'text-white'}`}
+                    className={`flex items-center gap-1 text-xs xl:text-sm font-bold uppercase tracking-wider hover:opacity-70 transition-opacity ${isScrolled ? 'text-gray-800 dark:text-gray-200' : 'text-white'}`}
                   >
                     {link.name} <ChevronDown size={14} />
                   </button>
                   <div className="absolute top-full left-1/2 -translate-x-1/2 pt-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform group-hover:translate-y-0 translate-y-2">
-                    <div className="bg-white rounded-xl shadow-xl border border-gray-100 p-2 min-w-[160px] overflow-hidden">
+                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-100 dark:border-gray-700 p-2 min-w-[160px] overflow-hidden">
                       {link.children.map(child => (
                          <a 
                            key={child.name}
                            href={child.href}
                            onClick={(e) => scrollToSection(e, child.href)}
-                           className="block px-4 py-2 text-xs xl:text-sm font-bold text-gray-700 hover:bg-gray-50 hover:text-[var(--color-clic-blue)] rounded-lg transition-colors text-center"
+                           className="block px-4 py-2 text-xs xl:text-sm font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:text-[var(--color-clic-blue)] dark:hover:text-[var(--color-clic-blue)] rounded-lg transition-colors text-center"
                          >
                            {child.name}
                          </a>
@@ -776,31 +887,61 @@ const Navbar = () => {
                   key={link.name} 
                   href={link.href} 
                   onClick={(e) => scrollToSection(e, link.href)}
-                  className={`text-xs xl:text-sm font-bold uppercase tracking-wider hover:opacity-70 transition-opacity ${isScrolled ? 'text-gray-800' : 'text-white'}`}
+                  className={`text-xs xl:text-sm font-bold uppercase tracking-wider hover:opacity-70 transition-opacity ${isScrolled ? 'text-gray-800 dark:text-gray-200' : 'text-white'}`}
                 >
                   {link.name}
                 </a>
               )
             ))}
-            <div className="flex gap-4">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 rounded-full p-1">
+                <button
+                  onClick={() => setLang('en')}
+                  className={`px-2 py-1 text-xs font-bold rounded-full transition-colors ${lang === 'en' ? 'bg-white dark:bg-gray-700 text-[var(--color-clic-blue)] shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
+                >
+                  EN
+                </button>
+                <button
+                  onClick={() => setLang('am')}
+                  className={`px-2 py-1 text-xs font-bold rounded-full transition-colors ${lang === 'am' ? 'bg-white dark:bg-gray-700 text-[var(--color-clic-blue)] shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
+                >
+                  አማ
+                </button>
+              </div>
+              <button
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className={`p-2 rounded-full transition-colors ${isScrolled ? 'text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800' : 'text-white hover:bg-white/10'}`}
+                aria-label="Toggle Dark Mode"
+              >
+                {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+              </button>
               <a href="#get-involved" onClick={(e) => scrollToSection(e, '#get-involved')} className="px-4 py-2 xl:px-5 xl:py-2.5 rounded-full text-xs xl:text-sm font-bold bg-[var(--color-clic-red)] text-white hover:bg-opacity-90 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 whitespace-nowrap">
-                Get Involved
+                {t.getInvolved}
               </a>
             </div>
           </div>
 
           {/* Mobile Menu Button */}
-          <button 
-            className="lg:hidden p-2 rounded-lg hover:bg-white/10 transition-colors"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? (
-              <X className={isScrolled ? 'text-gray-900' : 'text-white'} />
-            ) : (
-              <Menu className={isScrolled ? 'text-gray-900' : 'text-white'} />
-            )}
-          </button>
-        </div>
+          <div className="lg:hidden flex items-center gap-2">
+            <button
+              onClick={() => setIsDarkMode(!isDarkMode)}
+              className={`p-2 rounded-full transition-colors ${isScrolled ? 'text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800' : 'text-white hover:bg-white/10'}`}
+              aria-label="Toggle Dark Mode"
+            >
+              {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+            </button>
+            <button 
+              className="p-2 rounded-lg hover:bg-white/10 transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? (
+                <X className={isScrolled ? 'text-gray-900 dark:text-white' : 'text-white'} />
+              ) : (
+                <Menu className={isScrolled ? 'text-gray-900 dark:text-white' : 'text-white'} />
+              )}
+            </button>
+          </div>
+      </div>
       </div>
 
       {/* Mobile Nav */}
@@ -810,16 +951,16 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-white border-t overflow-hidden shadow-xl"
+            className="lg:hidden bg-white dark:bg-gray-900 border-t dark:border-gray-800 overflow-hidden shadow-xl"
           >
             <div className="px-4 py-6 flex flex-col gap-2 max-h-[80vh] overflow-y-auto">
               {navLinks.map((link) => (
                 <div key={link.name}>
                   {link.children ? (
-                    <div className="rounded-xl bg-gray-50 overflow-hidden">
+                    <div className="rounded-xl bg-gray-50 dark:bg-gray-800 overflow-hidden">
                       <button 
                         onClick={() => setActiveDropdown(activeDropdown === link.name ? null : link.name)}
-                        className="w-full flex justify-between items-center px-4 py-3 text-left font-bold text-gray-900"
+                        className="w-full flex justify-between items-center px-4 py-3 text-left font-bold text-gray-900 dark:text-white"
                       >
                         {link.name}
                         <ChevronDown size={16} className={`transition-transform ${activeDropdown === link.name ? 'rotate-180' : ''}`} />
@@ -838,7 +979,7 @@ const Navbar = () => {
                                   key={child.name}
                                   href={child.href}
                                   onClick={(e) => scrollToSection(e, child.href)}
-                                  className="block px-4 py-2 text-sm font-medium text-gray-600 hover:text-[var(--color-clic-blue)] hover:bg-gray-100 rounded-lg"
+                                  className="block px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-[var(--color-clic-blue)] dark:hover:text-[var(--color-clic-blue)] hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
                                 >
                                   {child.name}
                                 </a>
@@ -851,7 +992,7 @@ const Navbar = () => {
                   ) : (
                     <a 
                       href={link.href} 
-                      className="block px-4 py-3 text-lg font-bold text-gray-800 hover:bg-gray-50 rounded-xl"
+                      className="block px-4 py-3 text-lg font-bold text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl"
                       onClick={(e) => scrollToSection(e, link.href)}
                     >
                       {link.name}
@@ -859,13 +1000,27 @@ const Navbar = () => {
                   )}
                 </div>
               ))}
-              <hr className="my-4 border-gray-100" />
+              <hr className="my-4 border-gray-100 dark:border-gray-800" />
+              <div className="flex justify-center gap-4 mb-4">
+                <button
+                  onClick={() => setLang('en')}
+                  className={`px-4 py-2 text-sm font-bold rounded-full transition-colors ${lang === 'en' ? 'bg-gray-100 dark:bg-gray-800 text-[var(--color-clic-blue)] shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
+                >
+                  English
+                </button>
+                <button
+                  onClick={() => setLang('am')}
+                  className={`px-4 py-2 text-sm font-bold rounded-full transition-colors ${lang === 'am' ? 'bg-gray-100 dark:bg-gray-800 text-[var(--color-clic-blue)] shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
+                >
+                  አማርኛ
+                </button>
+              </div>
               <a 
                 href="#get-involved" 
                 onClick={(e) => scrollToSection(e, '#get-involved')}
                 className="px-5 py-4 text-center rounded-xl text-base font-bold bg-[var(--color-clic-red)] text-white shadow-md active:scale-95 transition-transform"
               >
-                Get Involved
+                {t.getInvolved}
               </a>
             </div>
           </motion.div>
@@ -876,6 +1031,10 @@ const Navbar = () => {
 };
 
 const Hero = () => {
+  const { t } = useTranslation();
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const videoId = "M7lc1UVf-VE"; // Placeholder YouTube video ID
+
   return (
     <section className="relative min-h-screen flex items-center pt-20 overflow-hidden bg-gray-900">
       {/* Background Image with Overlay */}
@@ -885,6 +1044,7 @@ const Hero = () => {
           alt="Ethiopian Students Learning" 
           className="w-full h-full object-cover opacity-40"
           referrerPolicy="no-referrer"
+          loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/80 to-transparent"></div>
       </div>
@@ -900,19 +1060,22 @@ const Hero = () => {
               Vision Smart-Ethiopia 2025 EC
             </span>
             <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight mb-6 font-serif">
-              Building Smart Citizens for the Future of <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-clic-green)] to-[var(--color-clic-blue)]">Ethiopia</span>
+              {t.heroTitle1} <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-clic-green)] to-[var(--color-clic-blue)]">{t.heroTitle2}</span> {t.heroTitle3}
             </h1>
             <p className="text-xl text-gray-300 mb-10 max-w-2xl leading-relaxed">
-              Creative Learning in Community (CLIC) provides practical STEAM-IE education to empower aspiring Ethiopian young entrepreneurs across every industrial sector.
+              {t.heroSubtitle}
             </p>
             
             <div className="flex flex-wrap gap-4">
-              <a href="#get-involved" className="px-8 py-4 rounded-full text-base font-bold bg-white text-gray-900 hover:bg-gray-100 transition-colors flex items-center gap-2">
-                Start Learning <ArrowRight size={18} />
+              <a href="#get-involved" className="px-8 py-4 rounded-full text-lg font-bold bg-[var(--color-clic-blue)] text-white hover:bg-opacity-90 transition-all shadow-[0_0_20px_rgba(0,114,206,0.4)] hover:shadow-[0_0_30px_rgba(0,114,206,0.6)] flex items-center gap-2 hover:scale-105">
+                Donate to Empower <ArrowRight size={20} />
               </a>
-              <a href="#about" className="px-8 py-4 rounded-full text-base font-bold bg-white/10 text-white border border-white/20 hover:bg-white/20 transition-colors backdrop-blur-sm">
-                Discover Our Mission
-              </a>
+              <button 
+                onClick={() => setIsVideoModalOpen(true)} 
+                className="px-8 py-4 rounded-full text-base font-bold bg-[#FF0000] text-white hover:bg-red-700 transition-all shadow-[0_0_20px_rgba(255,0,0,0.4)] hover:shadow-[0_0_30px_rgba(255,0,0,0.6)] flex items-center gap-2 hover:scale-105"
+              >
+                <Youtube size={18} /> {t.watchVideo}
+              </button>
             </div>
 
             <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-white/10 pt-8">
@@ -958,6 +1121,44 @@ const Hero = () => {
           </motion.div>
         ))}
       </div>
+
+      {/* Video Modal */}
+      <AnimatePresence>
+        {isVideoModalOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            onClick={() => setIsVideoModalOpen(false)}
+          >
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0 }} 
+              animate={{ scale: 1, opacity: 1 }} 
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-black rounded-2xl w-full max-w-5xl aspect-video overflow-hidden shadow-2xl relative"
+              onClick={e => e.stopPropagation()}
+            >
+              <button 
+                onClick={() => setIsVideoModalOpen(false)} 
+                className="absolute top-4 right-4 z-10 p-2 bg-black/50 hover:bg-black/80 rounded-full transition-colors text-white"
+              >
+                <X size={24} />
+              </button>
+              <iframe 
+                width="100%" 
+                height="100%" 
+                src={`https://www.youtube.com/embed/${videoId}?autoplay=1`} 
+                title="YouTube video player" 
+                frameBorder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowFullScreen
+                className="absolute inset-0"
+              ></iframe>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
@@ -1016,22 +1217,52 @@ const About = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="relative"
+            className="flex flex-col gap-12"
           >
-            <div className="aspect-square rounded-3xl overflow-hidden relative">
-              <img 
-                src="https://loremflickr.com/800/800/innovation,africa,business" 
-                alt="Innovation in Ethiopia" 
-                className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-clic-red)]/40 to-transparent mix-blend-multiply"></div>
+            <div className="relative">
+              <div className="aspect-square rounded-3xl overflow-hidden relative">
+                <img 
+                  src="https://loremflickr.com/800/800/innovation,africa,business" 
+                  alt="Innovation in Ethiopia" 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-clic-red)]/40 to-transparent mix-blend-multiply"></div>
+              </div>
+              
+              {/* Floating Stats Card */}
+              <div className="absolute -bottom-8 -left-8 bg-white p-8 rounded-2xl shadow-xl border border-gray-100 max-w-xs z-10">
+                <div className="text-4xl font-black text-[var(--color-clic-blue)] mb-2">1M+</div>
+                <div className="text-sm font-bold text-gray-500 uppercase tracking-wider">Ethiopians to be trained by 2025 EC</div>
+              </div>
             </div>
-            
-            {/* Floating Stats Card */}
-            <div className="absolute -bottom-8 -left-8 bg-white p-8 rounded-2xl shadow-xl border border-gray-100 max-w-xs">
-              <div className="text-4xl font-black text-[var(--color-clic-blue)] mb-2">1M+</div>
-              <div className="text-sm font-bold text-gray-500 uppercase tracking-wider">Ethiopians to be trained by 2025 EC</div>
+
+            {/* Other Projects by Prof. Frehun */}
+            <div className="mt-4">
+              <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Other Projects by Prof. Frehun</h3>
+              <div className="grid grid-cols-2 gap-5">
+                <a href="https://fadlab.tech" target="_blank" rel="noopener noreferrer" className="relative bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[var(--color-clic-blue)]/50 hover:-translate-y-1 transition-all duration-300 group">
+                  <svg className="absolute top-4 right-4 w-4 h-4 text-gray-400 group-hover:text-[var(--color-clic-blue)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                  <h4 className="font-bold text-gray-900 group-hover:text-[var(--color-clic-blue)] transition-colors text-base mb-1 pr-4">Fad.Lab</h4>
+                  <p className="text-sm text-gray-600 font-medium">R&D on smart industries</p>
+                </a>
+                <a href="https://fadbusinessverse.com" target="_blank" rel="noopener noreferrer" className="relative bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[var(--color-clic-blue)]/50 hover:-translate-y-1 transition-all duration-300 group">
+                  <svg className="absolute top-4 right-4 w-4 h-4 text-gray-400 group-hover:text-[var(--color-clic-blue)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                  <h4 className="font-bold text-gray-900 group-hover:text-[var(--color-clic-blue)] transition-colors text-base mb-1 pr-4">Fad Business Verse</h4>
+                  <p className="text-sm text-gray-600 font-medium">Generative AI business idea generator app</p>
+                </a>
+                <a href="https://fadlms.com" target="_blank" rel="noopener noreferrer" className="relative bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[var(--color-clic-blue)]/50 hover:-translate-y-1 transition-all duration-300 group">
+                  <svg className="absolute top-4 right-4 w-4 h-4 text-gray-400 group-hover:text-[var(--color-clic-blue)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                  <h4 className="font-bold text-gray-900 group-hover:text-[var(--color-clic-blue)] transition-colors text-base mb-1 pr-4">Fad LMS</h4>
+                  <p className="text-sm text-gray-600 font-medium">Learning management system for STEAM-IE</p>
+                </a>
+                <a href="https://nats.et" target="_blank" rel="noopener noreferrer" className="relative bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[var(--color-clic-blue)]/50 hover:-translate-y-1 transition-all duration-300 group">
+                  <svg className="absolute top-4 right-4 w-4 h-4 text-gray-400 group-hover:text-[var(--color-clic-blue)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+                  <h4 className="font-bold text-gray-900 group-hover:text-[var(--color-clic-blue)] transition-colors text-base mb-1 pr-4">NATS</h4>
+                  <p className="text-sm text-gray-600 font-medium">National Advanced Technology Services</p>
+                </a>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -1062,6 +1293,7 @@ const FounderMessage = () => {
                 alt="Dr. Ir. Frehun Adefris" 
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
+                loading="lazy"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-8 text-white">
                 <h3 className="text-2xl font-bold font-serif">Dr. Ir. Frehun Adefris (Prof.)</h3>
@@ -1119,39 +1351,47 @@ const SteamSection = () => {
   const steamFields = [
     { 
       letter: 'S', name: 'Science', color: 'var(--color-clic-red)', icon: FlaskConical, 
-      desc: 'Gives tools to experiment, test, and evaluate ideas to understand the world.',
-      stats: [{ label: 'Modules', value: '12+' }, { label: 'Experiments', value: '50+' }, { label: 'Hours', value: '120' }],
-      detailedContent: 'Our Science curriculum covers Biotechnology, Agricultural Science, Chemical Science, and Environmental Science. Students engage in hands-on experiments to understand the fundamental laws of nature and apply them to solve local challenges.'
+      desc: 'Equips students with the analytical tools to experiment, test hypotheses, and uncover the fundamental laws shaping our world.',
+      stats: [{ label: 'Modules', value: '12+' }, { label: 'Experiments', value: '50+' }],
+      detailedContent: 'Our Science curriculum covers Biotechnology, Agricultural Science, Chemical Science, and Environmental Science. Students engage in hands-on experiments to understand the fundamental laws of nature and apply them to solve local challenges.',
+      colSpan: 'lg:col-span-2'
     },
     { 
       letter: 'T', name: 'Technology', color: 'var(--color-clic-orange)', icon: Cpu, 
-      desc: 'Teaches how to process, connect, and make things in a variety of environments.',
-      stats: [{ label: 'Tools', value: '25+' }, { label: 'Projects', value: '40+' }, { label: 'Skills', value: '15' }],
-      detailedContent: 'Focuses on Electronics, IoT Systems, Computer Programming, and Digital Communications. Students learn to build smart devices, code applications, and leverage digital tools for industrial transformation.'
+      desc: 'Empowers learners to build, connect, and process information across diverse digital and physical environments.',
+      stats: [{ label: 'Tools', value: '25+' }, { label: 'Projects', value: '40+' }],
+      detailedContent: 'Focuses on Electronics, IoT Systems, Computer Programming, and Digital Communications. Students learn to build smart devices, code applications, and leverage digital tools for industrial transformation.',
+      colSpan: 'lg:col-span-2'
     },
     { 
       letter: 'E', name: 'Engineering', color: 'var(--color-clic-green)', icon: Compass, 
-      desc: 'Teaches the cycle of innovation, inventing solutions, and making changes.',
-      stats: [{ label: 'Designs', value: '100+' }, { label: 'Prototypes', value: '30+' }, { label: 'Methods', value: '10' }],
-      detailedContent: 'Covers Architecture, Manufacturing, Process Automation, and Robotics. Students learn the engineering design process, from ideation to prototyping and final production.'
+      desc: 'Drives the cycle of innovation—turning complex problems into tangible, scalable, and practical solutions.',
+      stats: [{ label: 'Designs', value: '100+' }, { label: 'Prototypes', value: '30+' }],
+      detailedContent: 'Covers Architecture, Manufacturing, Process Automation, and Robotics. Students learn the engineering design process, from ideation to prototyping and final production.',
+      colSpan: 'lg:col-span-2'
     },
     { 
       letter: 'A', name: 'Arts', color: 'var(--color-clic-blue)', icon: Palette, 
-      desc: 'Teaches symbolic & expressive capacities that reach across cultural barriers.',
-      stats: [{ label: 'Mediums', value: '8' }, { label: 'Exhibits', value: '12' }, { label: 'Creative', value: '∞' }],
-      detailedContent: 'Integrates Fine Arts, Digital Arts, and Technical Arts. We believe creativity is the catalyst for innovation. Students explore graphics design, 3D modeling, and multimedia storytelling.'
+      desc: 'Fosters creative expression and design thinking to bridge cultural barriers and inspire human-centric innovation.',
+      stats: [{ label: 'Mediums', value: '8' }, { label: 'Exhibits', value: '12' }],
+      detailedContent: 'Integrates Fine Arts, Digital Arts, and Technical Arts. We believe creativity is the catalyst for innovation. Students explore graphics design, 3D modeling, and multimedia storytelling.',
+      colSpan: 'lg:col-span-3'
     },
     { 
       letter: 'M', name: 'Mathematics', color: 'var(--color-clic-purple)', icon: Calculator, 
-      desc: 'Provides the tools & structures to analyze facts, events, and scenarios.',
-      stats: [{ label: 'Models', value: '20+' }, { label: 'Algorithms', value: '15+' }, { label: 'Logic', value: '100%' }],
-      detailedContent: 'Applied Mathematics, Statistics, and Data Science. We move beyond theory to application, using math to model real-world systems, analyze business data, and optimize industrial processes.'
+      desc: 'Provides the structural logic and quantitative frameworks needed to analyze data, model scenarios, and optimize systems.',
+      stats: [{ label: 'Models', value: '20+' }, { label: 'Algorithms', value: '15+' }],
+      detailedContent: 'Applied Mathematics, Statistics, and Data Science. We move beyond theory to application, using math to model real-world systems, analyze business data, and optimize industrial processes.',
+      colSpan: 'lg:col-span-3'
     },
   ];
 
   return (
-    <section id="steam" className="py-24 bg-[var(--color-clic-light)]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="steam" className="py-24 bg-[var(--color-clic-light)] relative overflow-hidden">
+      {/* Decorative dashed line behind the grid */}
+      <div className="absolute top-[55%] left-0 w-full h-0.5 border-t-2 border-dashed border-gray-300 -z-0 hidden lg:block opacity-50"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">What is STEAM?</h2>
           <p className="text-xl text-gray-600">
@@ -1159,7 +1399,7 @@ const SteamSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
           {steamFields.map((field, i) => (
             <motion.div
               key={field.name}
@@ -1167,38 +1407,53 @@ const SteamSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.5 }}
-              className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-xl transition-all border-t-4 flex flex-col h-full group cursor-pointer"
-              style={{ borderTopColor: field.color }}
+              className={`bg-white rounded-3xl p-8 shadow-sm border border-gray-100 relative overflow-hidden group cursor-pointer hover:shadow-2xl transition-all duration-500 flex flex-col h-full ${field.colSpan}`}
               onClick={() => setSelectedField({ ...field, title: field.name })}
             >
-              <div className="flex flex-col items-center text-center flex-grow">
-                <div 
-                  className="w-16 h-16 rounded-full flex items-center justify-center mb-4 text-white shadow-md group-hover:scale-110 transition-transform duration-300"
-                  style={{ backgroundColor: field.color }}
-                >
-                  <field.icon size={32} />
+              {/* Hover Tint */}
+              <div 
+                className="absolute inset-0 opacity-0 group-hover:opacity-[0.03] transition-opacity duration-500 z-0 pointer-events-none"
+                style={{ backgroundColor: field.color }}
+              ></div>
+
+              {/* Watermark Letter */}
+              <div 
+                className="absolute -bottom-8 -right-4 text-[14rem] font-black leading-none opacity-[0.15] group-hover:opacity-[0.25] group-hover:-translate-y-4 transition-all duration-700 z-0 select-none pointer-events-none"
+                style={{ color: field.color }}
+              >
+                {field.letter}
+              </div>
+
+              <div className="relative z-10 flex flex-col h-full">
+                <div className="flex items-center gap-4 mb-6">
+                  <div 
+                    className="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 group-hover:-translate-y-1 transition-transform duration-500"
+                    style={{ backgroundColor: field.color }}
+                  >
+                    <field.icon size={28} />
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900">{field.name}</h3>
                 </div>
-                <h3 className="text-5xl font-black mb-2" style={{ color: field.color }}>{field.letter}</h3>
-                <h4 className="text-lg font-bold text-gray-900 mb-4 uppercase tracking-wider">{field.name}</h4>
-                <p className="text-sm text-gray-600 mb-6">{field.desc}</p>
+                
+                <p className="text-gray-600 mb-8 flex-grow text-base leading-relaxed">
+                  {field.desc}
+                </p>
                 
                 {/* Mini Stats */}
-                <div className="grid grid-cols-3 gap-2 w-full mb-6 border-t border-gray-100 pt-4">
+                <div className="grid grid-cols-2 gap-4 w-full mb-6 border-t border-gray-100 pt-6">
                   {field.stats.map((stat, idx) => (
-                    <div key={idx} className="text-center">
-                      <div className="text-xs font-bold" style={{ color: field.color }}>{stat.value}</div>
-                      <div className="text-[0.6rem] text-gray-400 uppercase">{stat.label}</div>
+                    <div key={idx} className="text-left">
+                      <div className="text-2xl font-black mb-1" style={{ color: field.color }}>{stat.value}</div>
+                      <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">{stat.label}</div>
                     </div>
                   ))}
                 </div>
+
+                <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider mt-auto group-hover:gap-3 transition-all duration-300" style={{ color: field.color }}>
+                  <span>Learn More</span>
+                  <ArrowRight size={16} />
+                </div>
               </div>
-              
-              <button 
-                className="w-full py-2 rounded-lg text-sm font-bold text-white transition-opacity"
-                style={{ backgroundColor: field.color }}
-              >
-                Learn More
-              </button>
             </motion.div>
           ))}
         </div>
@@ -1264,10 +1519,18 @@ const IESection = () => {
             onClick={() => setSelectedItem(ieData.innovation)}
           >
             <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
-               <img src="https://loremflickr.com/600/400/idea,technology" alt="Innovation" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+               <img src="https://loremflickr.com/600/400/idea,technology" alt="Innovation" className="w-full h-full object-cover" referrerPolicy="no-referrer" loading="lazy" />
             </div>
             <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-clic-orange)]/10 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110 duration-500 z-0"></div>
             
+            {/* Watermark Letter */}
+            <div 
+              className="absolute -bottom-8 -right-4 text-[14rem] font-black leading-none opacity-[0.15] group-hover:opacity-[0.25] group-hover:-translate-y-4 transition-all duration-700 z-0 select-none pointer-events-none"
+              style={{ color: 'var(--color-clic-orange)' }}
+            >
+              I
+            </div>
+
             <div className="relative z-10">
               <div className="w-16 h-16 rounded-2xl bg-white text-[var(--color-clic-orange)] flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
                 <Lightbulb size={32} />
@@ -1302,10 +1565,18 @@ const IESection = () => {
             onClick={() => setSelectedItem(ieData.entrepreneurship)}
           >
             <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
-               <img src="https://loremflickr.com/600/400/startup,business" alt="Entrepreneurship" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+               <img src="https://loremflickr.com/600/400/startup,business" alt="Entrepreneurship" className="w-full h-full object-cover" referrerPolicy="no-referrer" loading="lazy" />
             </div>
             <div className="absolute top-0 right-0 w-64 h-64 bg-[var(--color-clic-green)]/10 rounded-bl-full -mr-16 -mt-16 transition-transform group-hover:scale-110 duration-500 z-0"></div>
             
+            {/* Watermark Letter */}
+            <div 
+              className="absolute -bottom-8 -right-4 text-[14rem] font-black leading-none opacity-[0.15] group-hover:opacity-[0.25] group-hover:-translate-y-4 transition-all duration-700 z-0 select-none pointer-events-none"
+              style={{ color: 'var(--color-clic-green)' }}
+            >
+              E
+            </div>
+
             <div className="relative z-10">
               <div className="w-16 h-16 rounded-2xl bg-white text-[var(--color-clic-green)] flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
                 <Rocket size={32} />
@@ -1352,7 +1623,8 @@ const Labs = () => {
       desc: 'The Future of Classrooms. E-learning platforms for remote classes, using VR & AR as new training methods.',
       image: 'https://loremflickr.com/600/400/computer,code,classroom',
       stats: [{ label: 'Students', value: '500+' }, { label: 'Courses', value: '25' }, { label: 'VR Units', value: '50' }],
-      detailedContent: 'Digital Labs are designed for learning skills using digital means. Includes Basic Literacy Skills (Language, Computer HW/SW) and Theoretical Skills delivered via virtual classrooms. Features a Data Center for digital solutions, IoT, and AI.'
+      detailedContent: 'Digital Labs are designed for learning skills using digital means. Includes Basic Literacy Skills (Language, Computer HW/SW) and Theoretical Skills delivered via virtual classrooms. Features a Data Center for digital solutions, IoT, and AI.',
+      colSpan: 'md:col-span-2 lg:col-span-3'
     },
     {
       title: 'Fabrication Labs',
@@ -1361,7 +1633,8 @@ const Labs = () => {
       desc: 'Smart workshops for practical lessons. Prototyping & small scale production labs using smart fabrication technologies.',
       image: 'https://loremflickr.com/600/400/robotics,factory,workshop',
       stats: [{ label: 'Machines', value: '15+' }, { label: 'Tools', value: '200+' }, { label: 'Safety', value: '100%' }],
-      detailedContent: 'Workshops for hands-on skills using state-of-the-art tools. Covers Basic Tools Skills, Design & Fabrication (CAD/CAM), and Prototyping & Manufacturing. Learn to manufacture, distribute, and market products.'
+      detailedContent: 'Workshops for hands-on skills using state-of-the-art tools. Covers Basic Tools Skills, Design & Fabrication (CAD/CAM), and Prototyping & Manufacturing. Learn to manufacture, distribute, and market products.',
+      colSpan: 'md:col-span-1 lg:col-span-2'
     },
     {
       title: 'Field Labs',
@@ -1370,7 +1643,8 @@ const Labs = () => {
       desc: 'State of the Art field projects. On-the-job hands-on practical trainings and large scale production plants.',
       image: 'https://loremflickr.com/600/400/agriculture,solar,farm',
       stats: [{ label: 'Sites', value: '10' }, { label: 'Projects', value: '15' }, { label: 'Impact', value: 'High' }],
-      detailedContent: 'Includes Field Workshops for digital learning in the field, Practical Attachment for on-the-job training with professionals, and On-the-Job Trainings for short-term assignments on field projects.'
+      detailedContent: 'Includes Field Workshops for digital learning in the field, Practical Attachment for on-the-job training with professionals, and On-the-Job Trainings for short-term assignments on field projects.',
+      colSpan: 'md:col-span-1 lg:col-span-2'
     },
     {
       title: 'Smart City Labs',
@@ -1379,23 +1653,24 @@ const Labs = () => {
       desc: 'A place for 10,000 to 100,000 innovators per region! Smart houses, smart factories, and smart businesses.',
       image: 'https://loremflickr.com/600/400/smartcity,architecture,modern',
       stats: [{ label: 'Capacity', value: '10k+' }, { label: 'Zones', value: '3' }, { label: 'Vision', value: '2025' }],
-      detailedContent: 'Smart industrial cities built as a business & manufacturing hub. Features Smart Industry (Smart factories, R&D), Smart Business (Data centers, Incubation), and Smart Living (Budget housing, Smart energy, Smart farming).'
+      detailedContent: 'Smart industrial cities built as a business & manufacturing hub. Features Smart Industry (Smart factories, R&D), Smart Business (Data centers, Incubation), and Smart Living (Budget housing, Smart energy, Smart farming).',
+      colSpan: 'md:col-span-2 lg:col-span-3'
     }
   ];
 
   return (
-    <section id="labs" className="py-24 bg-white">
+    <section id="labs" className="py-24 bg-white dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div className="max-w-2xl">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4 font-serif">Smart Creative Laboratories</h2>
-            <p className="text-lg text-gray-600">
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 font-serif">Smart Creative Laboratories</h2>
+            <p className="text-lg text-gray-600 dark:text-gray-400">
               Four types of specialized labs designed to deliver practical, hands-on STEAM education across Ethiopia.
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
           {labs.map((lab, i) => (
             <motion.div
               key={lab.title}
@@ -1403,7 +1678,7 @@ const Labs = () => {
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.5 }}
-              className="group relative rounded-3xl overflow-hidden bg-gray-900 aspect-[4/3] sm:aspect-[16/9] cursor-pointer shadow-lg hover:shadow-2xl transition-all"
+              className={`group relative rounded-3xl overflow-hidden bg-gray-900 aspect-[4/3] sm:aspect-auto sm:min-h-[400px] cursor-pointer shadow-lg hover:shadow-2xl transition-all ${lab.colSpan}`}
               onClick={() => setSelectedLab(lab)}
             >
               <img 
@@ -1411,12 +1686,13 @@ const Labs = () => {
                 alt={lab.title} 
                 className="absolute inset-0 w-full h-full object-cover opacity-50 group-hover:opacity-40 transition-opacity duration-500 group-hover:scale-105"
                 referrerPolicy="no-referrer"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent"></div>
               
               <div className="absolute inset-0 p-8 flex flex-col justify-end">
                 <div 
-                  className="w-12 h-12 rounded-full flex items-center justify-center mb-4 text-white backdrop-blur-md shadow-lg"
+                  className="w-12 h-12 rounded-2xl flex items-center justify-center mb-4 text-white backdrop-blur-md shadow-lg group-hover:scale-110 group-hover:-translate-y-1 transition-transform duration-500"
                   style={{ backgroundColor: `${lab.color}90` }}
                 >
                   <lab.icon size={24} />
@@ -1424,16 +1700,16 @@ const Labs = () => {
                 <h3 className="text-2xl font-bold text-white mb-2">{lab.title}</h3>
                 <p className="text-gray-300 max-w-md mb-4 line-clamp-2">{lab.desc}</p>
                 
-                <div className="flex items-center gap-4 mt-auto">
-                  <span className="text-white font-bold text-sm bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-4 mt-auto">
+                  <span className="text-white font-bold text-sm bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 w-max group-hover:bg-white/30 transition-colors">
                     Explore Lab
                   </span>
                   
-                  <div className="flex gap-4 ml-auto">
+                  <div className="flex gap-4 sm:ml-auto">
                     {lab.stats.slice(0, 2).map((stat, idx) => (
-                      <div key={idx} className="text-right">
+                      <div key={idx} className="text-left sm:text-right">
                         <div className="text-white font-bold text-sm">{stat.value}</div>
-                        <div className="text-gray-400 text-[0.6rem] uppercase">{stat.label}</div>
+                        <div className="text-gray-400 text-[0.6rem] uppercase tracking-wider">{stat.label}</div>
                       </div>
                     ))}
                   </div>
@@ -1461,73 +1737,85 @@ const Projects = () => {
       category: 'Smart Agriculture', count: '5 Projects', color: 'var(--color-clic-green)', icon: Sprout,
       items: ['Phytoponics & Hydroponics', 'Vertical Agriculture', 'Smart Livestock Farming'],
       stats: [{ label: 'Yield', value: '+300%' }, { label: 'Water', value: '-90%' }, { label: 'Space', value: 'Optimized' }],
-      detailedContent: 'Includes Phytoponics (Hydroponics farming powered by solar), Vertical agriculture systems for any size of space, and Smart Livestock Farming with automation in poultry farms. Aiming to increase vegetable production multiple folds.'
+      detailedContent: 'Includes Phytoponics (Hydroponics farming powered by solar), Vertical agriculture systems for any size of space, and Smart Livestock Farming with automation in poultry farms. Aiming to increase vegetable production multiple folds.',
+      colSpan: 'lg:col-span-2'
     },
     { 
       category: 'Smart Healthcare', count: '10 Projects', color: 'var(--color-clic-red)', icon: HeartHandshake,
       items: ['Portable Smart Healthcare', '4G Enabled IT Systems', 'Solar Powered Medical Kits'],
       stats: [{ label: 'Portability', value: '100%' }, { label: 'Access', value: 'Remote' }, { label: 'Cost', value: 'Low' }],
-      detailedContent: 'Highly portable smart healthcare systems that fit into a suitcase. Ultra-efficient 4G enabled IT systems including handheld ultrasound, smart phones, and wearable devices. Applications for cancer, HIV/AIDS, Diabetes, and emergency care.'
+      detailedContent: 'Highly portable smart healthcare systems that fit into a suitcase. Ultra-efficient 4G enabled IT systems including handheld ultrasound, smart phones, and wearable devices. Applications for cancer, HIV/AIDS, Diabetes, and emergency care.',
+      colSpan: 'lg:col-span-1'
     },
     { 
       category: 'Smart Manufacturing', count: '12 Projects', color: 'var(--color-clic-orange)', icon: Factory,
       items: ['Smart Factories', 'Specialty Robotics', 'Process Automation'],
       stats: [{ label: 'Efficiency', value: 'High' }, { label: 'Waste', value: 'Zero' }, { label: 'Quality', value: 'Best' }],
-      detailedContent: 'Smart factories for different industrial sectors. Includes Smart Industrial Robotics (Computer Aided Design, Machine Assembly), and Smart Metal, Plastic, Wood, Textile & Leather Works using small-scale fabrication technologies.'
+      detailedContent: 'Smart factories for different industrial sectors. Includes Smart Industrial Robotics (Computer Aided Design, Machine Assembly), and Smart Metal, Plastic, Wood, Textile & Leather Works using small-scale fabrication technologies.',
+      colSpan: 'lg:col-span-1'
     },
     { 
       category: 'Smart Construction', count: '7 Projects', color: 'var(--color-clic-blue)', icon: Building2,
       items: ['3D House Printing', 'Modular Prefabrication', 'Digital Construction Mgmt'],
       stats: [{ label: 'Speed', value: 'Fast' }, { label: 'Cost', value: 'Affordable' }, { label: 'Eco', value: 'Friendly' }],
-      detailedContent: 'Use of state-of-the-art technologies to build smart industrial villages. Resource efficient tools including 3D house printing machineries and modular concrete prefabrication technologies for rural areas.'
+      detailedContent: 'Use of state-of-the-art technologies to build smart industrial villages. Resource efficient tools including 3D house printing machineries and modular concrete prefabrication technologies for rural areas.',
+      colSpan: 'lg:col-span-1'
     },
     { 
       category: 'Smart Mobility', count: '5 Projects', color: 'var(--color-clic-purple)', icon: Car,
       items: ['Electric UTVs/ATVs', 'Solar Powered Batteries', 'Smart Traffic Systems'],
       stats: [{ label: 'Cost', value: '-40%' }, { label: 'Emission', value: '0%' }, { label: 'Range', value: '150km' }],
-      detailedContent: 'Modular city mobility solutions and electric utility vehicles for rural Ethiopia. Powered by efficient battery packs and solar charging. Includes conversion kits for old engines to electric.'
+      detailedContent: 'Modular city mobility solutions and electric utility vehicles for rural Ethiopia. Powered by efficient battery packs and solar charging. Includes conversion kits for old engines to electric.',
+      colSpan: 'lg:col-span-2'
     },
     { 
       category: 'Smart Energy', count: '5 Projects', color: 'var(--color-clic-green)', icon: Zap,
       items: ['Modular Wind Energy', 'Micro Hydropower', 'Off-grid Metering'],
       stats: [{ label: 'Power', value: '24/7' }, { label: 'Green', value: '100%' }, { label: 'Cost', value: 'Low' }],
-      detailedContent: 'Harvesting green energy using modular systems. Bringing electricity to villages not connected to the national grid using solar, wind, and hydro sources. Smart off-grid metering systems.'
+      detailedContent: 'Harvesting green energy using modular systems. Bringing electricity to villages not connected to the national grid using solar, wind, and hydro sources. Smart off-grid metering systems.',
+      colSpan: 'lg:col-span-1'
     },
     { 
       category: 'Smart Finance', count: '6 Projects', color: 'var(--color-clic-red)', icon: Coins,
       items: ['Digital Coins', 'Smart POS Systems', 'Mobile Payments'],
       stats: [{ label: 'Speed', value: 'Instant' }, { label: 'Security', value: 'High' }, { label: 'Access', value: 'All' }],
-      detailedContent: 'Integration of digital payment solutions and smart POS infrastructures. Enabling safe and secured transactions across all industries and private citizens. Includes crypto currency integration.'
+      detailedContent: 'Integration of digital payment solutions and smart POS infrastructures. Enabling safe and secured transactions across all industries and private citizens. Includes crypto currency integration.',
+      colSpan: 'lg:col-span-1'
     },
     { 
       category: 'Smart Education', count: '7 Projects', color: 'var(--color-clic-orange)', icon: GraduationCap,
       items: ['E-learning Platforms', 'VR/AR Classrooms', 'STEM Kits'],
       stats: [{ label: 'Reach', value: 'Remote' }, { label: 'Content', value: 'Rich' }, { label: 'Skills', value: 'Future' }],
-      detailedContent: 'Smart education delivery including remote areas. Offers highly specialized technical skills and content-oriented practical lessons via digital platforms and virtual reality.'
+      detailedContent: 'Smart education delivery including remote areas. Offers highly specialized technical skills and content-oriented practical lessons via digital platforms and virtual reality.',
+      colSpan: 'lg:col-span-1'
     },
     { 
       category: 'Smart Lifestyle', count: '3 Projects', color: 'var(--color-clic-blue)', icon: Home,
       items: ['Smart Cooking Stoves', 'Solar LED Lamps', 'Android TV Systems'],
       stats: [{ label: 'Smoke', value: '0%' }, { label: 'Power', value: 'Solar' }, { label: 'Life', value: 'Better' }],
-      detailedContent: 'Improving daily life with smart home technologies. Includes smokeless cooking stoves using biodegradable fuel, efficient solar lighting, and educational entertainment systems.'
+      detailedContent: 'Improving daily life with smart home technologies. Includes smokeless cooking stoves using biodegradable fuel, efficient solar lighting, and educational entertainment systems.',
+      colSpan: 'lg:col-span-2'
     },
     { 
       category: 'Smart Environment', count: '4 Projects', color: 'var(--color-clic-purple)', icon: Recycle,
       items: ['Plastic Recycling', 'Textile Waste Mgmt', 'Bio-fuel Production'],
       stats: [{ label: 'Waste', value: '-80%' }, { label: 'Value', value: 'Added' }, { label: 'Eco', value: 'Safe' }],
-      detailedContent: 'Small scale recycling plants for textiles and plastic wastes. Converting waste into usable products and energy sources. Environmentally friendly and safe operating atmosphere.'
+      detailedContent: 'Small scale recycling plants for textiles and plastic wastes. Converting waste into usable products and energy sources. Environmentally friendly and safe operating atmosphere.',
+      colSpan: 'lg:col-span-2'
     },
     { 
       category: 'Smart Infrastructure', count: '12 Projects', color: 'var(--color-clic-green)', icon: Server,
       items: ['National Data Centers', 'Smart Roads', 'Digital Services'],
       stats: [{ label: 'Uptime', value: '99.9%' }, { label: 'Connect', value: 'Fast' }, { label: 'Data', value: 'Secure' }],
-      detailedContent: 'Nationally connected data centers and smart road construction technologies for efficient transportation, supply chain, and logistics. Digital services for every industrial sector.'
+      detailedContent: 'Nationally connected data centers and smart road construction technologies for efficient transportation, supply chain, and logistics. Digital services for every industrial sector.',
+      colSpan: 'lg:col-span-1'
     },
     { 
       category: 'Smart Governance', count: '15 Projects', color: 'var(--color-clic-red)', icon: Landmark,
       items: ['Public Service Apps', 'Digital ID Systems', 'Civic Engagement'],
       stats: [{ label: 'Service', value: 'Fast' }, { label: 'Transp.', value: '100%' }, { label: 'Access', value: 'Easy' }],
-      detailedContent: 'Digitizing public services for better governance. Smart systems for efficient administration, citizen engagement, and smart public projects.'
+      detailedContent: 'Digitizing public services for better governance. Smart systems for efficient administration, citizen engagement, and smart public projects.',
+      colSpan: 'lg:col-span-1'
     },
   ];
 
@@ -1549,34 +1837,45 @@ const Projects = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.5 }}
-              className="bg-gray-800 rounded-2xl p-6 border border-gray-700 hover:border-gray-500 transition-all hover:bg-gray-750 cursor-pointer group"
+              className={`bg-gray-800 rounded-3xl p-8 border border-gray-700 hover:border-gray-500 transition-all hover:bg-gray-750 cursor-pointer group flex flex-col h-full relative overflow-hidden ${proj.colSpan}`}
               onClick={() => setSelectedProject({ ...proj, title: proj.category, description: `Explore our ${proj.category} initiatives.` })}
             >
-              <div className="flex justify-between items-start mb-4">
-                <div 
-                  className="text-xs font-bold uppercase tracking-wider inline-block px-3 py-1 rounded-full"
-                  style={{ backgroundColor: `${proj.color}20`, color: proj.color }}
-                >
-                  {proj.count}
+              {/* Hover Tint */}
+              <div 
+                className="absolute inset-0 opacity-0 group-hover:opacity-[0.05] transition-opacity duration-500 z-0 pointer-events-none"
+                style={{ backgroundColor: proj.color }}
+              ></div>
+
+              <div className="relative z-10 flex flex-col h-full">
+                <div className="flex justify-between items-start mb-6">
+                  <div 
+                    className="text-xs font-bold uppercase tracking-wider inline-block px-3 py-1 rounded-full"
+                    style={{ backgroundColor: `${proj.color}20`, color: proj.color }}
+                  >
+                    {proj.count}
+                  </div>
+                  <div 
+                    className="w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 group-hover:-translate-y-1 transition-transform duration-500"
+                    style={{ backgroundColor: `${proj.color}90` }}
+                  >
+                    <proj.icon size={24} />
+                  </div>
                 </div>
-                <div className="p-2 rounded-full bg-gray-700 text-gray-400 group-hover:text-white transition-colors">
-                  <proj.icon size={16} />
+                
+                <h3 className="text-2xl font-bold mb-4">{proj.category}</h3>
+                <ul className="space-y-3 mb-8 flex-grow">
+                  {proj.items.map((item, j) => (
+                    <li key={j} className="flex items-start gap-2 text-sm text-gray-400">
+                      <ChevronRight size={16} className="mt-0.5 flex-shrink-0" style={{ color: proj.color }} />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                
+                <div className="pt-6 border-t border-gray-700 flex justify-between items-center mt-auto">
+                  <span className="text-sm font-bold text-gray-400 group-hover:text-white transition-colors">View Details</span>
+                  <ArrowRight size={16} className="text-gray-500 group-hover:translate-x-1 transition-transform" />
                 </div>
-              </div>
-              
-              <h3 className="text-xl font-bold mb-4">{proj.category}</h3>
-              <ul className="space-y-3 mb-6">
-                {proj.items.map((item, j) => (
-                  <li key={j} className="flex items-start gap-2 text-sm text-gray-400">
-                    <ChevronRight size={16} className="mt-0.5 flex-shrink-0" style={{ color: proj.color }} />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              
-              <div className="pt-4 border-t border-gray-700 flex justify-between items-center">
-                <span className="text-sm font-bold text-gray-400 group-hover:text-white transition-colors">View Details</span>
-                <ArrowRight size={16} className="text-gray-500 group-hover:translate-x-1 transition-transform" />
               </div>
             </motion.div>
           ))}
@@ -1599,14 +1898,42 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
     name: '',
     email: '',
     phone: '',
-    message: ''
+    message: '',
+    paymentMethod: 'telebirr'
+  });
+  const [touched, setTouched] = useState({
+    name: false,
+    email: false,
+    phone: false
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const validatePhone = (phone: string) => {
+    return phone === '' || /^\d{10}$/.test(phone.replace(/\D/g, ''));
+  };
+
+  const isFormValid = () => {
+    const finalAmount = amount === 'Custom' ? customAmount : amount;
+    return (
+      finalAmount &&
+      formData.name.trim().length > 0 &&
+      validateEmail(formData.email) &&
+      validatePhone(formData.phone)
+    );
+  };
+
   const handleDonate = async (e: React.FormEvent) => {
     e.preventDefault();
+    setTouched({ name: true, email: true, phone: true });
+    
+    if (!isFormValid()) return;
+
     setIsLoading(true);
     setError(null);
     
@@ -1624,7 +1951,8 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
-          message: formData.message
+          message: formData.message,
+          paymentMethod: formData.paymentMethod
         }),
       });
 
@@ -1632,13 +1960,6 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
 
       if (result.status === 'success') {
         setIsSubmitted(true);
-        setTimeout(() => {
-          setIsSubmitted(false);
-          onClose();
-          setFormData({ name: '', email: '', phone: '', message: '' });
-          setAmount('');
-          setCustomAmount('');
-        }, 3000);
       } else {
         throw new Error(result.message || 'Failed to submit donation');
       }
@@ -1649,6 +1970,15 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
     }
   };
 
+  const handleClose = () => {
+    setIsSubmitted(false);
+    onClose();
+    setFormData({ name: '', email: '', phone: '', message: '', paymentMethod: 'telebirr' });
+    setAmount('');
+    setCustomAmount('');
+    setTouched({ name: false, email: false, phone: false });
+  };
+
   const finalAmount = amount === 'Custom' ? customAmount : amount;
 
   return (
@@ -1657,33 +1987,39 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
         <motion.div 
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-          onClick={onClose}
+          onClick={handleClose}
         >
           <motion.div 
             initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            className="bg-white rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative"
+            className="bg-white dark:bg-gray-800 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative"
             onClick={e => e.stopPropagation()}
           >
             {isSubmitted ? (
-              <div className="p-12 text-center">
-                <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="p-12 text-center relative">
+                <button onClick={handleClose} className="absolute top-4 right-4 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+                  <X size={20} className="text-gray-600 dark:text-gray-400" />
+                </button>
+                <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
                   <HeartHandshake size={40} />
                 </div>
-                <h3 className="text-3xl font-bold text-gray-900 mb-2">Thank You!</h3>
-                <p className="text-gray-600">Your generous donation has been received. We will send a receipt to your email shortly.</p>
+                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Thank You!</h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-8">Your generous donation has been received. We will send a receipt to your email shortly.</p>
+                <button onClick={handleClose} className="px-8 py-3 bg-[var(--color-clic-red)] text-white rounded-xl font-bold hover:bg-opacity-90 transition-colors">
+                  Close
+                </button>
               </div>
             ) : (
               <>
-                <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                  <h3 className="text-xl font-bold font-serif text-gray-900">Make a Donation</h3>
-                  <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full transition-colors">
-                    <X size={20} className="text-gray-600" />
+                <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800/50">
+                  <h3 className="text-xl font-bold font-serif text-gray-900 dark:text-white">Make a Donation</h3>
+                  <button onClick={handleClose} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors">
+                    <X size={20} className="text-gray-600 dark:text-gray-400" />
                   </button>
                 </div>
                 
                 <form onSubmit={handleDonate} className="p-8 space-y-4">
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Select Amount</label>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Select Amount</label>
                     <div className="grid grid-cols-4 gap-2 mb-3">
                       {['500', '2500', '10000', 'Custom'].map((opt) => (
                         <button
@@ -1693,7 +2029,7 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                           className={`py-2 px-1 rounded-lg text-sm font-bold border transition-all ${
                             amount === opt
                               ? 'bg-[var(--color-clic-red)] text-white border-[var(--color-clic-red)]'
-                              : 'bg-white text-gray-600 border-gray-200 hover:border-gray-400'
+                              : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
                           }`}
                         >
                           {opt === 'Custom' ? 'Custom' : `ETB ${opt}`}
@@ -1704,7 +2040,7 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                       <input 
                         required
                         type="number" 
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none"
                         placeholder="Enter amount in ETB"
                         value={customAmount}
                         onChange={e => setCustomAmount(e.target.value)}
@@ -1713,54 +2049,126 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-1">Full Name</label>
+                    <div className="relative">
+                      <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
                       <input 
                         required
                         type="text" 
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none"
+                        className={`w-full px-4 py-3 rounded-xl border bg-white dark:bg-gray-800 text-gray-900 dark:text-white outline-none transition-all pr-10 ${
+                          touched.name 
+                            ? formData.name.trim().length > 0 
+                              ? 'border-green-500 focus:ring-2 focus:ring-green-200 dark:focus:ring-green-900/30' 
+                              : 'border-red-500 focus:ring-2 focus:ring-red-200 dark:focus:ring-red-900/30'
+                            : 'border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-[var(--color-clic-red)]'
+                        }`}
                         value={formData.name}
                         onChange={e => setFormData({...formData, name: e.target.value})}
+                        onBlur={() => setTouched({...touched, name: true})}
                         placeholder="Your Name"
                       />
+                      {touched.name && formData.name.trim().length > 0 && (
+                        <CheckCircle size={18} className="absolute right-3 top-10 text-green-500" />
+                      )}
                     </div>
-                    <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-1">Phone</label>
+                    <div className="relative">
+                      <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Phone</label>
                       <input 
                         type="tel" 
-                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none"
+                        className={`w-full px-4 py-3 rounded-xl border bg-white dark:bg-gray-800 text-gray-900 dark:text-white outline-none transition-all pr-10 ${
+                          touched.phone 
+                            ? validatePhone(formData.phone)
+                              ? formData.phone ? 'border-green-500 focus:ring-2 focus:ring-green-200 dark:focus:ring-green-900/30' : 'border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-[var(--color-clic-red)]'
+                              : 'border-red-500 focus:ring-2 focus:ring-red-200 dark:focus:ring-red-900/30'
+                            : 'border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-[var(--color-clic-red)]'
+                        }`}
                         value={formData.phone}
                         onChange={e => setFormData({...formData, phone: e.target.value})}
+                        onBlur={() => setTouched({...touched, phone: true})}
                         placeholder="0911..."
                       />
+                      {touched.phone && formData.phone && validatePhone(formData.phone) && (
+                        <CheckCircle size={18} className="absolute right-3 top-10 text-green-500" />
+                      )}
                     </div>
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-1">Email</label>
+                  <div className="relative">
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Email</label>
                     <input 
                       required
                       type="email" 
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none"
+                      className={`w-full px-4 py-3 rounded-xl border bg-white dark:bg-gray-800 text-gray-900 dark:text-white outline-none transition-all pr-10 ${
+                        touched.email 
+                          ? validateEmail(formData.email)
+                            ? 'border-green-500 focus:ring-2 focus:ring-green-200 dark:focus:ring-green-900/30' 
+                            : 'border-red-500 focus:ring-2 focus:ring-red-200 dark:focus:ring-red-900/30'
+                          : 'border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-[var(--color-clic-red)]'
+                      }`}
                       value={formData.email}
                       onChange={e => setFormData({...formData, email: e.target.value})}
+                      onBlur={() => setTouched({...touched, email: true})}
                       placeholder="you@example.com"
                     />
+                    {touched.email && validateEmail(formData.email) && (
+                      <CheckCircle size={18} className="absolute right-3 top-10 text-green-500" />
+                    )}
+                    {touched.email && !validateEmail(formData.email) && formData.email.length > 0 && (
+                      <p className="text-red-500 text-xs mt-1">Please enter a valid email address</p>
+                    )}
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-1">Message (Optional)</label>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Message (Optional)</label>
                     <textarea 
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none h-24 resize-none"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none h-24 resize-none"
                       value={formData.message}
                       onChange={e => setFormData({...formData, message: e.target.value})}
                       placeholder="Why are you supporting us?"
                     />
                   </div>
 
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Payment Method</label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setFormData({...formData, paymentMethod: 'telebirr'})}
+                        className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all ${
+                          formData.paymentMethod === 'telebirr'
+                            ? 'border-[var(--color-clic-red)] bg-red-50 dark:bg-red-900/20 text-[var(--color-clic-red)]'
+                            : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600'
+                        }`}
+                      >
+                        <span className="font-bold">Telebirr</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setFormData({...formData, paymentMethod: 'chapa'})}
+                        className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all ${
+                          formData.paymentMethod === 'chapa'
+                            ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-600'
+                            : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600'
+                        }`}
+                      >
+                        <span className="font-bold">Chapa</span>
+                      </button>
+                    </div>
+                    {formData.paymentMethod === 'telebirr' && (
+                      <div className="mt-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg text-sm text-red-800 dark:text-red-200">
+                        <p>Please send <strong>{finalAmount ? `ETB ${finalAmount}` : 'your donation'}</strong> to Telebirr account: <strong>+251 911 69 2277</strong></p>
+                        <p className="mt-1 text-xs opacity-80">We will verify your payment and send a receipt.</p>
+                      </div>
+                    )}
+                    {formData.paymentMethod === 'chapa' && (
+                      <div className="mt-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg text-sm text-green-800 dark:text-green-200">
+                        <p>You will be redirected to the Chapa payment gateway to complete your donation securely.</p>
+                      </div>
+                    )}
+                  </div>
+
                   <button 
                     type="submit"
-                    disabled={!amount || (amount === 'Custom' && !customAmount) || isLoading}
+                    disabled={!isFormValid() || isLoading}
                     className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-red)] hover:bg-opacity-90 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {isLoading ? 'Processing...' : `Donate ${finalAmount ? `ETB ${finalAmount}` : ''}`} {!isLoading && <ArrowRight size={18} />}
@@ -1824,6 +2232,7 @@ const DonateContent = () => {
               alt="Community Support" 
               className="absolute inset-0 w-full h-full object-cover"
               referrerPolicy="no-referrer"
+              loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-white via-white/20 to-transparent"></div>
           </div>
@@ -1842,9 +2251,26 @@ const RegisterContent = () => {
     membershipType: 'Youth (High school graduates)',
     interests: [] as string[]
   });
+  const [touched, setTouched] = useState({
+    firstName: false,
+    lastName: false,
+    email: false
+  });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const isFormValid = () => {
+    return (
+      formData.firstName.trim().length > 0 &&
+      formData.lastName.trim().length > 0 &&
+      validateEmail(formData.email)
+    );
+  };
 
   const handleInterestChange = (interest: string) => {
     setFormData(prev => ({
@@ -1857,6 +2283,10 @@ const RegisterContent = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setTouched({ firstName: true, lastName: true, email: true });
+    
+    if (!isFormValid()) return;
+
     setIsLoading(true);
     setError(null);
 
@@ -1880,16 +2310,6 @@ const RegisterContent = () => {
 
       if (result.status === 'success') {
         setIsSubmitted(true);
-        setTimeout(() => {
-          setIsSubmitted(false);
-          setFormData({
-            firstName: '',
-            lastName: '',
-            email: '',
-            membershipType: 'Youth (High school graduates)',
-            interests: []
-          });
-        }, 3000);
       } else {
         throw new Error(result.message || 'Registration failed');
       }
@@ -1900,14 +2320,32 @@ const RegisterContent = () => {
     }
   };
 
+  const handleClose = () => {
+    setIsSubmitted(false);
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      membershipType: 'Youth (High school graduates)',
+      interests: []
+    });
+    setTouched({ firstName: false, lastName: false, email: false });
+  };
+
   if (isSubmitted) {
     return (
-      <div className="max-w-3xl mx-auto text-center py-12">
+      <div className="max-w-3xl mx-auto text-center py-12 relative bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
+        <button onClick={handleClose} className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors">
+          <X size={20} className="text-gray-600" />
+        </button>
         <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
           <UserPlus size={40} />
         </div>
         <h3 className="text-3xl font-bold text-gray-900 mb-2">Registration Successful!</h3>
-        <p className="text-gray-600">Welcome to CLIC Ethiopia. We will contact you soon.</p>
+        <p className="text-gray-600 mb-8">Welcome to CLIC Ethiopia. We will contact you soon.</p>
+        <button onClick={handleClose} className="px-8 py-3 bg-[var(--color-clic-blue)] text-white rounded-xl font-bold hover:bg-opacity-90 transition-colors">
+          Close
+        </button>
       </div>
     );
   }
@@ -1926,40 +2364,73 @@ const RegisterContent = () => {
 
       <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
+          <div className="relative">
             <label className="block text-sm font-bold text-gray-700 mb-2">First Name</label>
             <input 
               required
               type="text" 
               value={formData.firstName}
               onChange={e => setFormData({...formData, firstName: e.target.value})}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all" 
+              onBlur={() => setTouched({...touched, firstName: true})}
+              className={`w-full px-4 py-3 rounded-xl border outline-none transition-all pr-10 ${
+                touched.firstName 
+                  ? formData.firstName.trim().length > 0 
+                    ? 'border-green-500 focus:ring-2 focus:ring-green-200' 
+                    : 'border-red-500 focus:ring-2 focus:ring-red-200'
+                  : 'border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)]'
+              }`} 
               placeholder="Abebe" 
             />
+            {touched.firstName && formData.firstName.trim().length > 0 && (
+              <CheckCircle size={18} className="absolute right-3 top-11 text-green-500" />
+            )}
           </div>
-          <div>
+          <div className="relative">
             <label className="block text-sm font-bold text-gray-700 mb-2">Last Name</label>
             <input 
               required
               type="text" 
               value={formData.lastName}
               onChange={e => setFormData({...formData, lastName: e.target.value})}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all" 
+              onBlur={() => setTouched({...touched, lastName: true})}
+              className={`w-full px-4 py-3 rounded-xl border outline-none transition-all pr-10 ${
+                touched.lastName 
+                  ? formData.lastName.trim().length > 0 
+                    ? 'border-green-500 focus:ring-2 focus:ring-green-200' 
+                    : 'border-red-500 focus:ring-2 focus:ring-red-200'
+                  : 'border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)]'
+              }`} 
               placeholder="Kebede" 
             />
+            {touched.lastName && formData.lastName.trim().length > 0 && (
+              <CheckCircle size={18} className="absolute right-3 top-11 text-green-500" />
+            )}
           </div>
         </div>
         
-        <div>
+        <div className="relative">
           <label className="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
           <input 
             required
             type="email" 
             value={formData.email}
             onChange={e => setFormData({...formData, email: e.target.value})}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all" 
+            onBlur={() => setTouched({...touched, email: true})}
+            className={`w-full px-4 py-3 rounded-xl border outline-none transition-all pr-10 ${
+              touched.email 
+                ? validateEmail(formData.email)
+                  ? 'border-green-500 focus:ring-2 focus:ring-green-200' 
+                  : 'border-red-500 focus:ring-2 focus:ring-red-200'
+                : 'border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)]'
+            }`} 
             placeholder="abebe@example.com" 
           />
+          {touched.email && validateEmail(formData.email) && (
+            <CheckCircle size={18} className="absolute right-3 top-11 text-green-500" />
+          )}
+          {touched.email && !validateEmail(formData.email) && formData.email.length > 0 && (
+            <p className="text-red-500 text-xs mt-1">Please enter a valid email address</p>
+          )}
         </div>
 
         <div>
@@ -2001,8 +2472,8 @@ const RegisterContent = () => {
 
         <button 
           type="submit" 
-          disabled={isLoading}
-          className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-blue)] hover:bg-opacity-90 transition-colors shadow-md mt-4 disabled:opacity-50"
+          disabled={!isFormValid() || isLoading}
+          className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-blue)] hover:bg-opacity-90 transition-colors shadow-md mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? 'Submitting...' : 'Submit Application'}
         </button>
@@ -2020,12 +2491,35 @@ const MentorContent = () => {
     expertise: 'Engineering & Technology',
     message: ''
   });
+  const [touched, setTouched] = useState({
+    firstName: false,
+    lastName: false,
+    email: false,
+    message: false
+  });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const isFormValid = () => {
+    return (
+      formData.firstName.trim().length > 0 &&
+      formData.lastName.trim().length > 0 &&
+      validateEmail(formData.email) &&
+      formData.message.trim().length > 0
+    );
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setTouched({ firstName: true, lastName: true, email: true, message: true });
+    
+    if (!isFormValid()) return;
+
     setIsLoading(true);
     setError(null);
 
@@ -2049,16 +2543,6 @@ const MentorContent = () => {
 
       if (result.status === 'success') {
         setIsSubmitted(true);
-        setTimeout(() => {
-          setIsSubmitted(false);
-          setFormData({
-            firstName: '',
-            lastName: '',
-            email: '',
-            expertise: 'Engineering & Technology',
-            message: ''
-          });
-        }, 3000);
       } else {
         throw new Error(result.message || 'Registration failed');
       }
@@ -2069,15 +2553,46 @@ const MentorContent = () => {
     }
   };
 
+  const handleClose = () => {
+    setIsSubmitted(false);
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      expertise: 'Engineering & Technology',
+      message: ''
+    });
+    setTouched({ firstName: false, lastName: false, email: false, message: false });
+  };
+
   if (isSubmitted) {
     return (
-      <div className="max-w-3xl mx-auto text-center py-12">
-        <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
-          <Lightbulb size={40} />
-        </div>
-        <h3 className="text-3xl font-bold text-gray-900 mb-2">Thank You!</h3>
-        <p className="text-gray-600">Your application to become a mentor has been received. We will be in touch.</p>
-      </div>
+      <AnimatePresence>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          className="max-w-3xl mx-auto text-center py-12 bg-white rounded-3xl shadow-xl border border-gray-100 relative"
+        >
+          <button 
+            onClick={handleClose}
+            className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <X size={24} />
+          </button>
+          <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+            <CheckCircle size={40} />
+          </div>
+          <h3 className="text-3xl font-bold text-gray-900 mb-2">Thank You!</h3>
+          <p className="text-gray-600 mb-8 max-w-md mx-auto">Your application to become a mentor has been received. We will be in touch with you shortly.</p>
+          <button 
+            onClick={handleClose}
+            className="px-8 py-3 bg-[var(--color-clic-orange)] text-white font-bold rounded-xl hover:bg-opacity-90 transition-colors"
+          >
+            Close
+          </button>
+        </motion.div>
+      </AnimatePresence>
     );
   }
 
@@ -2097,38 +2612,86 @@ const MentorContent = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">First Name</label>
-            <input 
-              required
-              type="text" 
-              value={formData.firstName}
-              onChange={e => setFormData({...formData, firstName: e.target.value})}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all" 
-              placeholder="Your Name" 
-            />
+            <div className="relative">
+              <input 
+                required
+                type="text" 
+                value={formData.firstName}
+                onChange={e => setFormData({...formData, firstName: e.target.value})}
+                onBlur={() => setTouched({...touched, firstName: true})}
+                className={`w-full px-4 py-3 rounded-xl border ${
+                  touched.firstName 
+                    ? formData.firstName.trim().length > 0 
+                      ? 'border-green-500 focus:ring-green-500' 
+                      : 'border-red-500 focus:ring-red-500'
+                    : 'border-gray-200 focus:ring-[var(--color-clic-orange)]'
+                } focus:ring-2 focus:border-transparent outline-none transition-all`}
+                placeholder="Your Name" 
+              />
+              {touched.firstName && formData.firstName.trim().length > 0 && (
+                <CheckCircle className="absolute right-3 top-3.5 text-green-500" size={20} />
+              )}
+            </div>
+            {touched.firstName && formData.firstName.trim().length === 0 && (
+              <p className="text-red-500 text-xs mt-1">First name is required</p>
+            )}
           </div>
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">Last Name</label>
-            <input 
-              required
-              type="text" 
-              value={formData.lastName}
-              onChange={e => setFormData({...formData, lastName: e.target.value})}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all" 
-              placeholder="Surname" 
-            />
+            <div className="relative">
+              <input 
+                required
+                type="text" 
+                value={formData.lastName}
+                onChange={e => setFormData({...formData, lastName: e.target.value})}
+                onBlur={() => setTouched({...touched, lastName: true})}
+                className={`w-full px-4 py-3 rounded-xl border ${
+                  touched.lastName 
+                    ? formData.lastName.trim().length > 0 
+                      ? 'border-green-500 focus:ring-green-500' 
+                      : 'border-red-500 focus:ring-red-500'
+                    : 'border-gray-200 focus:ring-[var(--color-clic-orange)]'
+                } focus:ring-2 focus:border-transparent outline-none transition-all`}
+                placeholder="Surname" 
+              />
+              {touched.lastName && formData.lastName.trim().length > 0 && (
+                <CheckCircle className="absolute right-3 top-3.5 text-green-500" size={20} />
+              )}
+            </div>
+            {touched.lastName && formData.lastName.trim().length === 0 && (
+              <p className="text-red-500 text-xs mt-1">Last name is required</p>
+            )}
           </div>
         </div>
         
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
-          <input 
-            required
-            type="email" 
-            value={formData.email}
-            onChange={e => setFormData({...formData, email: e.target.value})}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all" 
-            placeholder="you@example.com" 
-          />
+          <div className="relative">
+            <input 
+              required
+              type="email" 
+              value={formData.email}
+              onChange={e => setFormData({...formData, email: e.target.value})}
+              onBlur={() => setTouched({...touched, email: true})}
+              className={`w-full px-4 py-3 rounded-xl border ${
+                touched.email 
+                  ? validateEmail(formData.email)
+                    ? 'border-green-500 focus:ring-green-500' 
+                    : 'border-red-500 focus:ring-red-500'
+                  : 'border-gray-200 focus:ring-[var(--color-clic-orange)]'
+              } focus:ring-2 focus:border-transparent outline-none transition-all`}
+              placeholder="you@example.com" 
+            />
+            {touched.email && validateEmail(formData.email) && (
+              <CheckCircle className="absolute right-3 top-3.5 text-green-500" size={20} />
+            )}
+          </div>
+          {touched.email && !validateEmail(formData.email) && formData.email.length > 0 && (
+            <p className="text-red-500 text-xs mt-1">Please enter a valid email address</p>
+          )}
+          {touched.email && formData.email.length === 0 && (
+            <p className="text-red-500 text-xs mt-1">Email is required</p>
+          )}
         </div>
 
         <div>
@@ -2148,19 +2711,34 @@ const MentorContent = () => {
 
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-2">How would you like to help?</label>
-          <textarea 
-            required
-            value={formData.message}
-            onChange={e => setFormData({...formData, message: e.target.value})}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all h-32" 
-            placeholder="Tell us about your experience and how you can contribute..."
-          ></textarea>
+          <div className="relative">
+            <textarea 
+              required
+              value={formData.message}
+              onChange={e => setFormData({...formData, message: e.target.value})}
+              onBlur={() => setTouched({...touched, message: true})}
+              className={`w-full px-4 py-3 rounded-xl border ${
+                touched.message 
+                  ? formData.message.trim().length > 0 
+                    ? 'border-green-500 focus:ring-green-500' 
+                    : 'border-red-500 focus:ring-red-500'
+                  : 'border-gray-200 focus:ring-[var(--color-clic-orange)]'
+              } focus:ring-2 focus:border-transparent outline-none transition-all h-32`}
+              placeholder="Tell us about your experience and how you can contribute..."
+            ></textarea>
+            {touched.message && formData.message.trim().length > 0 && (
+              <CheckCircle className="absolute right-3 top-3.5 text-green-500" size={20} />
+            )}
+          </div>
+          {touched.message && formData.message.trim().length === 0 && (
+            <p className="text-red-500 text-xs mt-1">Message is required</p>
+          )}
         </div>
 
         <button 
           type="submit" 
-          disabled={isLoading}
-          className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-orange)] hover:bg-opacity-90 transition-colors shadow-md mt-4 disabled:opacity-50"
+          disabled={!isFormValid() || isLoading}
+          className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-orange)] hover:bg-opacity-90 transition-colors shadow-md mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isLoading ? 'Submitting...' : 'Join as Mentor'}
         </button>
@@ -2301,8 +2879,8 @@ const Footer = () => {
   return (
     <footer className="bg-gray-900 text-white py-16 border-t border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-          <div className="col-span-1 md:col-span-2">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-12">
+          <div className="col-span-1 md:col-span-4">
             <div className="flex items-center gap-2 mb-6">
               <div className="flex">
                 <span className="text-3xl font-black text-[var(--color-clic-red)] tracking-tighter">C</span>
@@ -2319,11 +2897,11 @@ const Footer = () => {
             </p>
             <div className="text-sm text-gray-400">
               <p>Email: frehun@fadlab.tech</p>
-              <p>Phone: 09 11 692277</p>
+              <p>Phone: +251 911 69 2277</p>
             </div>
           </div>
           
-          <div>
+          <div className="col-span-1 md:col-span-2">
             <h4 className="text-lg font-bold mb-6">Quick Links</h4>
             <ul className="space-y-3 text-gray-400">
               <li><a href="#about" className="hover:text-white transition-colors">About Us</a></li>
@@ -2333,7 +2911,7 @@ const Footer = () => {
             </ul>
           </div>
           
-          <div>
+          <div className="col-span-1 md:col-span-2">
             <h4 className="text-lg font-bold mb-6">Get Involved</h4>
             <ul className="space-y-3 text-gray-400">
               <li><a href="#get-involved" className="hover:text-white transition-colors">Register as Student</a></li>
@@ -2341,6 +2919,27 @@ const Footer = () => {
               <li><a href="#get-involved" className="hover:text-white transition-colors">Partner with Us</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
             </ul>
+          </div>
+
+          <div className="col-span-1 md:col-span-4">
+            <h4 className="text-lg font-bold mb-6">Newsletter</h4>
+            <p className="text-gray-400 text-sm mb-4">Subscribe to our newsletter to get updates on new labs and merch drops.</p>
+            <form 
+              className="flex flex-col sm:flex-row gap-2" 
+              onSubmit={(e) => { 
+                e.preventDefault(); 
+                const form = e.target as HTMLFormElement; 
+                const emailInput = form.querySelector('input[type="email"]') as HTMLInputElement;
+                if (emailInput && emailInput.value) {
+                  window.location.href = `mailto:clic.ethiopia@gmail.com?subject=Subscribe to CLIC News&body=Please add me to the CLIC News email list. My email is: ${emailInput.value}`;
+                  alert('Thank you! Your email client has been opened to send the subscription request.'); 
+                  form.reset(); 
+                }
+              }}
+            >
+              <input type="email" placeholder="Your email" required className="bg-gray-800 text-white px-4 py-3 rounded-xl outline-none focus:ring-2 focus:ring-[var(--color-clic-blue)] w-full" />
+              <button type="submit" className="bg-[var(--color-clic-blue)] text-white px-6 py-3 rounded-xl font-bold hover:bg-opacity-90 transition-colors whitespace-nowrap">Subscribe</button>
+            </form>
           </div>
         </div>
         
@@ -2353,25 +2952,85 @@ const Footer = () => {
   );
 };
 
-export default function App() {
+const ScrollToTop = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const toggleVisibility = () => {
+      if (window.scrollY > 500) {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    window.addEventListener('scroll', toggleVisibility);
+    return () => window.removeEventListener('scroll', toggleVisibility);
+  }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  };
+
   return (
-    <div className="min-h-screen font-sans">
-      <Navbar />
-      <main>
-        <Hero />
-        <About />
-        <FounderMessage />
-        <SteamSection />
-        <IESection />
-        <CurriculumSection />
-        <Labs />
-        <Projects />
-        <NewsSection />
-        <MerchSection />
-        <GetInvolved />
-      </main>
-      <Footer />
-      <ChatBot />
-    </div>
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          className="fixed bottom-6 left-6 z-50"
+        >
+          <button
+            onClick={scrollToTop}
+            className="p-3 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg hover:shadow-xl border border-gray-100 dark:border-gray-700 transition-all hover:scale-110"
+            aria-label="Scroll to top"
+          >
+            <ArrowUp size={24} />
+          </button>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+export default function App() {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [lang, setLang] = useState<Language>('en');
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
+  return (
+    <LanguageContext.Provider value={{ lang, setLang }}>
+      <div className="min-h-screen font-sans bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
+        <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+        <main>
+          <Hero />
+          <ImpactSection />
+          <About />
+          <FounderMessage />
+          <SteamSection />
+          <IESection />
+          <CurriculumSection />
+          <Labs />
+          <Projects />
+          <NewsSection />
+          <MerchSection />
+          <GetInvolved />
+        </main>
+        <Footer />
+        <ChatBot />
+        <ScrollToTop />
+      </div>
+    </LanguageContext.Provider>
   );
 }

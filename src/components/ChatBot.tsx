@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MessageCircle, X, Send, Minimize2, User, Bot, Loader2, Phone, Mail, UserPlus, Sparkles, BookOpen, Lightbulb, Compass, HelpCircle, Languages, ExternalLink } from 'lucide-react';
+import { MessageCircle, X, Send, Minimize2, User, Bot, Loader2, Phone, Mail, UserPlus, Sparkles, BookOpen, Lightbulb, Compass, HelpCircle, Languages, ExternalLink, Wrench, ChevronDown, ChevronUp } from 'lucide-react';
 import { GoogleGenAI } from "@google/genai";
 
 const SYSTEM_INSTRUCTION = `
@@ -54,15 +54,16 @@ const SUGGESTION_CHIPS = [
 ];
 
 const CREATIVE_ACTIONS = [
-  { icon: Lightbulb, label: "Project Idea", prompt: "Generate a new, practical STEAM project idea for Ethiopia." },
-  { icon: Compass, label: "Find My Path", prompt: "I want to find my career path. Ask me 3 questions to recommend a CLIC Lab." },
-  { icon: HelpCircle, label: "Quiz Mode", prompt: "Ask me a multiple-choice trivia question about Ethiopian industrialization or STEAM." },
-  { icon: Languages, label: "Amharic", prompt: "Translate your last response to Amharic." }
+  { icon: Lightbulb, label: "Project Idea", prompt: "Generate a new, practical STEAM project idea for Ethiopia.", link: { url: "https://clicethiopia.com/projects", label: "Explore More Projects" } },
+  { icon: Compass, label: "Find My Path", prompt: "I want to find my career path. Ask me 3 questions to recommend a CLIC Lab.", link: { url: "https://clicethiopia.com/labs", label: "Discover CLIC Labs" } },
+  { icon: HelpCircle, label: "Quiz Mode", prompt: "Ask me a multiple-choice trivia question about Ethiopian industrialization or STEAM.", link: { url: "https://clicethiopia.com/quiz", label: "Play More Quizzes" } },
+  { icon: Languages, label: "Amharic", prompt: "Translate your last response to Amharic.", link: { url: "https://translate.google.com/?sl=en&tl=am", label: "Open Translator" } }
 ];
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<{ role: 'user' | 'model'; text: string }[]>([
+  const [showTools, setShowTools] = useState(false);
+  const [messages, setMessages] = useState<{ role: 'user' | 'model'; text: string; link?: { url: string, label: string } }[]>([
     { role: 'model', text: "Hello! I am Prof. Fad, the digital twin of Prof. Frehun. How can I help you build your future today?" }
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -77,7 +78,7 @@ const ChatBot = () => {
     scrollToBottom();
   }, [messages, isOpen]);
 
-  const handleSendMessage = async (textOverride?: string) => {
+  const handleSendMessage = async (textOverride?: string, actionLink?: { url: string, label: string }) => {
     const textToSend = textOverride || inputValue;
     if (!textToSend.trim()) return;
 
@@ -111,10 +112,10 @@ const ChatBot = () => {
       const result = await chat.sendMessage({ message: textToSend });
       const responseText = result.text;
 
-      setMessages(prev => [...prev, { role: 'model', text: responseText || "I'm sorry, I didn't catch that." }]);
+      setMessages(prev => [...prev, { role: 'model', text: responseText || "I'm sorry, I didn't catch that.", link: actionLink }]);
     } catch (error) {
       console.error("Error sending message:", error);
-      setMessages(prev => [...prev, { role: 'model', text: "I apologize, but I'm having trouble connecting to my knowledge base right now. Please try again later." }]);
+      setMessages(prev => [...prev, { role: 'model', text: "I apologize, but I'm having trouble connecting to my knowledge base right now. Please try again later.", link: actionLink }]);
     } finally {
       setIsLoading(false);
     }
@@ -177,6 +178,7 @@ const ChatBot = () => {
                     alt="Prof. Fad" 
                     className="w-full h-full object-cover"
                     referrerPolicy="no-referrer"
+                    loading="lazy"
                   />
                 </div>
                 <div>
@@ -200,17 +202,31 @@ const ChatBot = () => {
                <a href="https://notebooklm.google.com/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-500/10 text-emerald-400 rounded-lg border border-emerald-500/20 hover:bg-emerald-500/20 text-xs font-mono transition-colors whitespace-nowrap">
                  <BookOpen size={14} /> NotebookLM Guide <ExternalLink size={12} />
                </a>
+               <button onClick={() => setShowTools(!showTools)} className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-mono transition-colors whitespace-nowrap ${showTools ? 'bg-fuchsia-500/20 text-fuchsia-400 border-fuchsia-500/30' : 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-750'}`}>
+                 <Wrench size={14} /> Tools {showTools ? <ChevronUp size={12} /> : <ChevronDown size={12} />}
+               </button>
             </div>
 
             {/* Creative Actions */}
-            <div className="grid grid-cols-4 gap-2 p-2 bg-slate-900 border-b border-slate-800 shrink-0">
-               {CREATIVE_ACTIONS.map((action, idx) => (
-                 <button key={idx} onClick={() => handleSendMessage(action.prompt)} disabled={isLoading} className="flex flex-col items-center justify-center p-2 bg-slate-800 rounded-xl border border-fuchsia-500/30 hover:border-fuchsia-400 hover:bg-slate-800 hover:shadow-[0_0_15px_rgba(232,121,249,0.3)] transition-all group disabled:opacity-50 disabled:cursor-not-allowed">
-                    <action.icon size={18} className="text-fuchsia-400 group-hover:text-fuchsia-300 mb-1 transition-colors drop-shadow-[0_0_5px_rgba(232,121,249,0.5)] group-hover:drop-shadow-[0_0_8px_rgba(232,121,249,0.8)]" />
-                    <span className="text-[9px] font-mono text-fuchsia-400 group-hover:text-fuchsia-300 text-center leading-tight transition-colors drop-shadow-[0_0_2px_rgba(232,121,249,0.5)]">{action.label}</span>
-                 </button>
-               ))}
-            </div>
+            <AnimatePresence>
+              {showTools && (
+                <motion.div 
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden bg-slate-900 border-b border-slate-800 shrink-0"
+                >
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-2">
+                     {CREATIVE_ACTIONS.map((action, idx) => (
+                       <button key={idx} onClick={() => handleSendMessage(action.prompt, action.link)} disabled={isLoading} className="flex flex-col items-center justify-center p-3 bg-slate-800 rounded-xl border border-fuchsia-500/30 hover:border-fuchsia-400 hover:bg-slate-800 hover:shadow-[0_0_15px_rgba(232,121,249,0.3)] transition-all group disabled:opacity-50 disabled:cursor-not-allowed">
+                          <action.icon size={22} className="text-fuchsia-400 group-hover:text-fuchsia-300 mb-2 transition-colors drop-shadow-[0_0_5px_rgba(232,121,249,0.5)] group-hover:drop-shadow-[0_0_8px_rgba(232,121,249,0.8)]" />
+                          <span className="text-xs font-bold font-mono text-fuchsia-400 group-hover:text-fuchsia-300 text-center leading-tight transition-colors drop-shadow-[0_0_2px_rgba(232,121,249,0.5)]">{action.label}</span>
+                       </button>
+                     ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-4 bg-slate-900 space-y-4 custom-scrollbar">
@@ -227,6 +243,13 @@ const ChatBot = () => {
                     }`}
                   >
                     <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.text}</p>
+                    {msg.link && (
+                      <div className="mt-3 pt-2 border-t border-slate-700/50">
+                        <a href={msg.link.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 text-xs font-bold text-fuchsia-400 hover:text-fuchsia-300 transition-colors">
+                          <ExternalLink size={12} /> {msg.link.label}
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
