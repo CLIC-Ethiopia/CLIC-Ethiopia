@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'motion/react';
+import { useTranslation } from '../App';
 import { 
   FlaskConical, Calculator, 
   Hammer, Palette, 
@@ -9,6 +10,7 @@ import {
 } from 'lucide-react';
 
 const CurriculumSection = () => {
+  const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -80,8 +82,7 @@ const CurriculumSection = () => {
               From Raw Idea to Real Impact
             </h2>
             <p className="text-xl text-gray-600">
-              Our unique curriculum guides students through a transformative journey. 
-              See how we turn curiosity into capability, and ideas into industries.
+              {t.curriculumDesc}
             </p>
           </motion.div>
         </div>

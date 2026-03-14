@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useTranslation } from '../App';
 import { Youtube, Play, ArrowRight, Star, ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { GOOGLE_SCRIPT_URL } from '../constants';
 
@@ -153,6 +154,7 @@ const InnovatorSpotlight = () => {
 };
 
 const NewsSection = () => {
+  const { t } = useTranslation();
   const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
   const [videos, setVideos] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -192,7 +194,7 @@ const NewsSection = () => {
         <div className="mb-12">
             <h2 className="text-4xl font-bold text-gray-900 font-serif mb-4">Impact & Updates</h2>
             <p className="text-xl text-gray-600 max-w-2xl">
-              See how our students are changing the world, and stay tuned with our latest activities.
+              {t.newsDesc}
             </p>
         </div>
 

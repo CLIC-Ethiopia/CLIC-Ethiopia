@@ -15,6 +15,7 @@ import CurriculumSection from './components/CurriculumSection';
 import NewsSection from './components/NewsSection';
 import MerchSection from './components/MerchSection';
 import ImpactSection from './components/ImpactSection';
+import GoogleTranslateWidget from './components/GoogleTranslateWidget';
 
 // --- Localization ---
 export type Language = 'en' | 'am';
@@ -41,6 +42,28 @@ export const translations = {
     submit: 'Submit',
     success: 'Success!',
     close: 'Close',
+    aboutDesc: 'Founded by Dr. Ir. Frehun Adefris, CLIC Ethiopia aims to train 1 Million Ethiopians by 2025 EC. We bring new opportunities in Education, Industrialization, Digital Transformation, and High-Tech Entrepreneurship.',
+    aboutList1Title: 'Our Mission',
+    aboutList1Desc: 'Prepare Ethiopians for their professional future through practical interdisciplinary trainings using state-of-the-art STEAM laboratories.',
+    aboutList2Title: 'Our Vision',
+    aboutList2Desc: 'Create top technical talent for the future of Ethiopian industries and businesses, inspiring self-sufficient contributors to society.',
+    aboutList3Title: 'Our Operations',
+    aboutList3Desc: 'We operate in every region, every major city, and every locality within the country and beyond.',
+    founderMsg1: '"I am starting this national level NGO called CLIC (Creative Learning in Community) to help Ethiopians get the right education, start the right business and empower their communities."',
+    founderMsg2: 'I spent more than 10 years and millions of Birr to conduct NATIONAL research and design the curriculums at CLIC from interdisciplinary STEAM fields. My plan is to train ',
+    founderMsg2Bold: '1 MILLION ETHIOPIANS BY 2025 EC',
+    founderMsg3: 'I designed my STEAM curriculum based on Ethiopia\'s socio-economic situation and the level of adoption of new technology. I wish you join me at CLIC Ethiopia Vision 2025 and build smart citizens for the future of Ethiopia. I also call for every public servant & every government body to help me and help young Ethiopians achieve the ultimate goal!',
+    steamDesc: 'It is the New Evolution of Literacy. An interdisciplinary skill set that empowers students to be curious learners, critical thinkers & creative problem solvers.',
+    ieDesc: 'The "IE" in STEAM-IE. We empower the next generation to turn creative ideas into sustainable businesses and solutions.',
+    labsDesc: 'State-of-the-art facilities designed to foster hands-on learning and cutting-edge research across all STEAM disciplines.',
+    projectsDesc: 'Discover the innovative solutions our students and mentors are building to address real-world challenges in Ethiopia.',
+    curriculumDesc: 'A comprehensive, hands-on learning journey designed to transform students from curious beginners to capable innovators.',
+    newsDesc: 'Stay informed about our latest programs, student achievements, and upcoming events.',
+    merchDesc: 'Support our mission and show your CLIC pride with our official merchandise. All proceeds go towards funding student projects.',
+    impactDesc: 'Hear from the students, mentors, and partners who are part of the CLIC Ethiopia journey.',
+    getInvolvedDesc: 'Join us in our mission to transform education and empower the next generation of Ethiopian innovators.',
+    footerDesc: 'Creative Learning in Community. Bringing new STEAM skills across the nation enabling industrialization, digital transformation and tech entrepreneurship.',
+    newsletterDesc: 'Subscribe to our newsletter to get updates on new labs and merch drops.',
   },
   am: {
     home: 'መነሻ',
@@ -62,6 +85,28 @@ export const translations = {
     submit: 'አስገባ',
     success: 'ተሳክቷል!',
     close: 'ዝጋ',
+    aboutDesc: 'በዶ/ር ኢ/ር ፍሬሁን አደፍርስ የተመሰረተው ክሊክ ኢትዮጵያ በ2025 ዓ.ም 1 ሚሊዮን ኢትዮጵያውያንን ለማሰልጠን ያለመ ነው። በትምህርት፣ በኢንዱስትሪ፣ በዲጂታል ትራንስፎርሜሽን እና በከፍተኛ የቴክኖሎጂ ስራ ፈጠራ አዳዲስ እድሎችን እናመጣለን።',
+    aboutList1Title: 'ተልዕኳችን',
+    aboutList1Desc: 'በዘመናዊ የSTEAM ቤተ-ሙከራዎች በመጠቀም በተግባራዊ ሁለገብ ስልጠናዎች ኢትዮጵያውያንን ለወደፊቱ የሙያ ህይወታቸው ማዘጋጀት።',
+    aboutList2Title: 'ራዕያችን',
+    aboutList2Desc: 'ለወደፊቱ የኢትዮጵያ ኢንዱስትሪዎች እና ንግዶች ከፍተኛ የቴክኒክ ችሎታ ያላቸውን መፍጠር፣ ለማህበረሰቡ ራሳቸውን የቻሉ አስተዋፅዖ አድራጊዎችን ማነሳሳት።',
+    aboutList3Title: 'አሰራራችን',
+    aboutList3Desc: 'በእያንዳንዱ ክልል፣ በእያንዳንዱ ዋና ከተማ እና በሀገሪቱ ውስጥ እና ከሀገር ውጭ ባሉ ሁሉም አካባቢዎች እንሰራለን።',
+    founderMsg1: '"ኢትዮጵያውያን ትክክለኛውን ትምህርት እንዲያገኙ፣ ትክክለኛውን ንግድ እንዲጀምሩ እና ማህበረሰባቸውን እንዲያበቁ ለመርዳት ይህንን ሀገር አቀፍ መንግስታዊ ያልሆነ ድርጅት ክሊክ (በማህበረሰብ ውስጥ የፈጠራ ትምህርት) እየጀመርኩ ነው።"',
+    founderMsg2: 'ከ10 ዓመታት በላይ እና በሚሊዮኖች የሚቆጠር ብር አውጥቼ ሀገር አቀፍ ምርምር በማካሄድ በክሊክ የSTEAM ዘርፎች ስርአተ ትምህርቶችን ቀርጫለሁ። እቅዴ ',
+    founderMsg2Bold: 'በ2025 ዓ.ም 1 ሚሊዮን ኢትዮጵያውያንን ማሰልጠን ነው።',
+    founderMsg3: 'ስርአተ ትምህርቴን የነደፍኩት በኢትዮጵያ ማህበራዊና ኢኮኖሚያዊ ሁኔታ እና አዳዲስ ቴክኖሎጂዎችን በመቀበል ደረጃ ላይ በመመስረት ነው። በክሊክ ኢትዮጵያ ራዕይ 2025 እንድትቀላቀሉኝ እና ለወደፊቷ ኢትዮጵያ ብልህ ዜጎችን እንድንገነባ እመኛለሁ። እንዲሁም እያንዳንዱ የመንግስት ሰራተኛ እና እያንዳንዱ የመንግስት አካል እኔን እና ወጣት ኢትዮጵያውያንን የመጨረሻውን ግብ እንዲያሳኩ እንዲረዱኝ እጠይቃለሁ!',
+    steamDesc: 'ይህ አዲሱ የመፃፍ እና የማንበብ ዝግመተ ለውጥ ነው። ተማሪዎች የማወቅ ጉጉት ያላቸው ተማሪዎች፣ ሂሳዊ አሳቢዎች እና የፈጠራ ችግር ፈቺዎች እንዲሆኑ የሚያስችል ሁለገብ የክህሎት ስብስብ ነው።',
+    ieDesc: 'በSTEAM-IE ውስጥ ያለው "IE"። ቀጣዩን ትውልድ የፈጠራ ሀሳቦችን ወደ ዘላቂ ንግዶች እና መፍትሄዎች እንዲቀይር እናበቃለን።',
+    labsDesc: 'በሁሉም የSTEAM ዘርፎች የተግባር ትምህርት እና ዘመናዊ ምርምርን ለማበረታታት የተነደፉ ዘመናዊ ተቋማት።',
+    projectsDesc: 'ተማሪዎቻችን እና አማካሪዎቻችን በኢትዮጵያ ውስጥ ያሉ እውነተኛ ፈተናዎችን ለመፍታት እየገነቡ ያሉትን አዳዲስ መፍትሄዎች ያግኙ።',
+    curriculumDesc: 'ተማሪዎችን ከማወቅ ጉጉት ጀማሪዎች ወደ ብቁ ፈጣሪዎች ለመለወጥ የተነደፈ አጠቃላይ፣ የተግባር ትምህርት ጉዞ።',
+    newsDesc: 'ስለ አዳዲስ ፕሮግራሞቻችን፣ የተማሪዎች ስኬቶች እና መጪ ክስተቶች መረጃ ያግኙ።',
+    merchDesc: 'ተልዕኳችንን ይደግፉ እና የክሊክ ኩራትዎን በይፋዊ ሸቀጦቻችን ያሳዩ። ሁሉም ገቢዎች የተማሪዎችን ፕሮጀክቶች የገንዘብ ድጋፍ ለማድረግ ይውላሉ።',
+    impactDesc: 'የክሊክ ኢትዮጵያ ጉዞ አካል ከሆኑት ተማሪዎች፣ አማካሪዎች እና አጋሮች ይስሙ።',
+    getInvolvedDesc: 'ትምህርትን ለመለወጥ እና ቀጣዩን የኢትዮጵያ ፈጣሪዎች ትውልድ ለማብቃት በምናደርገው ተልዕኮ ይቀላቀሉን።',
+    footerDesc: 'በማህበረሰብ ውስጥ የፈጠራ ትምህርት። የኢንዱስትሪ፣ የዲጂታል ትራንስፎርሜሽን እና የቴክኖሎጂ ስራ ፈጠራን የሚያስችሉ አዳዲስ የSTEAM ክህሎቶችን በመላው ሀገሪቱ ማምጣት።',
+    newsletterDesc: 'ስለ አዳዲስ ቤተ-ሙከራዎች እና የሸቀጦች መረጃ ለማግኘት ለጋዜጣችን ይመዝገቡ።',
   }
 };
 
@@ -894,20 +939,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: { isDarkMode: boolean, setIsDarkM
               )
             ))}
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 rounded-full p-1">
-                <button
-                  onClick={() => setLang('en')}
-                  className={`px-2 py-1 text-xs font-bold rounded-full transition-colors ${lang === 'en' ? 'bg-white dark:bg-gray-700 text-[var(--color-clic-blue)] shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
-                >
-                  EN
-                </button>
-                <button
-                  onClick={() => setLang('am')}
-                  className={`px-2 py-1 text-xs font-bold rounded-full transition-colors ${lang === 'am' ? 'bg-white dark:bg-gray-700 text-[var(--color-clic-blue)] shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
-                >
-                  አማ
-                </button>
-              </div>
+              <GoogleTranslateWidget />
               <button
                 onClick={() => setIsDarkMode(!isDarkMode)}
                 className={`p-2 rounded-full transition-colors ${isScrolled ? 'text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800' : 'text-white hover:bg-white/10'}`}
@@ -1001,19 +1033,8 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: { isDarkMode: boolean, setIsDarkM
                 </div>
               ))}
               <hr className="my-4 border-gray-100 dark:border-gray-800" />
-              <div className="flex justify-center gap-4 mb-4">
-                <button
-                  onClick={() => setLang('en')}
-                  className={`px-4 py-2 text-sm font-bold rounded-full transition-colors ${lang === 'en' ? 'bg-gray-100 dark:bg-gray-800 text-[var(--color-clic-blue)] shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
-                >
-                  English
-                </button>
-                <button
-                  onClick={() => setLang('am')}
-                  className={`px-4 py-2 text-sm font-bold rounded-full transition-colors ${lang === 'am' ? 'bg-gray-100 dark:bg-gray-800 text-[var(--color-clic-blue)] shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}
-                >
-                  አማርኛ
-                </button>
+              <div className="flex justify-center mb-4">
+                <GoogleTranslateWidget id="google_translate_element_mobile" />
               </div>
               <a 
                 href="#get-involved" 
@@ -1164,6 +1185,7 @@ const Hero = () => {
 };
 
 const About = () => {
+  const { t } = useTranslation();
   return (
     <section id="about" className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1178,25 +1200,25 @@ const About = () => {
               National Initiative for New Opportunities
             </h2>
             <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-              Founded by Dr. Ir. Frehun Adefris, CLIC Ethiopia aims to train 1 Million Ethiopians by 2025 EC. We bring new opportunities in Education, Industrialization, Digital Transformation, and High-Tech Entrepreneurship.
+              {t.aboutDesc}
             </p>
             
             <div className="space-y-6">
               {[
                 { 
                   icon: Target, 
-                  title: 'Our Mission', 
-                  desc: 'Prepare Ethiopians for their professional future through practical interdisciplinary trainings using state-of-the-art STEAM laboratories.' 
+                  title: t.aboutList1Title, 
+                  desc: t.aboutList1Desc 
                 },
                 { 
                   icon: Lightbulb, 
-                  title: 'Our Vision', 
-                  desc: 'Create top technical talent for the future of Ethiopian industries and businesses, inspiring self-sufficient contributors to society.' 
+                  title: t.aboutList2Title, 
+                  desc: t.aboutList2Desc 
                 },
                 { 
                   icon: Globe, 
-                  title: 'Our Operations', 
-                  desc: 'We operate in every region, every major city, and every locality within the country and beyond.' 
+                  title: t.aboutList3Title, 
+                  desc: t.aboutList3Desc 
                 }
               ].map((item, i) => (
                 <div key={i} className="flex gap-4">
@@ -1272,6 +1294,7 @@ const About = () => {
 };
 
 const FounderMessage = () => {
+  const { t } = useTranslation();
   return (
     <section id="founder" className="py-24 bg-gray-50 relative overflow-hidden">
       {/* Decorative background elements */}
@@ -1318,13 +1341,13 @@ const FounderMessage = () => {
             
             <div className="prose prose-lg text-gray-600 mb-8">
               <p className="italic text-xl text-gray-800 font-medium mb-6">
-                "I am starting this national level NGO called CLIC (Creative Learning in Community) to help Ethiopians get the right education, start the right business and empower their communities."
+                {t.founderMsg1}
               </p>
               <p className="mb-4">
-                I spent more than 10 years and millions of Birr to conduct NATIONAL research and design the curriculums at CLIC from interdisciplinary STEAM fields. My plan is to train <strong className="text-[var(--color-clic-red)]">1 MILLION ETHIOPIANS BY 2025 EC</strong>.
+                {t.founderMsg2}<strong className="text-[var(--color-clic-red)]">{t.founderMsg2Bold}</strong>.
               </p>
               <p>
-                I designed my STEAM curriculum based on Ethiopia's socio-economic situation and the level of adoption of new technology. I wish you join me at CLIC Ethiopia Vision 2025 and build smart citizens for the future of Ethiopia. I also call for every public servant & every government body to help me and help young Ethiopians achieve the ultimate goal!
+                {t.founderMsg3}
               </p>
             </div>
 
@@ -1346,6 +1369,7 @@ const FounderMessage = () => {
 
 
 const SteamSection = () => {
+  const { t } = useTranslation();
   const [selectedField, setSelectedField] = useState<any>(null);
 
   const steamFields = [
@@ -1395,7 +1419,7 @@ const SteamSection = () => {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">What is STEAM?</h2>
           <p className="text-xl text-gray-600">
-            It is the New Evolution of Literacy. An interdisciplinary skill set that empowers students to be curious learners, critical thinkers & creative problem solvers.
+            {t.steamDesc}
           </p>
         </div>
 
@@ -1469,6 +1493,7 @@ const SteamSection = () => {
 };
 
 const IESection = () => {
+  const { t } = useTranslation();
   const [selectedItem, setSelectedItem] = useState<any>(null);
 
   const ieData = {
@@ -1504,7 +1529,7 @@ const IESection = () => {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">Innovation & Entrepreneurship</h2>
           <p className="text-xl text-gray-600">
-            The "IE" in STEAM-IE. We empower the next generation to turn creative ideas into sustainable businesses and solutions.
+            {t.ieDesc}
           </p>
         </div>
 
@@ -1613,6 +1638,7 @@ const IESection = () => {
 };
 
 const Labs = () => {
+  const { t } = useTranslation();
   const [selectedLab, setSelectedLab] = useState<any>(null);
 
   const labs = [
@@ -1665,7 +1691,7 @@ const Labs = () => {
           <div className="max-w-2xl">
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 font-serif">Smart Creative Laboratories</h2>
             <p className="text-lg text-gray-600 dark:text-gray-400">
-              Four types of specialized labs designed to deliver practical, hands-on STEAM education across Ethiopia.
+              {t.labsDesc}
             </p>
           </div>
         </div>
@@ -1730,6 +1756,7 @@ const Labs = () => {
 };
 
 const Projects = () => {
+  const { t } = useTranslation();
   const [selectedProject, setSelectedProject] = useState<any>(null);
 
   const projects = [
@@ -1825,7 +1852,7 @@ const Projects = () => {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-4xl font-bold mb-6 font-serif">200+ Applied Industrial Projects</h2>
           <p className="text-xl text-gray-400">
-            Learning through projects while solving real-life industrial and business problems from different sectors.
+            {t.projectsDesc}
           </p>
         </div>
 
@@ -2749,6 +2776,7 @@ const MentorContent = () => {
 };
 
 const GetInvolved = () => {
+  const { t } = useTranslation();
   const [activeRole, setActiveRole] = useState<'student' | 'mentor' | 'partner' | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -2798,7 +2826,7 @@ const GetInvolved = () => {
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">Join Our Ecosystem</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Whether you want to learn, teach, or support, there is a place for you in the CLIC community.
+            {t.getInvolvedDesc}
           </p>
         </div>
 
@@ -2876,6 +2904,7 @@ const GetInvolved = () => {
 };
 
 const Footer = () => {
+  const { t } = useTranslation();
   return (
     <footer className="bg-gray-900 text-white py-16 border-t border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -2893,7 +2922,7 @@ const Footer = () => {
               </div>
             </div>
             <p className="text-gray-400 max-w-sm mb-6">
-              Creative Learning in Community. Bringing new STEAM skills across the nation enabling industrialization, digital transformation and tech entrepreneurship.
+              {t.footerDesc}
             </p>
             <div className="text-sm text-gray-400">
               <p>Email: frehun@fadlab.tech</p>
@@ -2923,7 +2952,7 @@ const Footer = () => {
 
           <div className="col-span-1 md:col-span-4">
             <h4 className="text-lg font-bold mb-6">Newsletter</h4>
-            <p className="text-gray-400 text-sm mb-4">Subscribe to our newsletter to get updates on new labs and merch drops.</p>
+            <p className="text-gray-400 text-sm mb-4">{t.newsletterDesc}</p>
             <form 
               className="flex flex-col sm:flex-row gap-2" 
               onSubmit={(e) => { 

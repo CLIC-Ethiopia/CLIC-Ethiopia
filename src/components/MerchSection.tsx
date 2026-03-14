@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useTranslation } from '../App';
 import { ShoppingCart, X, Plus, Minus, Trash2, CheckCircle, ShoppingBag, Loader2 } from 'lucide-react';
 import { GOOGLE_SCRIPT_URL } from '../constants';
 
@@ -106,6 +107,7 @@ const PRODUCTS: Product[] = [
 ];
 
 const MerchSection = () => {
+  const { t } = useTranslation();
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -297,7 +299,7 @@ const MerchSection = () => {
           <div className="max-w-2xl">
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 font-serif">Campus Store</h2>
             <p className="text-xl text-gray-600 dark:text-gray-400">
-              Wear the vision. Support the mission. All proceeds go towards funding student scholarships and lab equipment.
+              {t.merchDesc}
             </p>
           </div>
           
