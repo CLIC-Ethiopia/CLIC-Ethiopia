@@ -52,12 +52,43 @@ const GoogleTranslateWidget = ({ id = "google_translate_element" }: { id?: strin
     }
   }, [id]);
 
+  useEffect(() => {
+    // Prevent Google Translate from adding `top` to the body
+    const observer = new MutationObserver(() => {
+      if (document.body.style.top) {
+        document.body.style.top = '';
+      }
+      if (document.body.style.marginTop) {
+        document.body.style.marginTop = '';
+      }
+      if (document.documentElement.style.top) {
+        document.documentElement.style.top = '';
+      }
+      if (document.documentElement.style.marginTop) {
+        document.documentElement.style.marginTop = '';
+      }
+    });
+
+    observer.observe(document.body, { attributes: true, attributeFilter: ['style'] });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
+
+    return () => observer.disconnect();
+  }, []);
+
   const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedLang = e.target.value;
     
     // Always use English as the base for the app's manual translation
     // so Google Translate can translate the entire page from English to the target language
     setLang('en');
+
+    if (selectedLang === 'en') {
+      // Clear Google Translate cookies to properly revert to original language
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
+      window.location.reload();
+      return;
+    }
 
     // Trigger Google Translate
     // Google Translate uses an empty string for the default page language
@@ -71,11 +102,7 @@ const GoogleTranslateWidget = ({ id = "google_translate_element" }: { id?: strin
       });
     } else {
       // Fallback if the widget hasn't fully loaded or DOM changed
-      if (selectedLang === 'en') {
-        document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-      } else {
-        document.cookie = `googtrans=/en/${selectedLang}; path=/;`;
-      }
+      document.cookie = `googtrans=/en/${selectedLang}; path=/;`;
       window.location.reload();
     }
   };

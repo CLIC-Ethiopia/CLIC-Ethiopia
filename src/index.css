@@ -39,16 +39,40 @@ html {
 
 /* Google Translate Overrides */
 .goog-te-banner-frame {
-  display: none !important;
-  visibility: hidden !important;
+  top: auto !important;
+  bottom: 0 !important;
+  position: fixed !important;
+  z-index: 9999999 !important;
+  display: block !important;
+  visibility: visible !important;
 }
 .goog-te-banner-frame.skiptranslate {
-  display: none !important;
-  visibility: hidden !important;
+  top: auto !important;
+  bottom: 0 !important;
+  position: fixed !important;
+  display: block !important;
+  visibility: visible !important;
+}
+iframe.goog-te-banner-frame {
+  top: auto !important;
+  bottom: 0 !important;
+  position: fixed !important;
+  display: block !important;
+}
+.skiptranslate > iframe.goog-te-banner-frame {
+  top: auto !important;
+  bottom: 0 !important;
+  position: fixed !important;
+  display: block !important;
 }
 body {
   top: 0px !important;
+  margin-top: 0px !important;
   position: static !important;
+}
+html {
+  top: 0px !important;
+  margin-top: 0px !important;
 }
 #goog-gt-tt {
   display: none !important;

@@ -15,6 +15,7 @@ import CurriculumSection from './components/CurriculumSection';
 import NewsSection from './components/NewsSection';
 import MerchSection from './components/MerchSection';
 import ImpactSection from './components/ImpactSection';
+import ShareStorySection from './components/ShareStorySection';
 import GoogleTranslateWidget from './components/GoogleTranslateWidget';
 
 // --- Localization ---
@@ -26,6 +27,7 @@ export const translations = {
     home: 'Home',
     about: 'About',
     founder: 'Founder',
+    impact: 'Impact',
     programs: 'Programs',
     news: 'News',
     merch: 'Merch',
@@ -69,6 +71,7 @@ export const translations = {
     home: 'መነሻ',
     about: 'ስለ እኛ',
     founder: 'መስራች',
+    impact: 'ተጽዕኖ',
     programs: 'ፕሮግራሞች',
     news: 'ዜና',
     merch: 'መደብር',
@@ -846,6 +849,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: { isDarkMode: boolean, setIsDarkM
   const navLinks = [
     { name: t.about, href: '#about' },
     { name: t.founder, href: '#founder' },
+    { name: t.impact, href: '#impact' },
     { 
       name: t.programs, 
       href: '#',
@@ -939,6 +943,9 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: { isDarkMode: boolean, setIsDarkM
               )
             ))}
             <div className="flex items-center gap-4">
+              <a href="#get-involved" onClick={(e) => scrollToSection(e, '#get-involved')} className="px-4 py-2 xl:px-5 xl:py-2.5 rounded-full text-xs xl:text-sm font-bold bg-[var(--color-clic-red)] text-white hover:bg-opacity-90 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 whitespace-nowrap">
+                {t.getInvolved}
+              </a>
               <GoogleTranslateWidget />
               <button
                 onClick={() => setIsDarkMode(!isDarkMode)}
@@ -947,9 +954,6 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: { isDarkMode: boolean, setIsDarkM
               >
                 {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
               </button>
-              <a href="#get-involved" onClick={(e) => scrollToSection(e, '#get-involved')} className="px-4 py-2 xl:px-5 xl:py-2.5 rounded-full text-xs xl:text-sm font-bold bg-[var(--color-clic-red)] text-white hover:bg-opacity-90 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 whitespace-nowrap">
-                {t.getInvolved}
-              </a>
             </div>
           </div>
 
@@ -1122,25 +1126,57 @@ const Hero = () => {
       </div>
 
       {/* Decorative STEAM Elements */}
-      <div className="absolute right-10 bottom-10 hidden lg:flex gap-4 opacity-50">
-        {[
-          { icon: FlaskConical, color: 'var(--color-clic-red)' },
-          { icon: Cpu, color: 'var(--color-clic-orange)' },
-          { icon: Compass, color: 'var(--color-clic-green)' },
-          { icon: Palette, color: 'var(--color-clic-blue)' },
-          { icon: Calculator, color: 'var(--color-clic-purple)' }
-        ].map((item, i) => (
-          <motion.div 
-            key={i}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5 + (i * 0.1), duration: 0.5 }}
-            className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20"
-            style={{ color: item.color }}
-          >
-            <item.icon size={32} />
-          </motion.div>
-        ))}
+      <div className="absolute right-10 bottom-10 hidden lg:flex items-center gap-4">
+        <div className="flex gap-3">
+          {[
+            { icon: FlaskConical, color: 'var(--color-clic-red)', label: 'S' },
+            { icon: Cpu, color: 'var(--color-clic-orange)', label: 'T' },
+            { icon: Compass, color: 'var(--color-clic-green)', label: 'E' },
+            { icon: Palette, color: 'var(--color-clic-blue)', label: 'A' },
+            { icon: Calculator, color: 'var(--color-clic-purple)', label: 'M' }
+          ].map((item, i) => (
+            <motion.div 
+              key={i}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5 + (i * 0.1), duration: 0.5 }}
+              className="w-14 h-14 rounded-2xl bg-white shadow-lg flex flex-col items-center justify-center border border-gray-100 relative group"
+              style={{ color: item.color }}
+            >
+              <item.icon size={24} />
+              <span className="text-[10px] font-bold mt-1 opacity-0 group-hover:opacity-100 absolute -bottom-5 text-white bg-gray-900 px-2 py-0.5 rounded transition-opacity">{item.label}</span>
+            </motion.div>
+          ))}
+        </div>
+        
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 1.2, duration: 0.5 }}
+          className="text-white/80 flex flex-col items-center justify-center mx-2"
+        >
+          <span className="text-xs font-bold uppercase tracking-widest mb-1">Enables</span>
+          <ArrowRight size={24} className="animate-pulse text-[var(--color-clic-blue)]" />
+        </motion.div>
+
+        <div className="flex gap-3">
+          {[
+            { icon: Lightbulb, color: '#FFD700', label: 'Innovation' },
+            { icon: Rocket, color: '#FF4500', label: 'Entrepreneurship' }
+          ].map((item, i) => (
+            <motion.div 
+              key={`ie-${i}`}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1.4 + (i * 0.2), duration: 0.5 }}
+              className="w-16 h-16 rounded-2xl bg-gradient-to-br from-white to-gray-100 shadow-[0_0_20px_rgba(255,255,255,0.3)] flex flex-col items-center justify-center border-2 border-white/50 relative group"
+              style={{ color: item.color }}
+            >
+              <item.icon size={28} />
+              <span className="text-[10px] font-bold mt-1 opacity-0 group-hover:opacity-100 absolute -bottom-5 text-white bg-gray-900 px-2 py-0.5 rounded transition-opacity whitespace-nowrap z-10">{item.label}</span>
+            </motion.div>
+          ))}
+        </div>
       </div>
 
       {/* Video Modal */}
@@ -3044,9 +3080,9 @@ export default function App() {
         <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
         <main>
           <Hero />
-          <ImpactSection />
           <About />
           <FounderMessage />
+          <ImpactSection />
           <SteamSection />
           <IESection />
           <CurriculumSection />
@@ -3055,6 +3091,7 @@ export default function App() {
           <NewsSection />
           <MerchSection />
           <GetInvolved />
+          <ShareStorySection />
         </main>
         <Footer />
         <ChatBot />
