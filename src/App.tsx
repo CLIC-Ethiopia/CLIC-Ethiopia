@@ -35,7 +35,7 @@ export const translations = {
     heroTitle1: 'Empowering',
     heroTitle2: 'Ethiopia\'s',
     heroTitle3: 'Future Innovators',
-    heroSubtitle: 'A visionary initiative by the Ministry of Innovation and Technology to transform education through STEAM and Innovation & Entrepreneurship.',
+    heroSubtitle: 'A visionary initiative to transform nations through industrialization and upward economic mobility enabled by STEAM education for Innovation & Entrepreneurship.',
     explorePrograms: 'Explore Programs',
     watchVideo: 'Watch Video',
     firstName: 'First Name',
@@ -79,7 +79,7 @@ export const translations = {
     heroTitle1: 'የኢትዮጵያን',
     heroTitle2: 'የነገ',
     heroTitle3: 'ፈጣሪዎች ማብቃት',
-    heroSubtitle: 'በኢኖቬሽን እና ቴክኖሎጂ ሚኒስቴር የትምህርት ስርዓትን በSTEAM እና በፈጠራና ስራ ፈጠራ ለመቀየር የተጀመረ ራዕይ ያለው ተነሳሽነት።',
+    heroSubtitle: 'A visionary initiative to transform nations through industrialization and upward economic mobility enabled by STEAM education for Innovation & Entrepreneurship.',
     explorePrograms: 'ፕሮግራሞችን ያስሱ',
     watchVideo: 'ቪዲዮ ይመልከቱ',
     firstName: 'ስም',
@@ -1102,81 +1102,84 @@ const Hero = () => {
                 <Youtube size={18} /> {t.watchVideo}
               </button>
             </div>
-
-            <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-white/10 pt-8">
-              <div>
-                <h3 className="text-4xl font-bold text-[var(--color-clic-red)] font-mono">5k+</h3>
-                <p className="text-sm text-gray-300 uppercase tracking-wider font-semibold mt-1">Students</p>
-              </div>
-              <div>
-                <h3 className="text-4xl font-bold text-[var(--color-clic-green)] font-mono">120+</h3>
-                <p className="text-sm text-gray-300 uppercase tracking-wider font-semibold mt-1">Projects</p>
-              </div>
-              <div>
-                <h3 className="text-4xl font-bold text-[var(--color-clic-blue)] font-mono">15+</h3>
-                <p className="text-sm text-gray-300 uppercase tracking-wider font-semibold mt-1">Partners</p>
-              </div>
-              <div>
-                <h3 className="text-4xl font-bold text-[var(--color-clic-orange)] font-mono">98%</h3>
-                <p className="text-sm text-gray-300 uppercase tracking-wider font-semibold mt-1">Success</p>
-              </div>
-            </div>
           </motion.div>
         </div>
-      </div>
 
-      {/* Decorative STEAM Elements */}
-      <div className="absolute right-10 bottom-10 hidden lg:flex items-center gap-4">
-        <div className="flex gap-3">
-          {[
-            { icon: FlaskConical, color: 'var(--color-clic-red)', label: 'S' },
-            { icon: Cpu, color: 'var(--color-clic-orange)', label: 'T' },
-            { icon: Compass, color: 'var(--color-clic-green)', label: 'E' },
-            { icon: Palette, color: 'var(--color-clic-blue)', label: 'A' },
-            { icon: Calculator, color: 'var(--color-clic-purple)', label: 'M' }
-          ].map((item, i) => (
-            <motion.div 
-              key={i}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5 + (i * 0.1), duration: 0.5 }}
-              className="w-14 h-14 rounded-2xl bg-white shadow-lg flex flex-col items-center justify-center border border-gray-100 relative group"
-              style={{ color: item.color }}
-            >
-              <item.icon size={24} />
-              <span className="text-[10px] font-bold mt-1 opacity-0 group-hover:opacity-100 absolute -bottom-5 text-white bg-gray-900 px-2 py-0.5 rounded transition-opacity">{item.label}</span>
-            </motion.div>
-          ))}
-        </div>
-        
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 1.2, duration: 0.5 }}
-          className="text-white/80 flex flex-col items-center justify-center mx-2"
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="mt-12 border-t border-white/10 pt-8 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8"
         >
-          <span className="text-xs font-bold uppercase tracking-widest mb-1">Enables</span>
-          <ArrowRight size={24} className="animate-pulse text-[var(--color-clic-blue)]" />
-        </motion.div>
+          <div className="grid grid-cols-3 gap-4 md:gap-8">
+            <div>
+              <h3 className="text-3xl md:text-4xl font-bold text-[var(--color-clic-red)] font-mono">12+</h3>
+              <p className="text-xs md:text-sm text-gray-300 uppercase tracking-wider font-semibold mt-1">Sectors</p>
+            </div>
+            <div>
+              <h3 className="text-3xl md:text-4xl font-bold text-[var(--color-clic-green)] font-mono">200+</h3>
+              <p className="text-xs md:text-sm text-gray-300 uppercase tracking-wider font-semibold mt-1">Projects</p>
+            </div>
+            <div>
+              <h3 className="text-3xl md:text-4xl font-bold text-[var(--color-clic-blue)] font-mono">15+</h3>
+              <p className="text-xs md:text-sm text-gray-300 uppercase tracking-wider font-semibold mt-1">Partners</p>
+            </div>
+          </div>
 
-        <div className="flex gap-3">
-          {[
-            { icon: Lightbulb, color: '#FFD700', label: 'Innovation' },
-            { icon: Rocket, color: '#FF4500', label: 'Entrepreneurship' }
-          ].map((item, i) => (
-            <motion.div 
-              key={`ie-${i}`}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1.4 + (i * 0.2), duration: 0.5 }}
-              className="w-16 h-16 rounded-2xl bg-gradient-to-br from-white to-gray-100 shadow-[0_0_20px_rgba(255,255,255,0.3)] flex flex-col items-center justify-center border-2 border-white/50 relative group"
-              style={{ color: item.color }}
+          {/* Decorative STEAM Elements - Moved to be responsive */}
+          <div className="flex flex-col sm:flex-row items-center gap-4 justify-start lg:justify-end">
+            <div className="flex gap-2 sm:gap-3">
+              {[
+                { icon: FlaskConical, color: 'var(--color-clic-red)', label: 'S' },
+                { icon: Cpu, color: 'var(--color-clic-orange)', label: 'T' },
+                { icon: Compass, color: 'var(--color-clic-green)', label: 'E' },
+                { icon: Palette, color: 'var(--color-clic-blue)', label: 'A' },
+                { icon: Calculator, color: 'var(--color-clic-purple)', label: 'M' }
+              ].map((item, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.5 + (i * 0.1), duration: 0.5 }}
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white shadow-lg flex flex-col items-center justify-center border border-gray-100 relative group"
+                  style={{ color: item.color }}
+                >
+                  <item.icon size={20} className="sm:w-6 sm:h-6" />
+                  <span className="text-[10px] font-bold mt-1 opacity-0 group-hover:opacity-100 absolute -bottom-5 text-white bg-gray-900 px-2 py-0.5 rounded transition-opacity z-20">{item.label}</span>
+                </motion.div>
+              ))}
+            </div>
+            
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 1.2, duration: 0.5 }}
+              className="text-white/80 flex flex-row sm:flex-col items-center justify-center mx-2 gap-2 sm:gap-0"
             >
-              <item.icon size={28} />
-              <span className="text-[10px] font-bold mt-1 opacity-0 group-hover:opacity-100 absolute -bottom-5 text-white bg-gray-900 px-2 py-0.5 rounded transition-opacity whitespace-nowrap z-10">{item.label}</span>
+              <span className="text-xs font-bold uppercase tracking-widest sm:mb-1">Enables</span>
+              <ArrowRight size={20} className="animate-pulse text-[var(--color-clic-blue)] sm:w-6 sm:h-6 sm:rotate-0" />
             </motion.div>
-          ))}
-        </div>
+
+            <div className="flex gap-2 sm:gap-3">
+              {[
+                { icon: Lightbulb, color: '#FFD700', label: 'Innovation' },
+                { icon: Rocket, color: '#FF4500', label: 'Entrepreneurship' }
+              ].map((item, i) => (
+                <motion.div 
+                  key={`ie-${i}`}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 1.4 + (i * 0.2), duration: 0.5 }}
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-white to-gray-100 shadow-[0_0_20px_rgba(255,255,255,0.3)] flex flex-col items-center justify-center border-2 border-white/50 relative group"
+                  style={{ color: item.color }}
+                >
+                  <item.icon size={24} className="sm:w-7 sm:h-7" />
+                  <span className="text-[10px] font-bold mt-1 opacity-0 group-hover:opacity-100 absolute -bottom-5 text-white bg-gray-900 px-2 py-0.5 rounded transition-opacity whitespace-nowrap z-20">{item.label}</span>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
       </div>
 
       {/* Video Modal */}
@@ -2054,7 +2057,7 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
         >
           <motion.div 
             initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            className="bg-white dark:bg-gray-800 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative"
+            className="bg-white dark:bg-gray-800 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative flex flex-col max-h-[90vh]"
             onClick={e => e.stopPropagation()}
           >
             {isSubmitted ? (
@@ -2073,16 +2076,17 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
               </div>
             ) : (
               <>
-                <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800/50">
+                <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800/50 shrink-0">
                   <h3 className="text-xl font-bold font-serif text-gray-900 dark:text-white">Make a Donation</h3>
                   <button onClick={handleClose} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors">
                     <X size={20} className="text-gray-600 dark:text-gray-400" />
                   </button>
                 </div>
                 
-                <form onSubmit={handleDonate} className="p-8 space-y-4">
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Select Amount</label>
+                <form onSubmit={handleDonate} className="flex flex-col overflow-hidden flex-grow">
+                  <div className="overflow-y-auto p-6 md:p-8 space-y-4 flex-grow">
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Select Amount</label>
                     <div className="grid grid-cols-4 gap-2 mb-3">
                       {['500', '2500', '10000', 'Custom'].map((opt) => (
                         <button
@@ -2228,15 +2232,18 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                       </div>
                     )}
                   </div>
+                  </div>
 
-                  <button 
-                    type="submit"
-                    disabled={!isFormValid() || isLoading}
-                    className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-red)] hover:bg-opacity-90 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                  >
-                    {isLoading ? 'Processing...' : `Donate ${finalAmount ? `ETB ${finalAmount}` : ''}`} {!isLoading && <ArrowRight size={18} />}
-                  </button>
-                  {error && <p className="text-red-500 text-sm mt-2 text-center">{error}</p>}
+                  <div className="p-6 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 shrink-0">
+                    <button 
+                      type="submit"
+                      disabled={!isFormValid() || isLoading}
+                      className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-red)] hover:bg-opacity-90 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      {isLoading ? 'Processing...' : `Donate ${finalAmount ? `ETB ${finalAmount}` : ''}`} {!isLoading && <ArrowRight size={18} />}
+                    </button>
+                    {error && <p className="text-red-500 text-sm mt-2 text-center">{error}</p>}
+                  </div>
                 </form>
               </>
             )}
@@ -2939,8 +2946,160 @@ const GetInvolved = () => {
   );
 };
 
+const SubscribeModal = ({ isOpen, onClose, initialEmail }: { isOpen: boolean; onClose: () => void; initialEmail: string }) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: initialEmail || '',
+    phone: ''
+  });
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setFormData(prev => ({ ...prev, email: initialEmail || '' }));
+    }
+  }, [isOpen, initialEmail]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          action: 'subscribe_newsletter',
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        setIsSubmitted(true);
+      } else {
+        throw new Error(result.message || 'Failed to subscribe');
+      }
+    } catch (err: any) {
+      setError(err.message || 'An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleClose = () => {
+    setIsSubmitted(false);
+    onClose();
+    setFormData({ name: '', email: '', phone: '' });
+    setError(null);
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div 
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          onClick={handleClose}
+        >
+          <motion.div 
+            initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }}
+            className="bg-white dark:bg-gray-800 rounded-3xl max-w-md w-full overflow-hidden shadow-2xl relative flex flex-col max-h-[90vh]"
+            onClick={e => e.stopPropagation()}
+          >
+            {isSubmitted ? (
+              <div className="p-12 text-center relative">
+                <button onClick={handleClose} className="absolute top-4 right-4 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+                  <X size={20} className="text-gray-600 dark:text-gray-400" />
+                </button>
+                <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <CheckCircle size={40} />
+                </div>
+                <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Subscribed!</h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-8">Thank you for subscribing to our newsletter. We'll keep you updated!</p>
+                <button onClick={handleClose} className="px-8 py-3 bg-[var(--color-clic-blue)] text-white rounded-xl font-bold hover:bg-opacity-90 transition-colors">
+                  Close
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800/50 shrink-0">
+                  <h3 className="text-xl font-bold font-serif text-gray-900 dark:text-white">Subscribe to Newsletter</h3>
+                  <button onClick={handleClose} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors">
+                    <X size={20} className="text-gray-600 dark:text-gray-400" />
+                  </button>
+                </div>
+                
+                <form onSubmit={handleSubmit} className="flex flex-col overflow-hidden flex-grow">
+                  <div className="overflow-y-auto p-6 md:p-8 space-y-4 flex-grow">
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Full Name</label>
+                      <input 
+                        required
+                        type="text" 
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-clic-blue)] outline-none"
+                        value={formData.name}
+                        onChange={e => setFormData({...formData, name: e.target.value})}
+                        placeholder="Your Name"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                      <input 
+                        required
+                        type="email" 
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-clic-blue)] outline-none"
+                        value={formData.email}
+                        onChange={e => setFormData({...formData, email: e.target.value})}
+                        placeholder="you@example.com"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Phone Number</label>
+                      <input 
+                        required
+                        type="tel" 
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-clic-blue)] outline-none"
+                        value={formData.phone}
+                        onChange={e => setFormData({...formData, phone: e.target.value})}
+                        placeholder="0911..."
+                      />
+                    </div>
+                  </div>
+
+                  <div className="p-6 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 shrink-0">
+                    <button 
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-blue)] hover:bg-opacity-90 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    >
+                      {isLoading ? 'Subscribing...' : 'Subscribe'}
+                    </button>
+                    {error && <p className="text-red-500 text-sm mt-2 text-center">{error}</p>}
+                  </div>
+                </form>
+              </>
+            )}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
 const Footer = () => {
   const { t } = useTranslation();
+  const [isSubscribeModalOpen, setIsSubscribeModalOpen] = useState(false);
+  const [subscribeEmail, setSubscribeEmail] = useState('');
+
   return (
     <footer className="bg-gray-900 text-white py-16 border-t border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -2996,9 +3155,8 @@ const Footer = () => {
                 const form = e.target as HTMLFormElement; 
                 const emailInput = form.querySelector('input[type="email"]') as HTMLInputElement;
                 if (emailInput && emailInput.value) {
-                  window.location.href = `mailto:clic.ethiopia@gmail.com?subject=Subscribe to CLIC News&body=Please add me to the CLIC News email list. My email is: ${emailInput.value}`;
-                  alert('Thank you! Your email client has been opened to send the subscription request.'); 
-                  form.reset(); 
+                  setSubscribeEmail(emailInput.value);
+                  setIsSubscribeModalOpen(true);
                 }
               }}
             >
@@ -3013,6 +3171,11 @@ const Footer = () => {
           <p>Prepared by Prof. Frehun Adefris</p>
         </div>
       </div>
+      <SubscribeModal 
+        isOpen={isSubscribeModalOpen} 
+        onClose={() => setIsSubscribeModalOpen(false)} 
+        initialEmail={subscribeEmail} 
+      />
     </footer>
   );
 };

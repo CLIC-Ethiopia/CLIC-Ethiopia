@@ -6,7 +6,7 @@ import {
   Hammer, Palette, 
   Cpu, Zap, 
   Briefcase, Rocket,
-  Lightbulb, Box, Layers, TrendingUp
+  Lightbulb, Box, Layers, TrendingUp, Factory, Server
 } from 'lucide-react';
 
 const CurriculumSection = () => {
@@ -63,6 +63,16 @@ const CurriculumSection = () => {
       color: 'var(--color-clic-blue)',
       productState: 'Marketable Product',
       visual: Box
+    },
+    {
+      id: 'industrialization',
+      title: 'Industrialization',
+      subtitle: 'Mechanization & Digital Transformation',
+      description: 'The ultimate end goal. Scaling enterprises to bring about an industrial revolution and digital transformation, creating upward economic mobility for the nation.',
+      icons: [Factory, Server],
+      color: 'var(--color-clic-purple)',
+      productState: 'National Impact',
+      visual: TrendingUp
     }
   ];
 

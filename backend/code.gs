@@ -35,7 +35,8 @@ const SHEETS = {
   STUDENTS: 'Students',
   MENTORS: 'Mentors',
   DONATIONS: 'Donations',
-  MESSAGES: 'Messages' // General contact
+  MESSAGES: 'Messages', // General contact
+  NEWSLETTER_SUB: 'newsletter sub'
 };
 
 // --- Setup Function ---
@@ -105,6 +106,11 @@ function setupDatabase() {
   // 12. Messages
   createSheetIfNotExists(ss, SHEETS.MESSAGES, [
     'message_id', 'date', 'name', 'email', 'subject', 'message', 'status'
+  ]);
+  
+  // 13. Newsletter Subscriptions
+  createSheetIfNotExists(ss, SHEETS.NEWSLETTER_SUB, [
+    'subscription_id', 'date', 'name', 'email', 'phone', 'status'
   ]);
 }
 
@@ -395,6 +401,32 @@ function doPost(e) {
       ];
       sheet.appendRow(newRow);
       return responseJSON({status: 'success', donationId: donationId, message: 'Donation recorded'});
+    }
+
+    // 5. Subscribe Newsletter
+    if (action === 'subscribe_newsletter') {
+      const sheet = ss.getSheetByName(SHEETS.NEWSLETTER_SUB);
+      
+      // Check if email already exists
+      const data = sheet.getDataRange().getValues();
+      const emailIndex = 3; // 0-indexed, email is the 4th column
+      for (let i = 1; i < data.length; i++) {
+        if (data[i][emailIndex] === postData.email) {
+          return responseJSON({status: 'error', message: 'Email already exists. Please use an alternative email.'});
+        }
+      }
+
+      const subId = 'SUB-' + Date.now();
+      const newRow = [
+        subId,
+        new Date(),
+        postData.name,
+        postData.email,
+        postData.phone,
+        'Active'
+      ];
+      sheet.appendRow(newRow);
+      return responseJSON({status: 'success', subId: subId, message: 'Subscription recorded'});
     }
 
     return responseJSON({status: 'error', message: 'Invalid action'});
