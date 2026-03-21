@@ -1264,9 +1264,31 @@ const About = () => {
                   <div className="flex-shrink-0 w-12 h-12 rounded-full bg-[var(--color-clic-light)] flex items-center justify-center text-[var(--color-clic-orange)]">
                     <item.icon size={24} />
                   </div>
-                  <div>
+                  <div className="flex-1">
                     <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
                     <p className="text-gray-600">{item.desc}</p>
+                    {i === 2 && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 w-full">
+                        <a 
+                          href="https://www.clicafrica.net" 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="group flex flex-col items-center justify-center bg-white border-2 border-[var(--color-clic-blue)] text-center py-3 px-4 rounded-xl transition-all shadow-sm hover:bg-[var(--color-clic-blue)]"
+                        >
+                          <span className="font-bold text-[var(--color-clic-blue)] group-hover:text-white text-lg">CLIC Africa</span>
+                          <span className="text-sm font-medium text-gray-500 group-hover:text-white/90">Brussels, Belgium</span>
+                        </a>
+                        <a 
+                          href="https://www.clicafrica.net" 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="group flex flex-col items-center justify-center bg-white border-2 border-[var(--color-clic-green)] text-center py-3 px-4 rounded-xl transition-all shadow-sm hover:bg-[var(--color-clic-green)]"
+                        >
+                          <span className="font-bold text-[var(--color-clic-green)] group-hover:text-white text-lg">CLIC Congo</span>
+                          <span className="text-sm font-medium text-gray-500 group-hover:text-white/90">Congo Branch</span>
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
@@ -1281,15 +1303,14 @@ const About = () => {
             className="flex flex-col gap-12"
           >
             <div className="relative">
-              <div className="aspect-square rounded-3xl overflow-hidden relative">
+              <div className="aspect-square rounded-3xl overflow-hidden relative shadow-2xl">
                 <img 
-                  src="https://loremflickr.com/800/800/innovation,africa,business" 
-                  alt="Innovation in Ethiopia" 
+                  src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80" 
+                  alt="National Initiative Collaboration" 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-tr from-[var(--color-clic-red)]/40 to-transparent mix-blend-multiply"></div>
               </div>
               
               {/* Floating Stats Card */}
