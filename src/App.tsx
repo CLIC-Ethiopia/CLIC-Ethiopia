@@ -7,16 +7,21 @@ import {
   Sprout, Building2, HeartHandshake, UserPlus, Menu, X,
   Globe, Lightbulb, GraduationCap, Target, Rocket, Briefcase,
   BarChart3, Clock, Users, Trophy, Zap, Microscope, Hammer,
-  Car, Coins, Home, Recycle, Server, Landmark, Quote, Play, Youtube, ChevronDown, Moon, Sun, ArrowUp, CheckCircle
+  Car, Coins, Home, Recycle, Server, Landmark, Quote, Play, Youtube, ChevronDown, Moon, Sun, ArrowUp, CheckCircle, Sparkles
 } from 'lucide-react';
 
 import ChatBot from './components/ChatBot';
 import CurriculumSection from './components/CurriculumSection';
+import CurriculumEngine from './components/CurriculumEngine';
 import NewsSection from './components/NewsSection';
 import MerchSection from './components/MerchSection';
 import ImpactSection from './components/ImpactSection';
 import ShareStorySection from './components/ShareStorySection';
 import GoogleTranslateWidget from './components/GoogleTranslateWidget';
+import DonationPortal from './components/DonationPortal';
+import ResourceHub from './components/ResourceHub';
+import EventCalendar from './components/EventCalendar';
+import TheoryOfChange from './components/TheoryOfChange';
 
 // --- Localization ---
 export type Language = 'en' | 'am';
@@ -66,6 +71,23 @@ export const translations = {
     getInvolvedDesc: 'Join us in our mission to transform education and empower the next generation of Ethiopian innovators.',
     footerDesc: 'Creative Learning in Community. Bringing new STEAM skills across the nation enabling industrialization, digital transformation and tech entrepreneurship.',
     newsletterDesc: 'Subscribe to our newsletter to get updates on new labs and merch drops.',
+    navAboutUs: 'About Us',
+    navMission: 'Mission & Vision',
+    navTheory: 'Theory of Change',
+    navEducation: 'Education',
+    navSteam: 'STEAM',
+    navIe: 'Innovation & Entrepreneurship',
+    navRoadmap: 'STEAM-IE Roadmap',
+    navEngine: 'Curriculum Engine',
+    navResources: 'Resource Hub',
+    navInnovation: 'Innovation',
+    navLabs: 'Labs',
+    navProjects: 'Student Projects',
+    navCommunity: 'Community',
+    navEvents: 'Events',
+    navStories: 'Community Stories',
+    navSupport: 'Support Us',
+    navDonate: 'Donate',
   },
   am: {
     home: 'መነሻ',
@@ -110,6 +132,23 @@ export const translations = {
     getInvolvedDesc: 'ትምህርትን ለመለወጥ እና ቀጣዩን የኢትዮጵያ ፈጣሪዎች ትውልድ ለማብቃት በምናደርገው ተልዕኮ ይቀላቀሉን።',
     footerDesc: 'በማህበረሰብ ውስጥ የፈጠራ ትምህርት። የኢንዱስትሪ፣ የዲጂታል ትራንስፎርሜሽን እና የቴክኖሎጂ ስራ ፈጠራን የሚያስችሉ አዳዲስ የSTEAM ክህሎቶችን በመላው ሀገሪቱ ማምጣት።',
     newsletterDesc: 'ስለ አዳዲስ ቤተ-ሙከራዎች እና የሸቀጦች መረጃ ለማግኘት ለጋዜጣችን ይመዝገቡ።',
+    navAboutUs: 'ስለ እኛ',
+    navMission: 'ተልዕኮ እና ራዕይ',
+    navTheory: 'የለውጥ ንድፈ ሀሳብ',
+    navEducation: 'ትምህርት',
+    navSteam: 'STEAM',
+    navIe: 'የፈጠራ ስራ እና ስራ ፈጠራ',
+    navRoadmap: 'STEAM-IE ፍኖተ ካርታ',
+    navEngine: 'ስርዓተ ትምህርት ኤንጂን',
+    navResources: 'የመረጃ ማዕከል',
+    navInnovation: 'ፈጠራ',
+    navLabs: 'ቤተ-ሙከራዎች',
+    navProjects: 'የተማሪ ፕሮጀክቶች',
+    navCommunity: 'ማህበረሰብ',
+    navEvents: 'ክስተቶች',
+    navStories: 'የማህበረሰብ ታሪኮች',
+    navSupport: 'ይደግፉን',
+    navDonate: 'ለግስ',
   }
 };
 
@@ -598,7 +637,7 @@ const InfoModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => 
         >
           <motion.div 
             initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            className="bg-white rounded-3xl max-w-6xl w-full max-h-[90vh] shadow-2xl relative flex flex-col md:flex-row overflow-hidden"
+            className="bg-white dark:bg-gray-900 rounded-3xl max-w-6xl w-full max-h-[90vh] shadow-2xl relative flex flex-col md:flex-row overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
             <button onClick={onClose} className="absolute top-4 right-4 z-20 p-2 rounded-full bg-black/20 hover:bg-black/40 backdrop-blur-md transition-colors text-white">
@@ -694,7 +733,7 @@ const InfoModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => 
                                 <BookOpen size={24} className="text-gray-400" />
                                 Overview
                             </h3>
-                            <div className="prose prose-lg text-gray-600 dark:text-gray-300">
+                            <div className="prose prose-lg dark:prose-invert text-gray-600 dark:text-gray-300">
                                 <p>{detailedContent}</p>
                             </div>
                         </div>
@@ -847,22 +886,53 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: { isDarkMode: boolean, setIsDarkM
   }, []);
 
   const navLinks = [
-    { name: t.about, href: '#about' },
-    { name: t.founder, href: '#founder' },
-    { name: t.impact, href: '#impact' },
     { 
-      name: t.programs, 
+      name: t.navAboutUs || 'About Us', 
       href: '#',
       children: [
-        { name: 'STEAM', href: '#steam' },
-        { name: 'IE', href: '#ie' },
-        { name: 'Curriculum', href: '#curriculum' },
-        { name: 'Labs', href: '#labs' },
-        { name: 'Projects', href: '#projects' },
+        { name: t.navMission || 'Mission & Vision', href: '#about' },
+        { name: t.founder, href: '#founder' },
+        { name: t.impact, href: '#impact' },
       ]
     },
-    { name: t.news, href: '#news' },
-    { name: t.merch, href: '#merch' },
+    { 
+      name: t.navEducation || 'Education', 
+      href: '#',
+      children: [
+        { name: t.navSteam || 'STEAM', href: '#steam' },
+        { name: t.navIe || 'Innovation & Entrepreneurship', href: '#ie' },
+        { name: t.navRoadmap || 'STEAM-IE Roadmap', href: '#curriculum' },
+        { name: t.navTheory || 'Theory of Change', href: '#theory-of-change' },
+        { name: t.navEngine || 'Curriculum Engine', href: '#engine' },
+        { name: t.navResources || 'Resource Hub', href: '#resources' },
+      ]
+    },
+    { 
+      name: t.navInnovation || 'Innovation', 
+      href: '#',
+      children: [
+        { name: t.navLabs || 'Labs', href: '#labs' },
+        { name: t.navProjects || 'Student Projects', href: '#projects' },
+      ]
+    },
+    { 
+      name: t.navCommunity || 'Community', 
+      href: '#',
+      children: [
+        { name: t.news, href: '#news' },
+        { name: t.navEvents || 'Events', href: '#events' },
+        { name: t.navStories || 'Community Stories', href: '#share-story' },
+      ]
+    },
+    { 
+      name: t.navSupport || 'Support Us', 
+      href: '#',
+      children: [
+        { name: t.getInvolved, href: '#get-involved' },
+        { name: t.navDonate || 'Donate', href: '#donate' },
+        { name: t.merch, href: '#merch' },
+      ]
+    },
   ];
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -890,24 +960,24 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: { isDarkMode: boolean, setIsDarkM
   };
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white dark:bg-gray-900 shadow-md py-3' : 'bg-transparent py-5'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white dark:bg-gray-900 shadow-md py-2' : 'bg-transparent py-3'}`}>
+      <div className="w-full px-2 lg:px-4">
         <div className="flex justify-between items-center">
           <a href="#" className="flex items-center gap-2 group">
             <div className="flex transition-transform group-hover:scale-105">
-              <span className="text-2xl md:text-3xl font-black text-[var(--color-clic-red)] tracking-tighter">C</span>
-              <span className="text-2xl md:text-3xl font-black text-[var(--color-clic-orange)] tracking-tighter">L</span>
-              <span className="text-2xl md:text-3xl font-black text-[var(--color-clic-green)] tracking-tighter">I</span>
-              <span className="text-2xl md:text-3xl font-black text-[var(--color-clic-blue)] tracking-tighter">C</span>
+              <span className="text-xl md:text-2xl font-black text-[var(--color-clic-red)] tracking-tighter">C</span>
+              <span className="text-xl md:text-2xl font-black text-[var(--color-clic-orange)] tracking-tighter">L</span>
+              <span className="text-xl md:text-2xl font-black text-[var(--color-clic-green)] tracking-tighter">I</span>
+              <span className="text-xl md:text-2xl font-black text-[var(--color-clic-blue)] tracking-tighter">C</span>
             </div>
             <div className="flex flex-col">
-              <span className={`text-lg md:text-xl font-bold leading-none ${isScrolled ? 'text-gray-900 dark:text-white' : 'text-white'}`}>Ethiopia</span>
-              <span className={`text-[0.4rem] md:text-[0.5rem] font-semibold uppercase tracking-widest ${isScrolled ? 'text-gray-500 dark:text-gray-400' : 'text-gray-300'}`}>Creative Learning</span>
+              <span className={`text-base md:text-lg font-bold leading-none ${isScrolled ? 'text-gray-900 dark:text-white' : 'text-white'}`}>Ethiopia</span>
+              <span className={`text-[0.4rem] md:text-[0.45rem] font-semibold uppercase tracking-widest ${isScrolled ? 'text-gray-500 dark:text-gray-400' : 'text-gray-300'}`}>Creative Learning</span>
             </div>
           </a>
 
           {/* Desktop Nav */}
-          <div className="hidden lg:flex items-center gap-4 xl:gap-6">
+          <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((link) => (
               link.children ? (
                 <div key={link.name} className="relative group">
@@ -943,7 +1013,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: { isDarkMode: boolean, setIsDarkM
               )
             ))}
             <div className="flex items-center gap-4">
-              <a href="#get-involved" onClick={(e) => scrollToSection(e, '#get-involved')} className="px-4 py-2 xl:px-5 xl:py-2.5 rounded-full text-xs xl:text-sm font-bold bg-[var(--color-clic-red)] text-white hover:bg-opacity-90 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 whitespace-nowrap">
+              <a href="#get-involved" onClick={(e) => scrollToSection(e, '#get-involved')} className="px-3 py-1.5 xl:px-4 xl:py-2 rounded-full text-xs xl:text-sm font-bold bg-[var(--color-clic-red)] text-white hover:bg-opacity-90 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 whitespace-nowrap">
                 {t.getInvolved}
               </a>
               <GoogleTranslateWidget />
@@ -1072,6 +1142,8 @@ const Hero = () => {
           loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-gray-900 via-gray-900/80 to-transparent"></div>
+        {/* Subtle African Motif Pattern */}
+        <div className="absolute inset-0 bg-pattern-mudcloth opacity-[0.04] invert pointer-events-none mix-blend-overlay"></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -1081,6 +1153,11 @@ const Hero = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 text-indigo-100 text-sm font-bold mb-6 backdrop-blur-sm">
+              <Sparkles className="w-4 h-4 text-indigo-300" />
+              <span>Curricula Co-Created with Google AI Ecosystem</span>
+            </div>
+            <br />
             <span className="inline-block py-1 px-3 rounded-full bg-white/10 border border-white/20 text-white text-xs font-bold tracking-widest uppercase mb-6 backdrop-blur-sm">
               Vision Smart-Ethiopia 2025 EC
             </span>
@@ -1141,7 +1218,7 @@ const Hero = () => {
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ delay: 0.5 + (i * 0.1), duration: 0.5 }}
-                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white shadow-lg flex flex-col items-center justify-center border border-gray-100 relative group"
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white dark:bg-gray-800 shadow-lg flex flex-col items-center justify-center border border-gray-100 dark:border-gray-700 relative group"
                   style={{ color: item.color }}
                 >
                   <item.icon size={20} className="sm:w-6 sm:h-6" />
@@ -1226,8 +1303,11 @@ const Hero = () => {
 const About = () => {
   const { t } = useTranslation();
   return (
-    <section id="about" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="about" className="py-24 bg-white dark:bg-gray-900 relative overflow-hidden transition-colors duration-300">
+      {/* Subtle African Motif Pattern */}
+      <div className="absolute inset-0 bg-pattern-mudcloth opacity-[0.02] pointer-events-none"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -1235,7 +1315,7 @@ const About = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-serif">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6 font-serif">
               National Initiative for New Opportunities
             </h2>
             <p className="text-lg text-gray-600 mb-8 leading-relaxed">
@@ -1265,30 +1345,8 @@ const About = () => {
                     <item.icon size={24} />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{item.title}</h3>
                     <p className="text-gray-600">{item.desc}</p>
-                    {i === 2 && (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 w-full">
-                        <a 
-                          href="https://www.clicafrica.net" 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="group flex flex-col items-center justify-center bg-white border-2 border-[var(--color-clic-blue)] text-center py-3 px-4 rounded-xl transition-all shadow-sm hover:bg-[var(--color-clic-blue)]"
-                        >
-                          <span className="font-bold text-[var(--color-clic-blue)] group-hover:text-white text-lg">CLIC Africa</span>
-                          <span className="text-sm font-medium text-gray-500 group-hover:text-white/90">Brussels, Belgium</span>
-                        </a>
-                        <a 
-                          href="https://www.clicafrica.net" 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="group flex flex-col items-center justify-center bg-white border-2 border-[var(--color-clic-green)] text-center py-3 px-4 rounded-xl transition-all shadow-sm hover:bg-[var(--color-clic-green)]"
-                        >
-                          <span className="font-bold text-[var(--color-clic-green)] group-hover:text-white text-lg">CLIC Congo</span>
-                          <span className="text-sm font-medium text-gray-500 group-hover:text-white/90">Congo Branch</span>
-                        </a>
-                      </div>
-                    )}
                   </div>
                 </div>
               ))}
@@ -1319,33 +1377,6 @@ const About = () => {
                 <div className="text-sm font-bold text-gray-500 uppercase tracking-wider">Ethiopians to be trained by 2025 EC</div>
               </div>
             </div>
-
-            {/* Other Projects by Prof. Frehun */}
-            <div className="mt-4">
-              <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Other Projects by Prof. Frehun</h3>
-              <div className="grid grid-cols-2 gap-5">
-                <a href="https://fadlab.tech" target="_blank" rel="noopener noreferrer" className="relative bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[var(--color-clic-blue)]/50 hover:-translate-y-1 transition-all duration-300 group">
-                  <svg className="absolute top-4 right-4 w-4 h-4 text-gray-400 group-hover:text-[var(--color-clic-blue)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                  <h4 className="font-bold text-gray-900 group-hover:text-[var(--color-clic-blue)] transition-colors text-base mb-1 pr-4">Fad.Lab</h4>
-                  <p className="text-sm text-gray-600 font-medium">R&D on smart industries</p>
-                </a>
-                <a href="https://fadbusinessverse.com" target="_blank" rel="noopener noreferrer" className="relative bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[var(--color-clic-blue)]/50 hover:-translate-y-1 transition-all duration-300 group">
-                  <svg className="absolute top-4 right-4 w-4 h-4 text-gray-400 group-hover:text-[var(--color-clic-blue)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                  <h4 className="font-bold text-gray-900 group-hover:text-[var(--color-clic-blue)] transition-colors text-base mb-1 pr-4">Fad Business Verse</h4>
-                  <p className="text-sm text-gray-600 font-medium">Generative AI business idea generator app</p>
-                </a>
-                <a href="https://fadlms.com" target="_blank" rel="noopener noreferrer" className="relative bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[var(--color-clic-blue)]/50 hover:-translate-y-1 transition-all duration-300 group">
-                  <svg className="absolute top-4 right-4 w-4 h-4 text-gray-400 group-hover:text-[var(--color-clic-blue)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                  <h4 className="font-bold text-gray-900 group-hover:text-[var(--color-clic-blue)] transition-colors text-base mb-1 pr-4">Fad LMS</h4>
-                  <p className="text-sm text-gray-600 font-medium">Learning management system for STEAM-IE</p>
-                </a>
-                <a href="https://nats.et" target="_blank" rel="noopener noreferrer" className="relative bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[var(--color-clic-blue)]/50 hover:-translate-y-1 transition-all duration-300 group">
-                  <svg className="absolute top-4 right-4 w-4 h-4 text-gray-400 group-hover:text-[var(--color-clic-blue)] transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
-                  <h4 className="font-bold text-gray-900 group-hover:text-[var(--color-clic-blue)] transition-colors text-base mb-1 pr-4">NATS</h4>
-                  <p className="text-sm text-gray-600 font-medium">National Advanced Technology Services</p>
-                </a>
-              </div>
-            </div>
           </motion.div>
         </div>
       </div>
@@ -1356,7 +1387,10 @@ const About = () => {
 const FounderMessage = () => {
   const { t } = useTranslation();
   return (
-    <section id="founder" className="py-24 bg-gray-50 relative overflow-hidden">
+    <section id="founder" className="py-24 bg-gray-50 dark:bg-gray-800 relative overflow-hidden transition-colors duration-300">
+      {/* Subtle African Motif Pattern */}
+      <div className="absolute inset-0 bg-pattern-kuba opacity-[0.02] pointer-events-none"></div>
+      
       {/* Decorative background elements */}
       <div className="absolute top-0 left-0 w-64 h-64 bg-[var(--color-clic-red)]/5 rounded-br-full -translate-x-1/2 -translate-y-1/2"></div>
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-[var(--color-clic-blue)]/5 rounded-tl-full translate-x-1/3 translate-y-1/3"></div>
@@ -1396,26 +1430,46 @@ const FounderMessage = () => {
           >
             <div className="flex items-center gap-2 mb-6">
               <Quote className="text-[var(--color-clic-red)] fill-current opacity-20" size={48} />
-              <h2 className="text-4xl font-bold text-gray-900 font-serif">Message from the Founder</h2>
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white font-serif">Message from the Founder</h2>
             </div>
             
-            <div className="prose prose-lg text-gray-600 mb-8">
-              <p className="italic text-xl text-gray-800 font-medium mb-6">
+            <div className="prose prose-lg dark:prose-invert text-gray-600 dark:text-gray-300 mb-8">
+              <p className="italic text-xl text-gray-800 dark:text-gray-200 font-medium mb-6">
                 {t.founderMsg1}
               </p>
-              <p className="mb-4">
+              <p className="mb-4 text-gray-700 dark:text-gray-300">
                 {t.founderMsg2}<strong className="text-[var(--color-clic-red)]">{t.founderMsg2Bold}</strong>.
               </p>
-              <p>
+              <p className="text-gray-700 dark:text-gray-300">
                 {t.founderMsg3}
               </p>
             </div>
+
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mt-8 mb-8 p-6 rounded-2xl bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 border border-indigo-100 dark:border-indigo-800/30 relative overflow-hidden"
+            >
+              <Sparkles className="absolute top-4 right-4 w-24 h-24 text-indigo-500/10 rotate-12" />
+              <div className="flex items-start gap-4 relative z-10">
+                <div className="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center flex-shrink-0 mt-1">
+                  <Sparkles className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-2 font-serif">The AI Synergy</h4>
+                  <p className="text-gray-700 dark:text-gray-300 italic text-sm">
+                    "As a Subject Matter Expert, I leverage tools like Google AI Studio and NotebookLM to translate decades of industrial experience into dynamic, scalable curricula. AI doesn't replace the expert; it amplifies our reach across Africa."
+                  </p>
+                </div>
+              </div>
+            </motion.div>
 
             <div className="flex flex-wrap gap-4">
               <a href="#get-involved" className="px-8 py-4 rounded-full text-base font-bold bg-[var(--color-clic-blue)] text-white hover:bg-opacity-90 transition-colors shadow-lg flex items-center gap-2">
                 Join the Vision <ArrowRight size={18} />
               </a>
-              <a href="#get-involved" className="px-8 py-4 rounded-full text-base font-bold bg-white text-gray-900 border border-gray-200 hover:bg-gray-50 transition-colors shadow-sm">
+              <a href="#get-involved" className="px-8 py-4 rounded-full text-base font-bold bg-white text-gray-900 dark:bg-gray-800 dark:text-white dark:border-gray-700 border border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors shadow-sm">
                 Support Our Goal
               </a>
             </div>
@@ -1471,13 +1525,16 @@ const SteamSection = () => {
   ];
 
   return (
-    <section id="steam" className="py-24 bg-[var(--color-clic-light)] relative overflow-hidden">
+    <section id="steam" className="py-24 bg-[var(--color-clic-light)] dark:bg-gray-900 relative overflow-hidden transition-colors duration-300">
+      {/* Subtle African Motif Pattern */}
+      <div className="absolute inset-0 bg-pattern-kuba opacity-[0.03] pointer-events-none"></div>
+      
       {/* Decorative dashed line behind the grid */}
       <div className="absolute top-[55%] left-0 w-full h-0.5 border-t-2 border-dashed border-gray-300 -z-0 hidden lg:block opacity-50"></div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">What is STEAM?</h2>
+          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6 font-serif">What is STEAM?</h2>
           <p className="text-xl text-gray-600">
             {t.steamDesc}
           </p>
@@ -1491,7 +1548,7 @@ const SteamSection = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.5 }}
-              className={`bg-white rounded-3xl p-8 shadow-sm border border-gray-100 relative overflow-hidden group cursor-pointer hover:shadow-2xl transition-all duration-500 flex flex-col h-full ${field.colSpan}`}
+              className={`bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-sm border border-gray-100 dark:border-gray-700 relative overflow-hidden group cursor-pointer hover:shadow-2xl transition-all duration-500 flex flex-col h-full ${field.colSpan}`}
               onClick={() => setSelectedField({ ...field, title: field.name })}
             >
               {/* Hover Tint */}
@@ -1516,15 +1573,15 @@ const SteamSection = () => {
                   >
                     <field.icon size={28} />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900">{field.name}</h3>
+                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{field.name}</h3>
                 </div>
                 
-                <p className="text-gray-600 mb-8 flex-grow text-base leading-relaxed">
+                <p className="text-gray-600 dark:text-gray-300 mb-8 flex-grow text-base leading-relaxed">
                   {field.desc}
                 </p>
                 
                 {/* Mini Stats */}
-                <div className="grid grid-cols-2 gap-4 w-full mb-6 border-t border-gray-100 pt-6">
+                <div className="grid grid-cols-2 gap-4 w-full mb-6 border-t border-gray-100 dark:border-gray-700 pt-6">
                   {field.stats.map((stat, idx) => (
                     <div key={idx} className="text-left">
                       <div className="text-2xl font-black mb-1" style={{ color: field.color }}>{stat.value}</div>
@@ -1540,6 +1597,25 @@ const SteamSection = () => {
               </div>
             </motion.div>
           ))}
+          
+          {/* AI Integration Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="col-span-1 md:col-span-2 lg:col-span-6 p-8 rounded-3xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white relative overflow-hidden flex flex-col md:flex-row items-center gap-8 shadow-xl"
+          >
+            <Sparkles className="absolute -right-10 -top-10 w-48 h-48 text-white/10 rotate-12" />
+            <div className="flex-grow relative z-10">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold uppercase tracking-wider mb-4 backdrop-blur-sm border border-white/30">
+                <Sparkles className="w-3 h-3" /> AI-Powered Curriculum
+              </div>
+              <h3 className="text-2xl md:text-3xl font-bold mb-3 font-serif">Dynamic STEAM Modules</h3>
+              <p className="text-indigo-100 text-lg max-w-3xl">
+                Course materials, quizzes, and project prompts across all STEAM fields are continuously updated using <strong>Gemini Gems</strong> to reflect the latest industry standards and technological advancements.
+              </p>
+            </div>
+          </motion.div>
         </div>
       </div>
 
@@ -1584,10 +1660,13 @@ const IESection = () => {
   };
 
   return (
-    <section id="ie" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="ie" className="py-24 bg-white dark:bg-gray-800 relative overflow-hidden transition-colors duration-300">
+      {/* Subtle African Motif Pattern */}
+      <div className="absolute inset-0 bg-pattern-zigzag opacity-[0.02] pointer-events-none"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">Innovation & Entrepreneurship</h2>
+          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6 font-serif">Innovation & Entrepreneurship</h2>
           <p className="text-xl text-gray-600">
             {t.ieDesc}
           </p>
@@ -1617,10 +1696,10 @@ const IESection = () => {
             </div>
 
             <div className="relative z-10">
-              <div className="w-16 h-16 rounded-2xl bg-white text-[var(--color-clic-orange)] flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
+              <div className="w-16 h-16 rounded-2xl bg-white dark:bg-gray-700 text-[var(--color-clic-orange)] flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
                 <Lightbulb size={32} />
               </div>
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">Innovation</h3>
+              <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Innovation</h3>
               <p className="text-lg text-gray-600 mb-6 leading-relaxed">
                 Fostering a culture of creativity and problem-solving. We provide the tools and environment for students to experiment, prototype, and develop unique solutions to real-world challenges.
               </p>
@@ -1663,10 +1742,10 @@ const IESection = () => {
             </div>
 
             <div className="relative z-10">
-              <div className="w-16 h-16 rounded-2xl bg-white text-[var(--color-clic-green)] flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
+              <div className="w-16 h-16 rounded-2xl bg-white dark:bg-gray-700 text-[var(--color-clic-green)] flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
                 <Rocket size={32} />
               </div>
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">Entrepreneurship</h3>
+              <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Entrepreneurship</h3>
               <p className="text-lg text-gray-600 mb-6 leading-relaxed">
                 Building the business leaders of tomorrow. We offer incubation support, mentorship, and resources to help transform innovative projects into viable, scalable startups.
               </p>
@@ -1686,6 +1765,25 @@ const IESection = () => {
             </div>
           </motion.div>
         </div>
+
+        {/* AI Integration Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-8 p-8 rounded-3xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white relative overflow-hidden flex flex-col md:flex-row items-center gap-8 shadow-xl"
+        >
+          <Sparkles className="absolute -left-10 -bottom-10 w-48 h-48 text-white/10 -rotate-12" />
+          <div className="flex-grow relative z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-bold uppercase tracking-wider mb-4 backdrop-blur-sm border border-white/30">
+              <Sparkles className="w-3 h-3" /> AI-Powered Incubation
+            </div>
+            <h3 className="text-2xl md:text-3xl font-bold mb-3 font-serif">Smart Startup Acceleration</h3>
+            <p className="text-indigo-100 text-lg max-w-3xl">
+              From ideation to market analysis, our incubation process leverages <strong>Google AI Studio</strong> to help student founders generate business plans, analyze market trends, and refine their pitches at unprecedented speed.
+            </p>
+          </div>
+        </motion.div>
       </div>
 
       <InfoModal 
@@ -1745,8 +1843,11 @@ const Labs = () => {
   ];
 
   return (
-    <section id="labs" className="py-24 bg-white dark:bg-gray-900 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="labs" className="py-24 bg-white dark:bg-gray-900 transition-colors duration-300 relative overflow-hidden">
+      {/* Subtle African Motif Pattern */}
+      <div className="absolute inset-0 bg-pattern-mudcloth opacity-[0.02] dark:opacity-[0.015] dark:invert pointer-events-none"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
           <div className="max-w-2xl">
             <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 font-serif">Smart Creative Laboratories</h2>
@@ -1907,8 +2008,11 @@ const Projects = () => {
   ];
 
   return (
-    <section id="projects" className="py-24 bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="projects" className="py-24 bg-gray-900 text-white relative overflow-hidden">
+      {/* Subtle African Motif Pattern */}
+      <div className="absolute inset-0 bg-pattern-kuba opacity-[0.03] invert pointer-events-none mix-blend-overlay"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-4xl font-bold mb-6 font-serif">200+ Applied Industrial Projects</h2>
           <p className="text-xl text-gray-400">
@@ -2280,13 +2384,13 @@ const DonateContent = () => {
 
   return (
     <>
-      <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700">
         <div className="grid grid-cols-1 lg:grid-cols-2">
           <div className="p-12 lg:p-16 flex flex-col justify-center">
             <div className="w-16 h-16 rounded-2xl bg-[var(--color-clic-red)]/10 text-[var(--color-clic-red)] flex items-center justify-center mb-8">
               <HeartHandshake size={32} />
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-6 font-serif">Support Our Mission</h2>
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 font-serif">Support Our Mission</h2>
             <p className="text-lg text-gray-600 mb-8">
               Your donation helps us build smart creative laboratories, provide course kits, and train the next generation of Ethiopian innovators and entrepreneurs.
             </p>
@@ -2301,9 +2405,9 @@ const DonateContent = () => {
                 <button 
                   key={i} 
                   onClick={() => setIsDonateModalOpen(true)}
-                  className="p-4 rounded-xl border-2 border-gray-100 hover:border-[var(--color-clic-red)] hover:bg-[var(--color-clic-red)]/5 transition-all text-left group"
+                  className="p-4 rounded-xl border-2 border-gray-100 dark:border-gray-700 hover:border-[var(--color-clic-red)] hover:bg-[var(--color-clic-red)]/5 transition-all text-left group"
                 >
-                  <div className="font-bold text-gray-900 group-hover:text-[var(--color-clic-red)]">{tier.amount}</div>
+                  <div className="font-bold text-gray-900 dark:text-white group-hover:text-[var(--color-clic-red)]">{tier.amount}</div>
                   <div className="text-xs text-gray-500 mt-1">{tier.desc}</div>
                 </button>
               ))}
@@ -2325,7 +2429,7 @@ const DonateContent = () => {
               referrerPolicy="no-referrer"
               loading="lazy"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-white via-white/20 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-white dark:from-gray-800 via-white/20 dark:via-gray-800/20 to-transparent"></div>
           </div>
         </div>
       </div>
@@ -2425,14 +2529,14 @@ const RegisterContent = () => {
 
   if (isSubmitted) {
     return (
-      <div className="max-w-3xl mx-auto text-center py-12 relative bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
+      <div className="max-w-3xl mx-auto text-center py-12 relative bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700">
         <button onClick={handleClose} className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors">
           <X size={20} className="text-gray-600" />
         </button>
         <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
           <UserPlus size={40} />
         </div>
-        <h3 className="text-3xl font-bold text-gray-900 mb-2">Registration Successful!</h3>
+        <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Registration Successful!</h3>
         <p className="text-gray-600 mb-8">Welcome to CLIC Ethiopia. We will contact you soon.</p>
         <button onClick={handleClose} className="px-8 py-3 bg-[var(--color-clic-blue)] text-white rounded-xl font-bold hover:bg-opacity-90 transition-colors">
           Close
@@ -2447,16 +2551,16 @@ const RegisterContent = () => {
         <div className="w-16 h-16 mx-auto rounded-2xl bg-[var(--color-clic-blue)]/10 text-[var(--color-clic-blue)] flex items-center justify-center mb-6">
           <UserPlus size={32} />
         </div>
-        <h2 className="text-3xl font-bold text-gray-900 mb-4 font-serif">Student Registration</h2>
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4 font-serif">Student Registration</h2>
         <p className="text-lg text-gray-600">
           Register for our STEAM-IE courses and become part of the digital transformation.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
+      <form onSubmit={handleSubmit} className="space-y-6 bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="relative">
-            <label className="block text-sm font-bold text-gray-700 mb-2">First Name</label>
+            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">First Name</label>
             <input 
               required
               type="text" 
@@ -2477,7 +2581,7 @@ const RegisterContent = () => {
             )}
           </div>
           <div className="relative">
-            <label className="block text-sm font-bold text-gray-700 mb-2">Last Name</label>
+            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Last Name</label>
             <input 
               required
               type="text" 
@@ -2500,7 +2604,7 @@ const RegisterContent = () => {
         </div>
         
         <div className="relative">
-          <label className="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
+          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
           <input 
             required
             type="email" 
@@ -2525,11 +2629,11 @@ const RegisterContent = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">Membership Type</label>
+          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Membership Type</label>
           <select 
             value={formData.membershipType}
             onChange={e => setFormData({...formData, membershipType: e.target.value})}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all bg-white"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all bg-white dark:bg-gray-700 dark:text-white"
           >
             <option>Youth (High school graduates)</option>
             <option>Students (Elementary & High school)</option>
@@ -2540,7 +2644,7 @@ const RegisterContent = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">Area of Interest</label>
+          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Area of Interest</label>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {[
               'Smart Agriculture', 'Smart Healthcare', 'Smart Manufacturing', 
@@ -2548,14 +2652,14 @@ const RegisterContent = () => {
               'Smart Finance', 'Smart Education', 'Smart Lifestyle', 
               'Smart Environment', 'Smart Infrastructure', 'Smart Governance'
             ].map((interest) => (
-              <label key={interest} className="flex items-center gap-2 p-3 rounded-lg border border-gray-200 bg-white cursor-pointer hover:bg-gray-50">
+              <label key={interest} className="flex items-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-700 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-600">
                 <input 
                   type="checkbox" 
                   checked={formData.interests.includes(interest)}
                   onChange={() => handleInterestChange(interest)}
                   className="rounded text-[var(--color-clic-blue)] focus:ring-[var(--color-clic-blue)]" 
                 />
-                <span className="text-sm text-gray-700">{interest}</span>
+                <span className="text-sm text-gray-700 dark:text-gray-300">{interest}</span>
               </label>
             ))}
           </div>
@@ -2663,7 +2767,7 @@ const MentorContent = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="max-w-3xl mx-auto text-center py-12 bg-white rounded-3xl shadow-xl border border-gray-100 relative"
+          className="max-w-3xl mx-auto text-center py-12 bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 relative"
         >
           <button 
             onClick={handleClose}
@@ -2674,7 +2778,7 @@ const MentorContent = () => {
           <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle size={40} />
           </div>
-          <h3 className="text-3xl font-bold text-gray-900 mb-2">Thank You!</h3>
+          <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Thank You!</h3>
           <p className="text-gray-600 mb-8 max-w-md mx-auto">Your application to become a mentor has been received. We will be in touch with you shortly.</p>
           <button 
             onClick={handleClose}
@@ -2693,16 +2797,16 @@ const MentorContent = () => {
         <div className="w-16 h-16 mx-auto rounded-2xl bg-[var(--color-clic-orange)]/10 text-[var(--color-clic-orange)] flex items-center justify-center mb-6">
           <Lightbulb size={32} />
         </div>
-        <h2 className="text-3xl font-bold text-gray-900 mb-4 font-serif">Become a Mentor</h2>
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4 font-serif">Become a Mentor</h2>
         <p className="text-lg text-gray-600">
           Share your expertise and help shape the next generation of Ethiopian innovators.
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white p-8 rounded-3xl shadow-xl border border-gray-100">
+      <form onSubmit={handleSubmit} className="space-y-6 bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">First Name</label>
+            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">First Name</label>
             <div className="relative">
               <input 
                 required
@@ -2728,7 +2832,7 @@ const MentorContent = () => {
             )}
           </div>
           <div>
-            <label className="block text-sm font-bold text-gray-700 mb-2">Last Name</label>
+            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Last Name</label>
             <div className="relative">
               <input 
                 required
@@ -2756,7 +2860,7 @@ const MentorContent = () => {
         </div>
         
         <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">Email Address</label>
+          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
           <div className="relative">
             <input 
               required
@@ -2786,11 +2890,11 @@ const MentorContent = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-bold text-gray-700 mb-2">Area of Expertise</label>
+          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Area of Expertise</label>
           <select 
             value={formData.expertise}
             onChange={e => setFormData({...formData, expertise: e.target.value})}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all bg-white"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-[var(--color-clic-orange)] focus:border-transparent outline-none transition-all bg-white dark:bg-gray-700 dark:text-white"
           >
             <option>Engineering & Technology</option>
             <option>Business & Entrepreneurship</option>
@@ -2885,10 +2989,13 @@ const GetInvolved = () => {
   }, [activeRole]);
 
   return (
-    <section id="get-involved" className="py-24 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="get-involved" className="py-24 bg-gray-50 dark:bg-gray-900 relative overflow-hidden transition-colors duration-300">
+      {/* Subtle African Motif Pattern */}
+      <div className="absolute inset-0 bg-pattern-zigzag opacity-[0.02] pointer-events-none"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">Join Our Ecosystem</h2>
+          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-6 font-serif">Join Our Ecosystem</h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             {t.getInvolvedDesc}
           </p>
@@ -2913,7 +3020,7 @@ const GetInvolved = () => {
               >
                 <role.icon size={32} />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">{role.title}</h3>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{role.title}</h3>
               <p className="text-gray-600 mb-6">{role.desc}</p>
               <div className="flex items-center font-bold text-sm uppercase tracking-wider" style={{ color: role.color }}>
                 {role.cta} <ArrowRight size={16} className="ml-2" />
@@ -3122,8 +3229,11 @@ const Footer = () => {
   const [subscribeEmail, setSubscribeEmail] = useState('');
 
   return (
-    <footer className="bg-gray-900 text-white py-16 border-t border-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer className="bg-gray-900 text-white py-16 border-t border-gray-800 relative overflow-hidden">
+      {/* Subtle African Motif Pattern */}
+      <div className="absolute inset-0 bg-pattern-mudcloth opacity-[0.03] invert pointer-events-none mix-blend-overlay"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 mb-12">
           <div className="col-span-1 md:col-span-4">
             <div className="flex items-center gap-2 mb-6">
@@ -3247,7 +3357,7 @@ const ScrollToTop = () => {
 };
 
 export default function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [lang, setLang] = useState<Language>('en');
 
   useEffect(() => {
@@ -3263,19 +3373,33 @@ export default function App() {
       <div className="min-h-screen font-sans bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300">
         <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
         <main>
+          {/* Phase 1: The Vision & Foundation */}
           <Hero />
           <About />
           <FounderMessage />
           <ImpactSection />
+          
+          {/* Phase 2: The Educational Engine */}
           <SteamSection />
           <IESection />
           <CurriculumSection />
+          <TheoryOfChange />
+          <CurriculumEngine />
+          <ResourceHub />
+          
+          {/* Phase 3: The Application & Output */}
           <Labs />
           <Projects />
+          
+          {/* Phase 4: Community & Updates */}
           <NewsSection />
-          <MerchSection />
-          <GetInvolved />
+          <EventCalendar />
           <ShareStorySection />
+          
+          {/* Phase 5: Support & Engagement */}
+          <GetInvolved />
+          <DonationPortal />
+          <MerchSection />
         </main>
         <Footer />
         <ChatBot />

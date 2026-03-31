@@ -16,54 +16,64 @@ const ImpactSection = () => {
       });
     }
   };
-  const testimonials = [
+
+  const projects = [
     {
-      quote: "The robotics lab completely changed my perspective on what I can achieve. I'm now building solutions for my community.",
-      author: "Betelhem T.",
-      role: "High School Student, Addis Ababa",
-      image: "https://loremflickr.com/150/150/student,africa,girl?random=1",
-      color: "var(--color-clic-blue)"
+      title: "Fad.Lab",
+      description: "A state-of-the-art innovation hub providing resources and mentorship for tech startups.",
+      link: "https://fad.lab",
+      color: "var(--color-clic-blue)",
+      letter: "F",
+      colSpan: "lg:col-span-3"
     },
     {
-      quote: "CLIC Ethiopia provided our school with the resources we desperately needed. Our students are more engaged than ever.",
-      author: "Ato Dawit",
-      role: "Science Teacher, Bahir Dar",
-      image: "https://loremflickr.com/150/150/teacher,africa,man?random=2",
-      color: "var(--color-clic-green)"
+      title: "Fad Business Verse",
+      description: "An ecosystem connecting entrepreneurs with investors and business development tools.",
+      link: "https://fadbusinessverse.com",
+      color: "var(--color-clic-green)",
+      letter: "B",
+      colSpan: "lg:col-span-3"
     },
     {
-      quote: "Learning to code through CLIC's mentorship program gave me the skills to start my own tech initiative.",
-      author: "Yonas M.",
-      role: "University Student, Hawassa",
-      image: "https://loremflickr.com/150/150/student,africa,boy?random=3",
-      color: "var(--color-clic-orange)"
+      title: "Fad LMS",
+      description: "A comprehensive Learning Management System designed for modern educational needs.",
+      link: "https://fadlms.com",
+      color: "var(--color-clic-orange)",
+      letter: "L",
+      colSpan: "lg:col-span-2"
     },
     {
-      quote: "The STEAM curriculum is exactly what our educational system needed to bridge the gap between theory and practice.",
-      author: "Dr. Aster K.",
-      role: "Education Policy Advisor",
-      image: "https://loremflickr.com/150/150/professional,africa,woman?random=4",
-      color: "var(--color-clic-purple)"
+      title: "NATS",
+      description: "National Advanced Technology Solutions, focusing on large-scale infrastructure projects.",
+      link: "https://nats.com",
+      color: "var(--color-clic-purple)",
+      letter: "N",
+      colSpan: "lg:col-span-2"
     },
     {
-      quote: "My daughter used to think science was only for boys. Now she wants to be an aerospace engineer thanks to CLIC.",
-      author: "W/ro Tigist",
-      role: "Parent, Dire Dawa",
-      image: "https://loremflickr.com/150/150/parent,africa,woman?random=5",
-      color: "var(--color-clic-red)"
+      title: "CLIC Africa",
+      description: "Expanding the CLIC initiative across the African continent to foster pan-African tech collaboration.",
+      link: "#",
+      color: "var(--color-clic-red)",
+      letter: "A",
+      colSpan: "lg:col-span-2"
     },
     {
-      quote: "Partnering with CLIC Ethiopia allowed our tech company to discover brilliant young minds we otherwise wouldn't have found.",
-      author: "Elias B.",
-      role: "Tech Entrepreneur",
-      image: "https://loremflickr.com/150/150/businessman,africa?random=6",
-      color: "var(--color-clic-blue)"
+      title: "CLIC Congo",
+      description: "A dedicated branch of CLIC operating in the Democratic Republic of Congo, focusing on local tech empowerment.",
+      link: "#",
+      color: "var(--color-clic-blue)",
+      letter: "C",
+      colSpan: "lg:col-span-6"
     }
   ];
 
   return (
-    <section id="impact" className="py-24 bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="impact" className="py-24 bg-gray-50 dark:bg-gray-800 transition-colors duration-300 relative overflow-hidden">
+      {/* Subtle African Motif Pattern */}
+      <div className="absolute inset-0 bg-pattern-kuba opacity-[0.03] dark:opacity-[0.02] dark:invert pointer-events-none"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4 font-serif">Our Impact</h2>
           <p className="text-xl text-gray-600 dark:text-gray-400">
@@ -115,96 +125,60 @@ const ImpactSection = () => {
           </motion.div>
         </div>
 
-        {/* Testimonials - Horizontally Scrollable */}
-        <div className="relative mb-16 px-4 group/slider">
-          {/* Left Arrow */}
-          <button 
-            onClick={() => scroll('left')}
-            className="absolute left-0 md:-left-4 top-1/2 -translate-y-1/2 z-20 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg border border-gray-100 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:text-[var(--color-clic-blue)] hover:scale-110 transition-all flex opacity-0 group-hover/slider:opacity-100 focus:opacity-100"
-            aria-label="Scroll left"
-          >
-            <ChevronLeft size={24} />
-          </button>
-
-          <div 
-            ref={scrollRef}
-            className="flex overflow-x-auto gap-6 md:gap-8 pb-12 snap-x snap-mandatory no-scrollbar" 
-            style={{ scrollBehavior: 'smooth' }}
-          >
-            {testimonials.map((testimonial, index) => (
-              <motion.div 
+        {/* Other Projects by Prof. Frehun */}
+        <div className="mb-20">
+          <div className="text-center max-w-3xl mx-auto mb-12">
+            <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4 font-serif">Other Projects by Prof. Frehun</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
+            {projects.map((project, index) => (
+              <motion.a 
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
                 key={index}
-                whileHover={{ y: -10 }}
-                className="bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-lg border-2 border-transparent hover:border-gray-200 dark:hover:border-gray-700 relative w-[85vw] sm:w-[320px] md:w-[380px] snap-center flex-shrink-0 flex flex-col transition-all group cursor-pointer"
-                style={{ 
-                  borderColor: testimonial.color,
-                  boxShadow: `0 10px 25px -5px ${testimonial.color}20`
-                }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                className={`bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-sm border border-gray-100 dark:border-gray-700 relative overflow-hidden group cursor-pointer hover:shadow-2xl transition-all duration-500 flex flex-col h-full ${project.colSpan}`}
               >
+                {/* Hover Tint */}
                 <div 
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-white shadow-md"
-                  style={{ backgroundColor: testimonial.color }}
+                  className="absolute inset-0 opacity-0 group-hover:opacity-[0.03] transition-opacity duration-500 z-0 pointer-events-none"
+                  style={{ backgroundColor: project.color }}
+                ></div>
+
+                {/* Watermark Letter */}
+                <div 
+                  className="absolute -bottom-8 -right-4 text-[14rem] font-black leading-none opacity-[0.15] group-hover:opacity-[0.25] group-hover:-translate-y-4 transition-all duration-700 z-0 select-none pointer-events-none"
+                  style={{ color: project.color }}
                 >
-                  <Quote size={32} />
+                  {project.letter}
                 </div>
-                
-                <p className="text-gray-700 dark:text-gray-300 text-lg mb-8 relative z-10 italic font-medium leading-relaxed flex-grow">
-                  "{testimonial.quote}"
-                </p>
-                
-                <div className="flex items-center gap-4 mt-auto pt-6 border-t border-gray-100 dark:border-gray-800">
-                  <img 
-                    src={testimonial.image} 
-                    alt={testimonial.author} 
-                    className="w-14 h-14 rounded-full object-cover shadow-md"
-                    referrerPolicy="no-referrer"
-                    loading="lazy"
-                  />
-                  <div>
-                    <h4 className="font-bold text-xl mb-1" style={{ color: testimonial.color }}>{testimonial.author}</h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wider">{testimonial.role}</p>
+
+                <div className="relative z-10 flex flex-col h-full">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div 
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center text-white shadow-lg group-hover:scale-110 group-hover:-translate-y-1 transition-transform duration-500"
+                      style={{ backgroundColor: project.color }}
+                    >
+                      <ArrowRight size={28} className="transform -rotate-45 group-hover:rotate-0 transition-transform" />
+                    </div>
+                    <h4 className="text-2xl font-bold text-gray-900 dark:text-white" style={{ color: project.color }}>{project.title}</h4>
+                  </div>
+                  
+                  <p className="text-gray-600 dark:text-gray-400 mb-8 flex-grow text-base leading-relaxed">
+                    {project.description}
+                  </p>
+
+                  <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider mt-auto group-hover:gap-3 transition-all duration-300" style={{ color: project.color }}>
+                    <span>Visit Project</span>
+                    <ArrowRight size={16} />
                   </div>
                 </div>
-              </motion.div>
+              </motion.a>
             ))}
-
-            {/* Add Your Story Card */}
-            <motion.a 
-              href="#share-story"
-              whileHover={{ y: -10 }}
-              className="bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-lg border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-[var(--color-clic-blue)] dark:hover:border-[var(--color-clic-blue)] relative w-[85vw] sm:w-[320px] md:w-[380px] snap-center flex-shrink-0 flex flex-col items-center justify-center text-center transition-all group cursor-pointer"
-            >
-              <div 
-                className="w-20 h-20 rounded-full flex items-center justify-center mb-6 text-[var(--color-clic-blue)] bg-blue-50 dark:bg-blue-900/30 group-hover:bg-[var(--color-clic-blue)] group-hover:text-white transition-colors shadow-sm"
-              >
-                <PlusCircle size={40} />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 font-serif group-hover:text-[var(--color-clic-blue)] transition-colors">Have a Story?</h3>
-              <p className="text-gray-600 dark:text-gray-400 text-lg mb-8">
-                We'd love to hear how CLIC Ethiopia has impacted your journey.
-              </p>
-              <div className="flex items-center font-bold text-sm uppercase tracking-wider text-[var(--color-clic-blue)]">
-                Share Your Story <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </motion.a>
-          </div>
-          
-          {/* Right Arrow */}
-          <button 
-            onClick={() => scroll('right')}
-            className="absolute right-0 md:-right-4 top-1/2 -translate-y-1/2 z-20 bg-white dark:bg-gray-800 p-3 rounded-full shadow-lg border border-gray-100 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:text-[var(--color-clic-blue)] hover:scale-110 transition-all flex opacity-0 group-hover/slider:opacity-100 focus:opacity-100"
-            aria-label="Scroll right"
-          >
-            <ChevronRight size={24} />
-          </button>
-
-          {/* Scroll Hint */}
-          <div className="flex justify-center mt-2">
-            <div className="flex gap-2">
-              <div className="w-2 h-2 rounded-full bg-[var(--color-clic-blue)]"></div>
-              <div className="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600"></div>
-              <div className="w-2 h-2 rounded-full bg-gray-300 dark:bg-gray-600"></div>
-            </div>
           </div>
         </div>
       </div>

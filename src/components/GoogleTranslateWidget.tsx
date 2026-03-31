@@ -123,7 +123,7 @@ const GoogleTranslateWidget = ({ id = "google_translate_element" }: { id?: strin
           defaultValue="en"
         >
           {LANGUAGES.map(l => (
-            <option key={l.code} value={l.code} className="text-gray-900">{l.label}</option>
+            <option key={l.code} value={l.code} className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100">{l.label}</option>
           ))}
         </select>
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-500 dark:text-gray-400">

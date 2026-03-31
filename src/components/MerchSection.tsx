@@ -291,8 +291,11 @@ const MerchSection = () => {
   };
 
   return (
-    <section id="merch" className="py-24 bg-white dark:bg-gray-900 relative transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="merch" className="py-24 bg-white dark:bg-gray-900 relative transition-colors duration-300 overflow-hidden">
+      {/* Subtle African Motif Pattern */}
+      <div className="absolute inset-0 bg-pattern-kuba opacity-[0.02] dark:opacity-[0.015] dark:invert pointer-events-none"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Header */}
         <div className="flex justify-between items-end mb-12">

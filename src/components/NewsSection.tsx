@@ -189,10 +189,13 @@ const NewsSection = () => {
   };
 
   return (
-    <section id="news" className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="news" className="py-24 bg-white dark:bg-gray-900 relative overflow-hidden transition-colors duration-300">
+      {/* Subtle African Motif Pattern */}
+      <div className="absolute inset-0 bg-pattern-zigzag opacity-[0.02] pointer-events-none"></div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="mb-12">
-            <h2 className="text-4xl font-bold text-gray-900 font-serif mb-4">Impact & Updates</h2>
+            <h2 className="text-4xl font-bold text-gray-900 dark:text-white font-serif mb-4">Impact & Updates</h2>
             <p className="text-xl text-gray-600 max-w-2xl">
               {t.newsDesc}
             </p>
@@ -211,7 +214,7 @@ const NewsSection = () => {
                         <div className="p-2 bg-red-600 rounded-lg text-white">
                             <Youtube size={20} />
                         </div>
-                        <h3 className="text-xl font-bold text-gray-900">Latest Videos</h3>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">Latest Videos</h3>
                     </div>
                     <a href="https://www.youtube.com/@clicethiopia/playlists" target="_blank" rel="noopener noreferrer" className="text-sm font-bold text-[var(--color-clic-red)] hover:underline flex items-center gap-1">
                         View Channel <ArrowRight size={14} />
@@ -272,7 +275,7 @@ const NewsSection = () => {
                                     </div>
                                 </div>
                             )}
-                            <h4 className="font-bold text-gray-900 leading-tight group-hover:text-[var(--color-clic-red)] transition-colors line-clamp-2">
+                            <h4 className="font-bold text-gray-900 dark:text-white leading-tight group-hover:text-[var(--color-clic-red)] transition-colors line-clamp-2">
                                 {video.title}
                             </h4>
                             <p className="text-xs text-gray-500 mt-1">{video.date || 'Recently added'}</p>
