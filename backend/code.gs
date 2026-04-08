@@ -36,7 +36,10 @@ const SHEETS = {
   MENTORS: 'Mentors',
   DONATIONS: 'Donations',
   MESSAGES: 'Messages', // General contact
-  NEWSLETTER_SUB: 'newsletter sub'
+  NEWSLETTER_SUB: 'newsletter sub',
+  
+  // Admin
+  SITE_ADMIN: 'site_admin'
 };
 
 // --- Setup Function ---
@@ -111,6 +114,11 @@ function setupDatabase() {
   // 13. Newsletter Subscriptions
   createSheetIfNotExists(ss, SHEETS.NEWSLETTER_SUB, [
     'subscription_id', 'date', 'name', 'email', 'phone', 'status'
+  ]);
+
+  // 14. Site Admin
+  createSheetIfNotExists(ss, SHEETS.SITE_ADMIN, [
+    'admin_id', 'email', 'password', 'role', 'name'
   ]);
 }
 
@@ -427,6 +435,111 @@ function doPost(e) {
       ];
       sheet.appendRow(newRow);
       return responseJSON({status: 'success', subId: subId, message: 'Subscription recorded'});
+    }
+
+    // 6. Admin Login
+    if (action === 'admin_login') {
+      let sheet = ss.getSheetByName(SHEETS.SITE_ADMIN);
+      if (!sheet) {
+        // Auto-create sheet and default admin if it doesn't exist
+        sheet = ss.insertSheet(SHEETS.SITE_ADMIN);
+        sheet.appendRow(['admin_id', 'email', 'password', 'role', 'name']);
+        sheet.getRange(1, 1, 1, 5).setFontWeight('bold').setBackground('#f3f3f3');
+        sheet.setFrozenRows(1);
+        sheet.appendRow(['admin_1', 'clic.ethiopia@gmail.com', 'admin123', 'Super Admin', 'CLIC Admin']);
+      }
+      
+      const data = sheet.getDataRange().getValues();
+      const emailIndex = 1;
+      const passIndex = 2;
+      
+      for (let i = 1; i < data.length; i++) {
+        if (data[i][emailIndex] === postData.email && data[i][passIndex] === postData.password) {
+          return responseJSON({
+            status: 'success', 
+            message: 'Login successful',
+            user: {
+              id: data[i][0],
+              email: data[i][1],
+              role: data[i][3],
+              name: data[i][4]
+            }
+          });
+        }
+      }
+      return responseJSON({status: 'error', message: 'Invalid credentials'});
+    }
+
+    // 7. Admin Get Data
+    if (action === 'admin_get_data') {
+      // In a real app, verify token here
+      const sheetName = postData.sheetName;
+      const sheet = ss.getSheetByName(sheetName);
+      if (!sheet) return responseJSON({status: 'error', message: 'Sheet not found. Please run setupDatabase() in Apps Script.'});
+      
+      const rows = sheet.getDataRange().getValues();
+      if (!rows || rows.length === 0 || (rows.length === 1 && rows[0].length === 1 && rows[0][0] === '')) {
+         return responseJSON({status: 'success', data: [], headers: []});
+      }
+      
+      const headers = rows[0];
+      let data = [];
+      
+      for (let i = 1; i < rows.length; i++) {
+        let row = rows[i];
+        let obj = {};
+        for (let j = 0; j < headers.length; j++) {
+          obj[headers[j]] = row[j];
+        }
+        data.push(obj);
+      }
+      return responseJSON({status: 'success', data: data, headers: headers});
+    }
+
+    // 8. Admin Add Row
+    if (action === 'admin_add_row') {
+      const sheetName = postData.sheetName;
+      const rowData = JSON.parse(postData.rowData);
+      const sheet = ss.getSheetByName(sheetName);
+      if (!sheet) return responseJSON({status: 'error', message: 'Sheet not found'});
+      
+      const headers = sheet.getDataRange().getValues()[0];
+      const newRow = headers.map(h => rowData[h] || '');
+      
+      // Auto-generate ID if first column is an ID column and is empty
+      if (headers[0].toLowerCase().includes('id') && !newRow[0]) {
+        newRow[0] = 'ID-' + Date.now();
+      }
+      
+      sheet.appendRow(newRow);
+      return responseJSON({status: 'success', message: 'Row added'});
+    }
+
+    // 9. Admin Update Row
+    if (action === 'admin_update_row') {
+      const sheetName = postData.sheetName;
+      const rowIndex = parseInt(postData.rowIndex); // 0-indexed relative to data array (so row 2 in sheet is index 0)
+      const rowData = JSON.parse(postData.rowData);
+      const sheet = ss.getSheetByName(sheetName);
+      if (!sheet) return responseJSON({status: 'error', message: 'Sheet not found'});
+      
+      const headers = sheet.getDataRange().getValues()[0];
+      const updateRow = headers.map(h => rowData[h] || '');
+      
+      // +2 because rowIndex 0 is row 2 in sheet (row 1 is headers)
+      sheet.getRange(rowIndex + 2, 1, 1, headers.length).setValues([updateRow]);
+      return responseJSON({status: 'success', message: 'Row updated'});
+    }
+
+    // 10. Admin Delete Row
+    if (action === 'admin_delete_row') {
+      const sheetName = postData.sheetName;
+      const rowIndex = parseInt(postData.rowIndex);
+      const sheet = ss.getSheetByName(sheetName);
+      if (!sheet) return responseJSON({status: 'error', message: 'Sheet not found'});
+      
+      sheet.deleteRow(rowIndex + 2);
+      return responseJSON({status: 'success', message: 'Row deleted'});
     }
 
     return responseJSON({status: 'error', message: 'Invalid action'});

@@ -178,7 +178,7 @@ const TimelineItem: React.FC<{ stage: any, index: number, isEven: boolean }> = (
           initial={{ scale: 0, opacity: 0 }}
           whileInView={{ scale: 1, opacity: 1 }}
           viewport={{ once: true, margin: "-100px" }}
-          transition={{ type: "spring", stiffness: 200, damping: 20 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
           className="w-16 h-16 rounded-full bg-white dark:bg-gray-800 border-4 flex items-center justify-center shadow-lg relative"
           style={{ borderColor: stage.color }}
         >

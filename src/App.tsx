@@ -7,7 +7,7 @@ import {
   Sprout, Building2, HeartHandshake, UserPlus, Menu, X,
   Globe, Lightbulb, GraduationCap, Target, Rocket, Briefcase,
   BarChart3, Clock, Users, Trophy, Zap, Microscope, Hammer,
-  Car, Coins, Home, Recycle, Server, Landmark, Quote, Play, Youtube, ChevronDown, Moon, Sun, ArrowUp, CheckCircle, Sparkles
+  Car, Coins, Home, Recycle, Server, Landmark, Quote, Play, Youtube, ChevronDown, Moon, Sun, ArrowUp, CheckCircle, Sparkles, Phone, Mail
 } from 'lucide-react';
 
 import ChatBot from './components/ChatBot';
@@ -22,6 +22,7 @@ import DonationPortal from './components/DonationPortal';
 import ResourceHub from './components/ResourceHub';
 import EventCalendar from './components/EventCalendar';
 import TheoryOfChange from './components/TheoryOfChange';
+import AdminPortal from './components/AdminPortal';
 
 // --- Localization ---
 export type Language = 'en' | 'am';
@@ -870,9 +871,152 @@ const InfoModal = ({ isOpen, onClose, data }: { isOpen: boolean; onClose: () => 
   );
 };
 
+const LoginModal = ({ isOpen, onClose, onLoginSuccess }: { isOpen: boolean; onClose: () => void; onLoginSuccess: (user: any) => void }) => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
+  if (!isOpen) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError('');
+    
+    // Hardcoded test login in the frontend
+    if (formData.email === 'frehun.demissie@gmail.com' && formData.password === 'Assefa2!') {
+      onLoginSuccess({
+        id: 'test_admin',
+        email: 'frehun.demissie@gmail.com',
+        role: 'Super Admin',
+        name: 'Test Admin'
+      });
+      onClose();
+      setIsSubmitting(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          action: 'admin_login',
+          email: formData.email,
+          password: formData.password
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        onLoginSuccess(result.user);
+        onClose();
+      } else {
+        setError(result.message || 'Invalid credentials. Please try again.');
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <AnimatePresence>
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      >
+        <motion.div 
+          initial={{ scale: 0.95, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          exit={{ scale: 0.95, opacity: 0 }}
+          onClick={(e) => e.stopPropagation()}
+          className="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 w-full max-w-md shadow-2xl relative overflow-hidden"
+        >
+          <button 
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-700 rounded-full transition-colors"
+          >
+            <X size={20} />
+          </button>
+
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Admin Portal</h3>
+            <p className="text-gray-600 dark:text-gray-400">Access your CLIC Ethiopia account</p>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="p-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-sm rounded-lg border border-red-200 dark:border-red-800">
+                {error}
+              </div>
+            )}
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
+              <input 
+                type="email" 
+                required
+                value={formData.email}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all"
+                placeholder="Enter your email"
+              />
+            </div>
+            
+            <div>
+              <div className="flex justify-between mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                <a href="#" className="text-sm text-[var(--color-clic-blue)] hover:underline">Forgot password?</a>
+              </div>
+              <input 
+                type="password" 
+                required
+                value={formData.password}
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                className="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-clic-blue)] focus:border-transparent outline-none transition-all"
+                placeholder="Enter your password"
+              />
+            </div>
+
+            <button 
+              type="submit" 
+              disabled={isSubmitting}
+              className="w-full py-3 px-4 bg-[var(--color-clic-blue)] hover:bg-blue-700 text-white font-medium rounded-lg transition-colors flex justify-center items-center gap-2 mt-6 disabled:opacity-70"
+            >
+              {isSubmitting ? (
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                'Sign In'
+              )}
+            </button>
+          </form>
+          
+          <div className="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+            Don't have an account? <a href="#" className="text-[var(--color-clic-blue)] font-medium hover:underline">Request access</a>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
 const Navbar = ({ isDarkMode, setIsDarkMode }: { isDarkMode: boolean, setIsDarkMode: (val: boolean) => void }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isAdminPortalOpen, setIsAdminPortalOpen] = useState(false);
+  const [adminUser, setAdminUser] = useState<any>(null);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const { t, lang } = useTranslation();
   const { setLang } = React.useContext(LanguageContext);
@@ -884,6 +1028,11 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: { isDarkMode: boolean, setIsDarkM
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleLoginSuccess = (user: any) => {
+    setAdminUser(user);
+    setIsAdminPortalOpen(true);
+  };
 
   const navLinks = [
     { 
@@ -942,17 +1091,26 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: { isDarkMode: boolean, setIsDarkM
     
     // Handle hash links
     if (href.startsWith('#')) {
-      const element = document.querySelector(href);
-      if (element) {
-        const offset = 80; // Navbar height
-        const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-        const offsetPosition = elementPosition - offset;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
+      if (href === '#') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
       }
+      
+      // Use setTimeout to allow the mobile menu close animation to start
+      // without interrupting the smooth scroll
+      setTimeout(() => {
+        const element = document.querySelector(href);
+        if (element) {
+          const offset = 80; // Navbar height
+          const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+          const offsetPosition = elementPosition - offset;
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }
+      }, 50);
     } else {
       // Handle external links or other cases
       window.location.href = href;
@@ -960,10 +1118,29 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: { isDarkMode: boolean, setIsDarkM
   };
 
   return (
-    <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white dark:bg-gray-900 shadow-md py-2' : 'bg-transparent py-3'}`}>
-      <div className="w-full px-2 lg:px-4">
+    <>
+      <LoginModal isOpen={isLoginModalOpen} onClose={() => setIsLoginModalOpen(false)} onLoginSuccess={handleLoginSuccess} />
+      <AdminPortal isOpen={isAdminPortalOpen} onClose={() => setIsAdminPortalOpen(false)} user={adminUser} />
+      <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white dark:bg-gray-900 shadow-md py-2' : 'bg-transparent py-0'}`}>
+        {/* Institutional Top Bar */}
+        <div className="hidden lg:flex justify-between items-center px-4 md:px-8 py-1.5 bg-gray-900 text-gray-300 text-xs border-b border-gray-800">
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1"><Phone size={12} /> +251 911 69 2277</span>
+            <span className="flex items-center gap-1"><Mail size={12} /> frehun@fadlab.tech</span>
+          </div>
+          <div className="flex items-center gap-4 font-medium">
+            <span className="text-[var(--color-clic-blue)]">National Initiative for New Opportunities</span>
+            <div className="flex items-center gap-3 ml-2">
+              <button onClick={() => setIsLoginModalOpen(true)} className="hover:text-white transition-colors">Admin Portal</button>
+              <span className="w-px h-3 bg-gray-700"></span>
+              <a href="https://web.facebook.com/profile.php?id=100088701683074" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">Alumni</a>
+            </div>
+          </div>
+        </div>
+
+        <div className={`w-full px-2 lg:px-4 transition-all duration-300 ${isScrolled ? '' : 'pt-3 pb-3'}`}>
         <div className="flex justify-between items-center">
-          <a href="#" className="flex items-center gap-2 group">
+          <a href="#" onClick={(e) => scrollToSection(e, '#')} className="flex items-center gap-2 group">
             <div className="flex transition-transform group-hover:scale-105">
               <span className="text-xl md:text-2xl font-black text-[var(--color-clic-red)] tracking-tighter">C</span>
               <span className="text-xl md:text-2xl font-black text-[var(--color-clic-orange)] tracking-tighter">L</span>
@@ -1122,6 +1299,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: { isDarkMode: boolean, setIsDarkM
         )}
       </AnimatePresence>
     </nav>
+    </>
   );
 };
 
@@ -1699,7 +1877,7 @@ const IESection = () => {
               <div className="w-16 h-16 rounded-2xl bg-white dark:bg-gray-700 text-[var(--color-clic-orange)] flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
                 <Lightbulb size={32} />
               </div>
-              <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Innovation</h3>
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">Innovation</h3>
               <p className="text-lg text-gray-600 mb-6 leading-relaxed">
                 Fostering a culture of creativity and problem-solving. We provide the tools and environment for students to experiment, prototype, and develop unique solutions to real-world challenges.
               </p>
@@ -1745,7 +1923,7 @@ const IESection = () => {
               <div className="w-16 h-16 rounded-2xl bg-white dark:bg-gray-700 text-[var(--color-clic-green)] flex items-center justify-center mb-8 shadow-sm group-hover:scale-110 transition-transform">
                 <Rocket size={32} />
               </div>
-              <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Entrepreneurship</h3>
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">Entrepreneurship</h3>
               <p className="text-lg text-gray-600 mb-6 leading-relaxed">
                 Building the business leaders of tomorrow. We offer incubation support, mentorship, and resources to help transform innovative projects into viable, scalable startups.
               </p>
@@ -3298,8 +3476,19 @@ const Footer = () => {
         </div>
         
         <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
-          <p>&copy; {new Date().getFullYear()} CLIC Ethiopia. All rights reserved.</p>
-          <p>Prepared by Prof. Frehun Adefris</p>
+          <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6">
+            <p>&copy; {new Date().getFullYear()} CLIC Ethiopia. All rights reserved.</p>
+            <div className="flex items-center gap-4">
+              <a href="#" className="hover:text-gray-300 transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-gray-300 transition-colors">Terms of Service</a>
+              <a href="#" className="hover:text-gray-300 transition-colors">Data Sources</a>
+            </div>
+          </div>
+          <div className="flex flex-col md:flex-row items-center gap-2 md:gap-6">
+            <p>Prepared by Prof. Frehun Adefris</p>
+            <span className="hidden md:inline w-px h-3 bg-gray-700"></span>
+            <p className="font-mono text-xs">v2.4.1 (Build 2026.04)</p>
+          </div>
         </div>
       </div>
       <SubscribeModal 

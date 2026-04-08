@@ -4,13 +4,13 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-clic-red: #E6004E;
-  --color-clic-orange: #F37021;
-  --color-clic-green: #8DC63F;
-  --color-clic-blue: #00AEEF;
-  --color-clic-purple: #92278F;
-  --color-clic-dark: #1A1A1A;
-  --color-clic-light: #F5F5F5;
+  --color-clic-red: #9B2242;
+  --color-clic-orange: #C2591A;
+  --color-clic-green: #4A7C2E;
+  --color-clic-blue: #005A8C;
+  --color-clic-purple: #5C2D6D;
+  --color-clic-dark: #0F172A;
+  --color-clic-light: #F8FAFC;
 
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Playfair Display", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
@@ -94,4 +94,58 @@ html {
 .goog-text-highlight {
   background-color: transparent !important;
   box-shadow: none !important;
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background-color: white !important;
+    color: black !important;
+  }
+  
+  .dark {
+    background-color: white !important;
+    color: black !important;
+  }
+
+  /* Hide everything except the theory of change section when printing */
+  body > * {
+    display: none !important;
+  }
+  
+  body > #root {
+    display: block !important;
+  }
+  
+  #root > * {
+    display: none !important;
+  }
+  
+  #root > #theory-of-change {
+    display: block !important;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Ensure text is black and backgrounds are white/light gray for contrast */
+  #theory-of-change * {
+    color: black !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Keep border colors for structure */
+  #theory-of-change .border-t-4 {
+    border-top-width: 4px !important;
+  }
+
+  /* Avoid page breaks inside blocks */
+  #theory-of-change .group {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
 }
