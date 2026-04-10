@@ -6,8 +6,16 @@ import { GOOGLE_SCRIPT_URL } from '../constants';
 const SHEETS = [
   'Content_STEAM', 'Content_IE', 'Content_Curriculum', 'Content_Labs', 'Content_Projects',
   'Content_Spotlight', 'Content_Videos', 'Products', 'Orders', 'Students', 'Mentors',
-  'Donations', 'Messages', 'newsletter sub', 'site_admin'
+  'Donations', 'Messages', 'newsletter sub', 'Events', 'Event Registration', 'site_admin'
 ];
+
+const formatSheetName = (name: string) => {
+  return name
+    .replace('Content_', '')
+    .replace('newsletter sub', 'Newsletter Subscriptions')
+    .replace('site_admin', 'Site Admins')
+    .replace(/_/g, ' ');
+};
 
 interface AdminPortalProps {
   isOpen: boolean;
@@ -27,6 +35,8 @@ const AdminPortal = ({ isOpen, onClose, user }: AdminPortalProps) => {
   const [editRowIndex, setEditRowIndex] = useState<number | null>(null);
   const [formData, setFormData] = useState<any>({});
 
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+
   useEffect(() => {
     if (isOpen) {
       fetchData(activeSheet);
@@ -35,6 +45,7 @@ const AdminPortal = ({ isOpen, onClose, user }: AdminPortalProps) => {
 
   const fetchData = async (sheetName: string) => {
     setIsLoading(true);
+    setIsInitialLoading(true);
     setError('');
     try {
       const response = await fetch(GOOGLE_SCRIPT_URL, {
@@ -56,6 +67,7 @@ const AdminPortal = ({ isOpen, onClose, user }: AdminPortalProps) => {
       setError('An error occurred while fetching data');
     } finally {
       setIsLoading(false);
+      setIsInitialLoading(false);
     }
   };
 
@@ -133,6 +145,39 @@ const AdminPortal = ({ isOpen, onClose, user }: AdminPortalProps) => {
     }
   };
 
+  const getDynamicStat = () => {
+    if (data.length === 0) return { label: 'Total Value', value: '-' };
+
+    if (activeSheet === 'Orders') {
+      const total = data.reduce((sum, row) => {
+        const amount = parseFloat(row.total_amount || row.total || 0);
+        return sum + (isNaN(amount) ? 0 : amount);
+      }, 0);
+      return { label: 'Total Revenue', value: `${total.toLocaleString()} ETB` };
+    }
+    
+    if (activeSheet === 'Donations') {
+      const total = data.reduce((sum, row) => {
+        const amount = parseFloat(row.amount || 0);
+        return sum + (isNaN(amount) ? 0 : amount);
+      }, 0);
+      return { label: 'Total Donations', value: `${total.toLocaleString()} ETB` };
+    }
+
+    if (activeSheet === 'Products') {
+      const inStock = data.filter(row => row.stock_status === 'In Stock').length;
+      return { label: 'In Stock Items', value: inStock };
+    }
+
+    if (activeSheet === 'Students' || activeSheet === 'Mentors') {
+      const pending = data.filter(row => row.status === 'Pending').length;
+      return { label: 'Pending Approvals', value: pending };
+    }
+
+    // Default for content sheets
+    return { label: 'Data Fields', value: headers.length };
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -147,42 +192,49 @@ const AdminPortal = ({ isOpen, onClose, user }: AdminPortalProps) => {
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
-          className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-7xl h-[90vh] shadow-2xl relative overflow-hidden flex flex-col md:flex-row"
+          className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-7xl h-[90vh] shadow-2xl relative overflow-hidden flex flex-col md:flex-row border border-[var(--color-clic-blue)]/20"
         >
           {/* Sidebar */}
-          <div className="w-full md:w-64 bg-gray-50 dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col h-full">
-            <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-              <div className="flex items-center gap-2 text-gray-900 dark:text-white font-bold">
-                <Database size={20} className="text-[var(--color-clic-blue)]" />
+          <div className="w-full md:w-64 bg-slate-50 dark:bg-slate-900 border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0 md:h-full">
+            <div className="p-3 md:p-4 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-[var(--color-clic-blue)]/5">
+              <div className="flex items-center gap-2 text-[var(--color-clic-blue)] font-bold">
+                <Database size={20} />
                 <span>Admin Portal</span>
               </div>
+              <button 
+                onClick={onClose}
+                className="md:hidden p-2 text-red-600 bg-red-50 dark:bg-red-500/10 dark:text-red-400 rounded-lg"
+                title="Logout"
+              >
+                <LogOut size={18} />
+              </button>
             </div>
-            <div className="p-4 overflow-y-auto flex-1">
-              <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Database Tables</div>
-              <ul className="space-y-1">
+            <div className="p-2 md:p-4 overflow-x-auto md:overflow-y-auto flex-none md:flex-1">
+              <div className="hidden md:block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-3">Database Tables</div>
+              <ul className="flex md:flex-col gap-2 md:gap-0 md:space-y-1 pb-1 md:pb-0">
                 {SHEETS.map(sheet => (
-                  <li key={sheet}>
+                  <li key={sheet} className="shrink-0">
                     <button
                       onClick={() => { setActiveSheet(sheet); setIsEditing(false); }}
-                      className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                      className={`whitespace-nowrap w-full text-left px-3 py-2 md:py-2.5 rounded-lg text-sm font-medium transition-all ${
                         activeSheet === sheet 
-                          ? 'bg-[var(--color-clic-blue)] text-white' 
-                          : 'text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                          ? 'bg-[var(--color-clic-blue)] text-white shadow-md shadow-blue-500/20' 
+                          : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white'
                       }`}
                     >
-                      {sheet}
+                      {formatSheetName(sheet)}
                     </button>
                   </li>
                 ))}
               </ul>
             </div>
-            <div className="p-4 border-t border-gray-200 dark:border-gray-700">
-              <div className="text-sm text-gray-600 dark:text-gray-400 mb-2 truncate">
-                Logged in as: <span className="font-medium text-gray-900 dark:text-white">{user?.name || user?.email}</span>
+            <div className="hidden md:block p-4 border-t border-slate-200 dark:border-slate-800 bg-slate-100/50 dark:bg-slate-800/50">
+              <div className="text-xs text-slate-500 dark:text-slate-400 mb-2 truncate">
+                Logged in as: <span className="font-semibold text-slate-700 dark:text-slate-300">{user?.name || user?.email}</span>
               </div>
               <button 
                 onClick={onClose}
-                className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/40 rounded-lg transition-colors text-sm font-medium"
+                className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-500/10 dark:text-red-400 dark:hover:bg-red-500/20 rounded-lg transition-colors text-sm font-semibold"
               >
                 <LogOut size={16} /> Logout
               </button>
@@ -190,18 +242,19 @@ const AdminPortal = ({ isOpen, onClose, user }: AdminPortalProps) => {
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 flex flex-col h-full overflow-hidden bg-white dark:bg-gray-900 relative">
+          <div className="flex-1 flex flex-col h-full overflow-hidden bg-white dark:bg-slate-950 relative">
             <button 
               onClick={onClose}
-              className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors z-20"
+              className="hidden md:block absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors z-20"
             >
               <X size={20} />
             </button>
             {/* Header */}
-            <div className="p-4 md:p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-white dark:bg-gray-900 z-10 pr-16">
+            <div className="p-4 md:p-6 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center bg-white dark:bg-slate-950 z-10 pr-4 md:pr-16 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[var(--color-clic-blue)] via-blue-400 to-[var(--color-clic-green)] opacity-50"></div>
               <div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">{activeSheet}</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Manage records for {activeSheet}</p>
+                <h2 className="text-2xl font-bold text-slate-900 dark:text-white">{formatSheetName(activeSheet)}</h2>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Manage records for {formatSheetName(activeSheet)}</p>
               </div>
               <div className="flex gap-2">
                 <button 
@@ -232,8 +285,9 @@ const AdminPortal = ({ isOpen, onClose, user }: AdminPortalProps) => {
               )}
 
               {isEditing ? (
-                <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-6 shadow-sm">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                    <span className="w-2 h-6 bg-[var(--color-clic-blue)] rounded-full"></span>
                     {editRowIndex !== null ? 'Edit Record' : 'Add New Record'}
                   </h3>
                   <form onSubmit={handleSave} className="space-y-4">
@@ -284,40 +338,45 @@ const AdminPortal = ({ isOpen, onClose, user }: AdminPortalProps) => {
                 <>
                   {/* Stats */}
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-                    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
-                      <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Total Records</div>
-                      <div className="text-2xl font-bold text-gray-900 dark:text-white">{data.length}</div>
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm relative overflow-hidden group">
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-[var(--color-clic-blue)]/5 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                      <div className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Total Records</div>
+                      <div className="text-3xl font-bold text-slate-900 dark:text-white">{isInitialLoading ? '-' : data.length}</div>
                     </div>
-                    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
-                      <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Columns</div>
-                      <div className="text-2xl font-bold text-gray-900 dark:text-white">{headers.length}</div>
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm relative overflow-hidden group">
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-[var(--color-clic-green)]/5 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                      <div className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">{getDynamicStat().label}</div>
+                      <div className="text-3xl font-bold text-slate-900 dark:text-white">{isInitialLoading ? '-' : getDynamicStat().value}</div>
                     </div>
-                    <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4">
-                      <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Last Updated</div>
-                      <div className="text-2xl font-bold text-gray-900 dark:text-white">Just now</div>
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5 shadow-sm relative overflow-hidden group">
+                      <div className="absolute top-0 right-0 w-16 h-16 bg-purple-500/5 rounded-bl-full -mr-8 -mt-8 transition-transform group-hover:scale-110"></div>
+                      <div className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Last Updated</div>
+                      <div className="text-3xl font-bold text-slate-900 dark:text-white text-lg mt-2">Just now</div>
                     </div>
                   </div>
 
                   {/* Table */}
-                  <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
-                    <div className="overflow-x-auto">
+                  <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden flex-1 flex flex-col">
+                    <div className="overflow-x-auto flex-1">
                       <table className="w-full text-left border-collapse">
                         <thead>
-                          <tr className="bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
-                            <th className="p-3 text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">Actions</th>
+                          <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
+                            <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap sticky top-0 bg-slate-50 dark:bg-slate-900 z-10 shadow-sm">Actions</th>
                             {headers.map(header => (
-                              <th key={header} className="p-3 text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap">
+                              <th key={header} className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap sticky top-0 bg-slate-50 dark:bg-slate-900 z-10 shadow-sm">
                                 {header.replace(/_/g, ' ')}
                               </th>
                             ))}
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                          {isLoading && data.length === 0 ? (
+                        <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
+                          {isInitialLoading ? (
                             <tr>
-                              <td colSpan={headers.length + 1} className="p-8 text-center text-gray-500">
-                                <RefreshCw size={24} className="animate-spin mx-auto mb-2" />
-                                Loading data...
+                              <td colSpan={headers.length + 1} className="p-12 text-center text-slate-500">
+                                <div className="flex flex-col items-center justify-center">
+                                  <div className="w-10 h-10 border-4 border-[var(--color-clic-blue)]/20 border-t-[var(--color-clic-blue)] rounded-full animate-spin mb-4"></div>
+                                  <p className="font-medium text-slate-600 dark:text-slate-400">Loading {formatSheetName(activeSheet)} data...</p>
+                                </div>
                               </td>
                             </tr>
                           ) : data.length === 0 ? (

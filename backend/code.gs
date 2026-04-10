@@ -37,6 +37,8 @@ const SHEETS = {
   DONATIONS: 'Donations',
   MESSAGES: 'Messages', // General contact
   NEWSLETTER_SUB: 'newsletter sub',
+  EVENTS: 'Events',
+  EVENT_REGISTRATION: 'Event Registration',
   
   // Admin
   SITE_ADMIN: 'site_admin'
@@ -116,7 +118,17 @@ function setupDatabase() {
     'subscription_id', 'date', 'name', 'email', 'phone', 'status'
   ]);
 
-  // 14. Site Admin
+  // 14. Events
+  createSheetIfNotExists(ss, SHEETS.EVENTS, [
+    'event_id', 'title', 'date', 'time', 'location', 'type', 'spots', 'color'
+  ]);
+
+  // 15. Event Registration
+  createSheetIfNotExists(ss, SHEETS.EVENT_REGISTRATION, [
+    'registration_id', 'date', 'name', 'email', 'phone', 'organization', 'event_id', 'event_title'
+  ]);
+
+  // 16. Site Admin
   createSheetIfNotExists(ss, SHEETS.SITE_ADMIN, [
     'admin_id', 'email', 'password', 'role', 'name'
   ]);
@@ -139,7 +151,7 @@ function fillSampleData() {
   
   // 1. STEAM Data
   const steamSheet = ss.getSheetByName(SHEETS.CONTENT_STEAM);
-  if (steamSheet.getLastRow() === 1) {
+  if (steamSheet && steamSheet.getLastRow() === 1) {
     const steamData = [
       ['steam_1', 'Science', 'Gives tools to experiment, test, and evaluate ideas to understand the world.', 'FlaskConical', '#ef4444', 'Our Science curriculum covers Biotechnology, Agricultural Science, Chemical Science, and Environmental Science. Students engage in hands-on experiments to understand the fundamental laws of nature and apply them to solve local challenges.'],
       ['steam_2', 'Technology', 'Teaches how to process, connect, and make things in a variety of environments.', 'Cpu', '#f97316', 'Focuses on Electronics, IoT Systems, Computer Programming, and Digital Communications. Students learn to build smart devices, code applications, and leverage digital tools for industrial transformation.'],
@@ -152,7 +164,7 @@ function fillSampleData() {
 
   // 2. IE Data
   const ieSheet = ss.getSheetByName(SHEETS.CONTENT_IE);
-  if (ieSheet.getLastRow() === 1) {
+  if (ieSheet && ieSheet.getLastRow() === 1) {
     const ieData = [
       ['ie_1', 'Innovation', 'Fostering a culture of creativity and problem-solving. We provide the tools and environment for students to experiment, prototype, and develop unique solutions to real-world challenges.', 'Lightbulb', '#f97316', 'Our Innovation hub focuses on Research & Development, Prototyping, and Design Thinking. We support students in protecting their intellectual property through patent support and connecting them with industrial partners for pilot testing.'],
       ['ie_2', 'Entrepreneurship', 'Building the business leaders of tomorrow. We offer incubation support, mentorship, and resources to help transform innovative projects into viable, scalable startups.', 'Rocket', '#22c55e', 'The Entrepreneurship track includes Business Incubation, Startup Mentorship, and Market Analysis. We guide young entrepreneurs through the entire lifecycle of a startup, from business plan development to securing seed funding and scaling operations.']
@@ -162,7 +174,7 @@ function fillSampleData() {
 
   // 3. Curriculum Data
   const currSheet = ss.getSheetByName(SHEETS.CONTENT_CURRICULUM);
-  if (currSheet.getLastRow() === 1) {
+  if (currSheet && currSheet.getLastRow() === 1) {
     const currData = [
       ['curr_1', 'Foundation', 'Science & Mathematics', '3 Months', 'The journey begins with curiosity. Students grasp the fundamental laws of nature (Science) and the logic of patterns (Math).', JSON.stringify(['Concept & Theory']), 'FlaskConical', '#ef4444'],
       ['curr_2', 'Creation', 'Engineering & Arts', '6 Months', 'Knowledge takes shape. Through Engineering, we build structure and function. Through Arts, we add human-centric design and aesthetics.', JSON.stringify(['Prototype & Design']), 'Hammer', '#f97316'],
@@ -174,7 +186,7 @@ function fillSampleData() {
 
   // 4. Labs Data
   const labsSheet = ss.getSheetByName(SHEETS.CONTENT_LABS);
-  if (labsSheet.getLastRow() === 1) {
+  if (labsSheet && labsSheet.getLastRow() === 1) {
     const labsData = [
       ['lab_1', 'Digital Labs', 'The Future of Classrooms. E-learning platforms for remote classes, using VR & AR as new training methods.', 'BookOpen', '#3b82f6', JSON.stringify(['VR Units', 'Computers', 'IoT Kits']), '500+ Students', JSON.stringify([{label: 'Students', value: '500+'}, {label: 'Courses', value: '25'}, {label: 'VR Units', value: '50'}]), 'Digital Labs are designed for learning skills using digital means. Includes Basic Literacy Skills (Language, Computer HW/SW) and Theoretical Skills delivered via virtual classrooms. Features a Data Center for digital solutions, IoT, and AI.', 'https://loremflickr.com/600/400/computer,code,classroom?lock=1'],
       ['lab_2', 'Fabrication Labs', 'Smart workshops for practical lessons. Prototyping & small scale production labs using smart fabrication technologies.', 'Factory', '#f97316', JSON.stringify(['CNC Machines', '3D Printers', 'Laser Cutters']), '200+ Tools', JSON.stringify([{label: 'Machines', value: '15+'}, {label: 'Tools', value: '200+'}, {label: 'Safety', value: '100%'}]), 'Workshops for hands-on skills using state-of-the-art tools. Covers Basic Tools Skills, Design & Fabrication (CAD/CAM), and Prototyping & Manufacturing. Learn to manufacture, distribute, and market products.', 'https://loremflickr.com/600/400/robotics,factory,workshop?lock=2'],
@@ -186,7 +198,7 @@ function fillSampleData() {
 
   // 5. Projects Data
   const projectsSheet = ss.getSheetByName(SHEETS.CONTENT_PROJECTS);
-  if (projectsSheet.getLastRow() === 1) {
+  if (projectsSheet && projectsSheet.getLastRow() === 1) {
     const projectsData = [
       ['proj_1', 'Smart Agriculture', '5 Projects', 'Sprout', '#22c55e', JSON.stringify(['Phytoponics & Hydroponics', 'Vertical Agriculture', 'Smart Livestock Farming']), JSON.stringify([{label: 'Yield', value: '+300%'}, {label: 'Water', value: '-90%'}, {label: 'Space', value: 'Optimized'}]), 'Includes Phytoponics (Hydroponics farming powered by solar), Vertical agriculture systems for any size of space, and Smart Livestock Farming with automation in poultry farms. Aiming to increase vegetable production multiple folds.', ''],
       ['proj_2', 'Smart Healthcare', '10 Projects', 'HeartHandshake', '#ef4444', JSON.stringify(['Portable Smart Healthcare', '4G Enabled IT Systems', 'Solar Powered Medical Kits']), JSON.stringify([{label: 'Portability', value: '100%'}, {label: 'Access', value: 'Remote'}, {label: 'Cost', value: 'Low'}]), 'Highly portable smart healthcare systems that fit into a suitcase. Ultra-efficient 4G enabled IT systems including handheld ultrasound, smart phones, and wearable devices. Applications for cancer, HIV/AIDS, Diabetes, and emergency care.', ''],
@@ -206,7 +218,7 @@ function fillSampleData() {
   
   // 6a. Innovator Spotlight Data
   const spotlightSheet = ss.getSheetByName(SHEETS.CONTENT_SPOTLIGHT);
-  if (spotlightSheet.getLastRow() === 1) {
+  if (spotlightSheet && spotlightSheet.getLastRow() === 1) {
     const spotlightData = [
       ['1', 'Betelhem Desalegn', 'Solar-Smart Irrigation', 'https://loremflickr.com/400/400/student,ethiopian,woman?lock=5', 'https://loremflickr.com/400/300/solar,sensor,farm?lock=6', 'Local farmers were losing 30% of crops due to improper watering and water scarcity.', 'Developed a low-cost, solar-powered soil moisture sensor that automates irrigation, saving 40% water.', 'Deployed in 5 local farms.'],
       ['2', 'Yared Haile', '3D Printed Mobility', 'https://loremflickr.com/400/400/student,ethiopian,man?lock=7', 'https://loremflickr.com/400/300/prosthetic,3dprint?lock=8', 'Prosthetic limbs are too expensive for many rural amputees.', 'Created a customizable, 3D-printed prosthetic leg using recycled plastics for under $50.', 'Helped 12 patients regain mobility.'],
@@ -217,7 +229,7 @@ function fillSampleData() {
 
   // 6b. Latest Videos Data
   const videosSheet = ss.getSheetByName(SHEETS.CONTENT_VIDEOS);
-  if (videosSheet.getLastRow() === 1) {
+  if (videosSheet && videosSheet.getLastRow() === 1) {
     const videosData = [
       ['1', 'CLIC Ethiopia Official Launch', 'https://loremflickr.com/640/360/conference,ethiopia?lock=11', '12:45', 'LXb3EKWsInQ'],
       ['2', 'Student Success Stories: Smart Agriculture', 'https://loremflickr.com/640/360/farming,technology?lock=12', '05:30', 'ysz5S6P_z-U'],
@@ -231,7 +243,7 @@ function fillSampleData() {
 
   // 7. Products Data (Merch)
   const prodSheet = ss.getSheetByName(SHEETS.PRODUCTS);
-  if (prodSheet.getLastRow() === 1) {
+  if (prodSheet && prodSheet.getLastRow() === 1) {
     const prodData = [
       ['prod_1', "CLIC 'Future Innovator' Tee", 450, "Apparel", "https://loremflickr.com/600/600/tshirt,tech,fashion?lock=17", "Premium cotton t-shirt featuring the 'Future Innovator' slogan. Perfect for lab work or casual wear.", JSON.stringify([{name:"Size",values:["XXS","XS","S","M","L","XL","XXL"]},{name:"Color",values:["White","Black","Navy Blue"]}]), 'In Stock'],
       ['prod_2', "Official CLIC Hoodie", 1200, "Apparel", "https://loremflickr.com/600/600/hoodie,streetwear?lock=18", "Warm and comfortable hoodie with the embroidered CLIC logo. Essential for late-night coding sessions.", JSON.stringify([{name:"Size",values:["XS","S","M","L","XL","XXL"]},{name:"Color",values:["Heather Grey","Black"]}]), 'In Stock'],
@@ -241,6 +253,28 @@ function fillSampleData() {
       ['prod_6', "Eco-Metal Water Bottle", 500, "Accessories", "https://loremflickr.com/600/600/bottle,water?lock=22", "Stainless steel water bottle to keep you hydrated during long workshops. Eco-friendly and durable.", JSON.stringify([{name:"Color",values:["Silver","Matte Black","Blue"]}]), 'In Stock']
     ];
     prodData.forEach(row => prodSheet.appendRow(row));
+  }
+
+  // 8. Events Data
+  const eventsSheet = ss.getSheetByName(SHEETS.EVENTS);
+  if (eventsSheet && eventsSheet.getLastRow() === 1) {
+    const eventsData = [
+      ['1', 'National STEAM Hackathon', 'Oct 15, 2026', '09:00 AM - 05:00 PM', 'Addis Ababa University', 'Hackathon', 200, 'var(--color-clic-blue)'],
+      ['2', 'Fad.Lab Instructor Training', 'Nov 02, 2026', '10:00 AM - 03:00 PM', 'Virtual', 'Workshop', 50, 'var(--color-clic-orange)'],
+      ['3', 'Women in Tech Bootcamp', 'Nov 20, 2026', '08:00 AM - 04:00 PM', 'CLIC HQ, Addis Ababa', 'Bootcamp', 100, 'var(--color-clic-red)'],
+      ['4', 'AI for Agriculture Symposium', 'Dec 05, 2026', '09:00 AM - 12:00 PM', 'Hawassa University', 'Symposium', 150, 'var(--color-clic-green)']
+    ];
+    eventsData.forEach(row => eventsSheet.appendRow(row));
+  }
+
+  // 9. Event Registration Data
+  const eventRegSheet = ss.getSheetByName(SHEETS.EVENT_REGISTRATION);
+  if (eventRegSheet && eventRegSheet.getLastRow() === 1) {
+    const eventRegData = [
+      ['reg_1', new Date().toISOString(), 'Abebe Bikila', 'abebe@example.com', '+251911234567', 'AAU', '1', 'National STEAM Hackathon'],
+      ['reg_2', new Date().toISOString(), 'Tirunesh Dibaba', 'tirunesh@example.com', '+251911234568', 'Hawassa Uni', '4', 'AI for Agriculture Symposium']
+    ];
+    eventRegData.forEach(row => eventRegSheet.appendRow(row));
   }
 }
 
@@ -268,6 +302,7 @@ function doGet(e) {
       case 'spotlight': sheetName = SHEETS.CONTENT_SPOTLIGHT; break;
       case 'videos': sheetName = SHEETS.CONTENT_VIDEOS; break;
       case 'products': sheetName = SHEETS.PRODUCTS; break;
+      case 'events': sheetName = SHEETS.EVENTS; break;
       default: 
         return ContentService.createTextOutput(JSON.stringify({status: 'error', message: "Invalid or missing 'type' parameter"}))
           .setMimeType(ContentService.MimeType.JSON);
@@ -437,7 +472,25 @@ function doPost(e) {
       return responseJSON({status: 'success', subId: subId, message: 'Subscription recorded'});
     }
 
-    // 6. Admin Login
+    // 6. Register Event
+    if (action === 'register_event') {
+      const sheet = ss.getSheetByName(SHEETS.EVENT_REGISTRATION);
+      const regId = 'REG-' + Date.now();
+      const newRow = [
+        regId,
+        new Date(),
+        postData.name,
+        postData.email,
+        postData.phone,
+        postData.organization,
+        postData.eventId,
+        postData.eventTitle
+      ];
+      sheet.appendRow(newRow);
+      return responseJSON({status: 'success', regId: regId, message: 'Event registration submitted'});
+    }
+
+    // 7. Admin Login
     if (action === 'admin_login') {
       let sheet = ss.getSheetByName(SHEETS.SITE_ADMIN);
       if (!sheet) {

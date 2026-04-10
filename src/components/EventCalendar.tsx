@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Calendar, MapPin, Clock, Users, X, ArrowRight, CheckCircle } from 'lucide-react';
+import { Calendar, MapPin, Clock, Users, X, ArrowRight, CheckCircle, Loader2 } from 'lucide-react';
+import { GOOGLE_SCRIPT_URL } from '../constants';
 
-const events = [
+const mockEvents = [
   { id: 1, title: 'National STEAM Hackathon', date: 'Oct 15, 2026', time: '09:00 AM - 05:00 PM', location: 'Addis Ababa University', type: 'Hackathon', spots: 200, color: 'var(--color-clic-blue)' },
   { id: 2, title: 'Fad.Lab Instructor Training', date: 'Nov 02, 2026', time: '10:00 AM - 03:00 PM', location: 'Virtual', type: 'Workshop', spots: 50, color: 'var(--color-clic-orange)' },
   { id: 3, title: 'Women in Tech Bootcamp', date: 'Nov 20, 2026', time: '08:00 AM - 04:00 PM', location: 'CLIC HQ, Addis Ababa', type: 'Bootcamp', spots: 100, color: 'var(--color-clic-red)' },
@@ -10,20 +11,74 @@ const events = [
 ];
 
 const EventCalendar = () => {
+  const [events, setEvents] = useState<any[]>(mockEvents);
   const [selectedEvent, setSelectedEvent] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRegistered, setIsRegistered] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoadingEvents, setIsLoadingEvents] = useState(true);
 
-  const handleRegister = (e: React.FormEvent) => {
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch(`${GOOGLE_SCRIPT_URL}?type=events`);
+        const result = await response.json();
+        if (result.status === 'success' && result.data && result.data.length > 0) {
+          // Map backend data to frontend format
+          const formattedEvents = result.data.map((item: any) => ({
+            id: item.event_id || item.id,
+            title: item.title,
+            date: item.date,
+            time: item.time,
+            location: item.location,
+            type: item.type,
+            spots: item.spots,
+            color: item.color || 'var(--color-clic-blue)'
+          }));
+          setEvents(formattedEvents);
+        }
+      } catch (error) {
+        console.error("Failed to fetch events, using mock data", error);
+      } finally {
+        setIsLoadingEvents(false);
+      }
+    };
+    fetchEvents();
+  }, []);
+
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Mock API call
-    setTimeout(() => {
+    setIsSubmitting(true);
+    
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      action: 'register_event',
+      name: `${formData.get('firstName')} ${formData.get('lastName')}`,
+      email: formData.get('email'),
+      phone: formData.get('phone'),
+      organization: formData.get('organization'),
+      eventId: selectedEvent.id,
+      eventTitle: selectedEvent.title
+    };
+
+    try {
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(data as any),
+      });
+      
       setIsRegistered(true);
       setTimeout(() => {
         setIsModalOpen(false);
         setIsRegistered(false);
-      }, 2000);
-    }, 1000);
+      }, 3000);
+    } catch (error) {
+      console.error("Registration failed", error);
+      alert("Registration failed. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -175,23 +230,30 @@ const EventCalendar = () => {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">First Name</label>
-                        <input required type="text" className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[var(--color-clic-blue)] outline-none dark:text-white" />
+                        <input required name="firstName" type="text" className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[var(--color-clic-blue)] outline-none dark:text-white" />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Last Name</label>
-                        <input required type="text" className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[var(--color-clic-blue)] outline-none dark:text-white" />
+                        <input required name="lastName" type="text" className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[var(--color-clic-blue)] outline-none dark:text-white" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
+                        <input required name="email" type="email" className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[var(--color-clic-blue)] outline-none dark:text-white" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Phone Number</label>
+                        <input required name="phone" type="tel" className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[var(--color-clic-blue)] outline-none dark:text-white" />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email Address</label>
-                      <input required type="email" className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[var(--color-clic-blue)] outline-none dark:text-white" />
-                    </div>
-                    <div>
                       <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">School / Organization</label>
-                      <input required type="text" className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[var(--color-clic-blue)] outline-none dark:text-white" />
+                      <input required name="organization" type="text" className="w-full px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-[var(--color-clic-blue)] outline-none dark:text-white" />
                     </div>
-                    <button type="submit" className="w-full mt-4 py-4 bg-[var(--color-clic-blue)] hover:bg-blue-700 text-white rounded-xl font-bold text-lg transition-colors">
-                      Confirm Registration
+                    <button type="submit" disabled={isSubmitting} className="w-full mt-4 py-4 bg-[var(--color-clic-blue)] hover:bg-blue-700 text-white rounded-xl font-bold text-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-70">
+                      {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : null}
+                      {isSubmitting ? 'Registering...' : 'Confirm Registration'}
                     </button>
                   </form>
                 </>
