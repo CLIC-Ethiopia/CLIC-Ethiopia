@@ -18,6 +18,29 @@ const EventCalendar = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoadingEvents, setIsLoadingEvents] = useState(true);
 
+  const formatDateParts = (dateString: string) => {
+    if (!dateString) return { month: 'TBD', day: '--' };
+    try {
+      // If it's already in "Oct 15, 2026" format
+      if (dateString.includes(' ') && dateString.includes(',')) {
+        const parts = dateString.split(' ');
+        return { 
+          month: parts[0], 
+          day: parts[1] ? parts[1].replace(',', '') : '--' 
+        };
+      }
+      // If it's an ISO string or other valid date
+      const d = new Date(dateString);
+      if (isNaN(d.getTime())) return { month: 'TBD', day: '--' };
+      
+      const month = d.toLocaleString('default', { month: 'short' });
+      const day = d.getDate().toString();
+      return { month, day };
+    } catch (e) {
+      return { month: 'TBD', day: '--' };
+    }
+  };
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
@@ -97,7 +120,9 @@ const EventCalendar = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Calendar List */}
           <div className="lg:col-span-8 space-y-6">
-            {events.map((event, i) => (
+            {events.map((event, i) => {
+              const dateParts = formatDateParts(event.date);
+              return (
               <motion.div
                 key={event.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -107,8 +132,8 @@ const EventCalendar = () => {
                 className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-700 rounded-2xl p-6 hover:shadow-xl transition-all flex flex-col md:flex-row gap-6 items-start md:items-center group"
               >
                 <div className="flex-shrink-0 w-24 h-24 rounded-2xl flex flex-col items-center justify-center text-white" style={{ backgroundColor: event.color }}>
-                  <span className="text-sm font-bold uppercase opacity-80">{event.date.split(' ')[0]}</span>
-                  <span className="text-3xl font-black">{event.date.split(' ')[1].replace(',', '')}</span>
+                  <span className="text-sm font-bold uppercase opacity-80">{dateParts.month}</span>
+                  <span className="text-3xl font-black">{dateParts.day}</span>
                 </div>
                 
                 <div className="flex-grow">
@@ -136,7 +161,8 @@ const EventCalendar = () => {
                   </button>
                 </div>
               </motion.div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Stats / Info Side */}
