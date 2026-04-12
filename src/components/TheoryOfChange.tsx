@@ -356,7 +356,7 @@ const TheoryOfChange = () => {
       <div className="absolute inset-0 bg-pattern-mudcloth opacity-5 invert pointer-events-none print:hidden"></div>
 
       {/* Pyramid Visual Background */}
-      <div className="absolute inset-0 pointer-events-none flex justify-center items-end z-0 overflow-hidden pb-4 md:pb-12 print:hidden">
+      <div className="absolute inset-0 pointer-events-none flex justify-center items-end z-0 overflow-hidden pb-4 md:pb-12">
         <motion.div 
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -440,7 +440,7 @@ const TheoryOfChange = () => {
         </div>
 
         {/* Pyramid Container */}
-        <div ref={pyramidRef} className="flex flex-col items-center gap-3 w-full relative z-10 print:bg-white print:text-black">
+        <div ref={pyramidRef} className="flex flex-col items-center gap-3 w-full relative z-10">
           
           {/* Level 7: National Industrialization */}
           <motion.div 

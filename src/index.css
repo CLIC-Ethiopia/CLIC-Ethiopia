@@ -101,6 +101,8 @@ html {
   body {
     background-color: white !important;
     color: black !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
   
   .dark {
@@ -119,11 +121,17 @@ html {
     width: 100%;
     margin: 0;
     padding: 0;
+    overflow: visible !important;
   }
 
-  /* Ensure text is black and backgrounds are white/light gray for contrast */
+  /* Force visibility of animated elements during print */
+  #theory-of-change .pyramid-level {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  /* Ensure text shadows and box shadows are removed for clean printing */
   #theory-of-change * {
-    color: black !important;
     text-shadow: none !important;
     box-shadow: none !important;
   }
