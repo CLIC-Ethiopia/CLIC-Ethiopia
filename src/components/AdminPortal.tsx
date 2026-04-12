@@ -357,8 +357,8 @@ const AdminPortal = ({ isOpen, onClose, user }: AdminPortalProps) => {
 
                   {/* Table */}
                   <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden flex-1 flex flex-col">
-                    <div className="overflow-x-auto flex-1">
-                      <table className="w-full text-left border-collapse">
+                    <div className="overflow-x-auto flex-1 w-full">
+                      <table className="w-full text-left border-collapse min-w-max">
                         <thead>
                           <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
                             <th className="p-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider whitespace-nowrap sticky top-0 bg-slate-50 dark:bg-slate-900 z-10 shadow-sm">Actions</th>

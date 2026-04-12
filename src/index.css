@@ -109,20 +109,15 @@ html {
   }
 
   /* Hide everything except the theory of change section when printing */
-  body > * {
-    display: none !important;
+  body * {
+    visibility: hidden;
   }
   
-  body > #root {
-    display: block !important;
+  #theory-of-change, #theory-of-change * {
+    visibility: visible;
   }
   
-  #root > * {
-    display: none !important;
-  }
-  
-  #root > #theory-of-change {
-    display: block !important;
+  #theory-of-change {
     position: absolute;
     left: 0;
     top: 0;
@@ -148,4 +143,34 @@ html {
     page-break-inside: avoid;
     break-inside: avoid;
   }
+}
+
+/* Force visibility of animated elements during PNG export */
+.exporting-mode .pyramid-level {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Preserve the neon edge rotation if possible, though transform: none overrides it */
+.exporting-mode .animate-spin {
+  animation: none !important;
+}
+
+/* Accessibility: Keyboard Navigation Focus Styles */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px var(--color-clic-light), 0 0 0 4px var(--color-clic-blue) !important;
+  border-radius: inherit;
+}
+
+.dark a:focus-visible,
+.dark button:focus-visible,
+.dark input:focus-visible,
+.dark textarea:focus-visible,
+.dark select:focus-visible {
+  box-shadow: 0 0 0 2px var(--color-clic-dark), 0 0 0 4px var(--color-clic-blue) !important;
 }

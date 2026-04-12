@@ -394,7 +394,7 @@ const MerchSection = () => {
             >
               <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center bg-gray-50 dark:bg-gray-800/50 flex-shrink-0">
                 <h3 className="text-xl font-bold text-gray-900 dark:text-white">Select Options</h3>
-                <button onClick={() => setSelectedProduct(null)} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors text-gray-600 dark:text-gray-400">
+                <button onClick={() => setSelectedProduct(null)} aria-label="Close Options" className="p-3 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors text-gray-600 dark:text-gray-400 min-h-[44px] min-w-[44px] flex items-center justify-center">
                   <X size={20} />
                 </button>
               </div>

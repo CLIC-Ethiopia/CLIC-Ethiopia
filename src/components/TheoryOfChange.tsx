@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ChevronDown, Sparkles, Info, Download, Image as ImageIcon, Maximize2, Minimize2, X, Printer } from 'lucide-react';
-import html2canvas from 'html2canvas';
+import { ChevronDown, Sparkles, Info, Download, Image as ImageIcon, Maximize2, Minimize2, X, Printer, Loader2 } from 'lucide-react';
+import { toPng } from 'html-to-image';
 
 const peakTier = {
   title: "8+ National Industrialization",
@@ -309,22 +309,40 @@ const industrialSectorsList = [
 const TheoryOfChange = () => {
   const [showInfoModal, setShowInfoModal] = useState(false);
   const [isExpandedAll, setIsExpandedAll] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const pyramidRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   const handleExportPNG = async () => {
-    if (!pyramidRef.current) return;
+    if (!sectionRef.current) return;
     try {
-      const canvas = await html2canvas(pyramidRef.current, {
+      setIsExporting(true);
+      // Small delay to allow UI to update loading state
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      const dataUrl = await toPng(sectionRef.current, {
         backgroundColor: '#0F172A', // Match slate-950
-        scale: 2,
-        useCORS: true,
+        pixelRatio: 2,
+        style: {
+          // Ensure the exported image doesn't have print-specific styles applied
+          padding: '2rem',
+        },
+        filter: (node) => {
+          // Filter out the toolbar from the export
+          if (node.id === 'pyramid-toolbar') return false;
+          return true;
+        }
       });
+      
       const link = document.createElement('a');
       link.download = 'clic-educational-pyramid.png';
-      link.href = canvas.toDataURL('image/png');
+      link.href = dataUrl;
       link.click();
     } catch (err) {
       console.error('Failed to export PNG', err);
+      alert('Failed to export PNG. Please try again.');
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -333,7 +351,7 @@ const TheoryOfChange = () => {
   };
 
   return (
-    <section id="theory-of-change" className="py-24 bg-slate-950 transition-colors duration-300 relative overflow-hidden print:bg-white print:py-8">
+    <section ref={sectionRef} id="theory-of-change" className={`py-24 bg-slate-950 transition-colors duration-300 relative overflow-hidden print:bg-white print:py-8 ${isExporting ? 'exporting-mode' : ''}`}>
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-pattern-mudcloth opacity-5 invert pointer-events-none print:hidden"></div>
 
@@ -344,7 +362,7 @@ const TheoryOfChange = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 1 }}
-          className="w-full max-w-7xl h-[95%] relative"
+          className="pyramid-level w-full max-w-7xl h-[95%] relative"
           style={{ filter: 'drop-shadow(0 0 20px rgba(59, 130, 246, 0.4))' }}
         >
           {/* Animated Neon Edge */}
@@ -389,7 +407,7 @@ const TheoryOfChange = () => {
         </div>
 
         {/* Toolbar */}
-        <div className="flex flex-wrap justify-center gap-3 mb-10 print:hidden">
+        <div id="pyramid-toolbar" className="flex flex-wrap justify-center gap-3 mb-10 print:hidden">
           <button 
             onClick={() => setShowInfoModal(true)}
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium transition-colors border border-slate-700"
@@ -406,10 +424,11 @@ const TheoryOfChange = () => {
           </button>
           <button 
             onClick={handleExportPNG}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium transition-colors border border-slate-700"
+            disabled={isExporting}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white text-sm font-medium transition-colors border border-slate-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <ImageIcon size={16} />
-            Export PNG
+            {isExporting ? <Loader2 size={16} className="animate-spin" /> : <ImageIcon size={16} />}
+            {isExporting ? 'Exporting...' : 'Export PNG'}
           </button>
           <button 
             onClick={handlePrint}
@@ -429,7 +448,7 @@ const TheoryOfChange = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 1.0 }}
-            className="w-full md:w-1/4 z-[70] hover:z-[100] focus-within:z-[100]"
+            className="pyramid-level w-full md:w-1/4 z-[70] hover:z-[100] focus-within:z-[100]"
           >
             <ExpandableBlock 
               title={peakTier.title} 
@@ -447,7 +466,7 @@ const TheoryOfChange = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.9 }}
-            className="w-full md:w-1/3 z-[60] hover:z-[100] focus-within:z-[100]"
+            className="pyramid-level w-full md:w-1/3 z-[60] hover:z-[100] focus-within:z-[100]"
           >
             <ExpandableBlock 
               title={topTier.title} 
@@ -465,7 +484,7 @@ const TheoryOfChange = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.8 }}
-            className="w-full md:w-1/2 z-[50] hover:z-[100] focus-within:z-[100] bg-white/5 dark:bg-gray-800/50 rounded-2xl p-4 md:p-6 border border-white/10 backdrop-blur-sm"
+            className="pyramid-level w-full md:w-1/2 z-[50] hover:z-[100] focus-within:z-[100] bg-white/5 dark:bg-gray-800/50 rounded-2xl p-4 md:p-6 border border-white/10 backdrop-blur-sm"
           >
             <h3 className="text-center text-white font-bold mb-4 text-sm md:text-base tracking-widest uppercase">{secondTier.title}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -489,7 +508,7 @@ const TheoryOfChange = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.7 }}
-            className="w-full md:w-2/3 z-[40] hover:z-[100] focus-within:z-[100] bg-white/5 dark:bg-gray-800/50 rounded-2xl p-4 md:p-6 border border-white/10 backdrop-blur-sm"
+            className="pyramid-level w-full md:w-2/3 z-[40] hover:z-[100] focus-within:z-[100] bg-white/5 dark:bg-gray-800/50 rounded-2xl p-4 md:p-6 border border-white/10 backdrop-blur-sm"
           >
             <h3 className="text-center text-white font-bold mb-4 text-sm md:text-base tracking-widest uppercase">Industrial Sector</h3>
             
@@ -570,7 +589,7 @@ const TheoryOfChange = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.6 }}
-            className="w-full md:w-3/4 z-[30] hover:z-[100] focus-within:z-[100] bg-white/5 dark:bg-gray-800/50 rounded-2xl p-4 md:p-6 border border-white/10 backdrop-blur-sm"
+            className="pyramid-level w-full md:w-3/4 z-[30] hover:z-[100] focus-within:z-[100] bg-white/5 dark:bg-gray-800/50 rounded-2xl p-4 md:p-6 border border-white/10 backdrop-blur-sm"
           >
             <h3 className="text-center text-white font-bold mb-4 text-sm md:text-base tracking-widest uppercase">Industrial STEAM</h3>
             <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
@@ -595,7 +614,7 @@ const TheoryOfChange = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.5 }}
-            className="w-full md:w-5/6 z-[20] hover:z-[100] focus-within:z-[100] bg-white/5 dark:bg-gray-800/50 rounded-2xl p-4 md:p-6 border border-white/10 backdrop-blur-sm"
+            className="pyramid-level w-full md:w-5/6 z-[20] hover:z-[100] focus-within:z-[100] bg-white/5 dark:bg-gray-800/50 rounded-2xl p-4 md:p-6 border border-white/10 backdrop-blur-sm"
           >
             <h3 className="text-center text-white font-bold mb-4 text-sm md:text-base tracking-widest uppercase">Applied STEAM</h3>
             <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
@@ -621,7 +640,7 @@ const TheoryOfChange = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="w-full md:w-11/12 z-[10] hover:z-[100] focus-within:z-[100] mt-2"
+            className="pyramid-level w-full md:w-11/12 z-[10] hover:z-[100] focus-within:z-[100] mt-2"
           >
             <ExpandableBlock 
               title={baseTier2.title} 
@@ -639,7 +658,7 @@ const TheoryOfChange = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="w-full z-0 hover:z-[100] focus-within:z-[100]"
+            className="pyramid-level w-full z-0 hover:z-[100] focus-within:z-[100]"
           >
             <ExpandableBlock 
               title={baseTier1.title} 

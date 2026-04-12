@@ -941,11 +941,12 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }: { isOpen: boolean; onCl
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
           onClick={(e) => e.stopPropagation()}
-          className="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 w-full max-w-md shadow-2xl relative overflow-hidden"
+          className="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 w-full max-w-md shadow-2xl relative overflow-y-auto max-h-[90vh]"
         >
           <button 
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-700 rounded-full transition-colors"
+            className="absolute top-4 right-4 p-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 bg-gray-100 dark:bg-gray-700 rounded-full transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+            aria-label="Close Admin Login"
           >
             <X size={20} />
           </button>
@@ -1261,7 +1262,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: { isDarkMode: boolean, setIsDarkM
                                 <a 
                                   key={child.name}
                                   href={child.href}
-                                  onClick={(e) => scrollToSection(e, child.href)}
+                                  onClick={(e) => { scrollToSection(e, child.href); setIsMobileMenuOpen(false); }}
                                   className="block px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-[var(--color-clic-blue)] dark:hover:text-[var(--color-clic-blue)] hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
                                 >
                                   {child.name}
@@ -1276,7 +1277,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: { isDarkMode: boolean, setIsDarkM
                     <a 
                       href={link.href} 
                       className="block px-4 py-3 text-lg font-bold text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl"
-                      onClick={(e) => scrollToSection(e, link.href)}
+                      onClick={(e) => { scrollToSection(e, link.href); setIsMobileMenuOpen(false); }}
                     >
                       {link.name}
                     </a>
@@ -1289,7 +1290,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: { isDarkMode: boolean, setIsDarkM
               </div>
               <a 
                 href="#get-involved" 
-                onClick={(e) => scrollToSection(e, '#get-involved')}
+                onClick={(e) => { scrollToSection(e, '#get-involved'); setIsMobileMenuOpen(false); }}
                 className="px-5 py-4 text-center rounded-xl text-base font-bold bg-[var(--color-clic-red)] text-white shadow-md active:scale-95 transition-transform"
               >
                 {t.getInvolved}
@@ -2364,8 +2365,8 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
             onClick={e => e.stopPropagation()}
           >
             {isSubmitted ? (
-              <div className="p-12 text-center relative">
-                <button onClick={handleClose} className="absolute top-4 right-4 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+              <div className="p-12 text-center relative overflow-y-auto">
+                <button onClick={handleClose} aria-label="Close Donation Modal" className="absolute top-4 right-4 p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
                   <X size={20} className="text-gray-600 dark:text-gray-400" />
                 </button>
                 <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -2373,7 +2374,7 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                 </div>
                 <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Thank You!</h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-8">Your generous donation has been received. We will send a receipt to your email shortly.</p>
-                <button onClick={handleClose} className="px-8 py-3 bg-[var(--color-clic-red)] text-white rounded-xl font-bold hover:bg-opacity-90 transition-colors">
+                <button onClick={handleClose} className="px-8 py-3 bg-[var(--color-clic-red)] text-white rounded-xl font-bold hover:bg-opacity-90 transition-colors min-h-[44px]">
                   Close
                 </button>
               </div>
@@ -2381,7 +2382,7 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
               <>
                 <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800/50 shrink-0">
                   <h3 className="text-xl font-bold font-serif text-gray-900 dark:text-white">Make a Donation</h3>
-                  <button onClick={handleClose} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors">
+                  <button onClick={handleClose} aria-label="Close Donation Modal" className="p-3 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
                     <X size={20} className="text-gray-600 dark:text-gray-400" />
                   </button>
                 </div>
@@ -3322,8 +3323,8 @@ const SubscribeModal = ({ isOpen, onClose, initialEmail }: { isOpen: boolean; on
             onClick={e => e.stopPropagation()}
           >
             {isSubmitted ? (
-              <div className="p-12 text-center relative">
-                <button onClick={handleClose} className="absolute top-4 right-4 p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors">
+              <div className="p-12 text-center relative overflow-y-auto">
+                <button onClick={handleClose} aria-label="Close Newsletter Modal" className="absolute top-4 right-4 p-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
                   <X size={20} className="text-gray-600 dark:text-gray-400" />
                 </button>
                 <div className="w-20 h-20 bg-green-100 dark:bg-green-900/30 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -3331,7 +3332,7 @@ const SubscribeModal = ({ isOpen, onClose, initialEmail }: { isOpen: boolean; on
                 </div>
                 <h3 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Subscribed!</h3>
                 <p className="text-gray-600 dark:text-gray-300 mb-8">Thank you for subscribing to our newsletter. We'll keep you updated!</p>
-                <button onClick={handleClose} className="px-8 py-3 bg-[var(--color-clic-blue)] text-white rounded-xl font-bold hover:bg-opacity-90 transition-colors">
+                <button onClick={handleClose} className="px-8 py-3 bg-[var(--color-clic-blue)] text-white rounded-xl font-bold hover:bg-opacity-90 transition-colors min-h-[44px]">
                   Close
                 </button>
               </div>
@@ -3339,7 +3340,7 @@ const SubscribeModal = ({ isOpen, onClose, initialEmail }: { isOpen: boolean; on
               <>
                 <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800/50 shrink-0">
                   <h3 className="text-xl font-bold font-serif text-gray-900 dark:text-white">Subscribe to Newsletter</h3>
-                  <button onClick={handleClose} className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors">
+                  <button onClick={handleClose} aria-label="Close Newsletter Modal" className="p-3 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
                     <X size={20} className="text-gray-600 dark:text-gray-400" />
                   </button>
                 </div>
