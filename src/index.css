@@ -109,18 +109,13 @@ html {
   }
 
   /* Hide everything except the theory of change section when printing */
-  body * {
-    visibility: hidden;
-  }
-  
-  #theory-of-change, #theory-of-change * {
-    visibility: visible;
-  }
+  body > *:not(#root) { display: none !important; }
+  #root > div > *:not(main) { display: none !important; }
+  main > *:not(#theory-of-change) { display: none !important; }
   
   #theory-of-change {
-    position: absolute;
-    left: 0;
-    top: 0;
+    display: block !important;
+    position: relative !important;
     width: 100%;
     margin: 0;
     padding: 0;

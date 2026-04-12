@@ -322,7 +322,7 @@ const TheoryOfChange = () => {
       
       const dataUrl = await toPng(sectionRef.current, {
         backgroundColor: '#0F172A', // Match slate-950
-        pixelRatio: 2,
+        pixelRatio: 4, // Increased for higher resolution
         style: {
           // Ensure the exported image doesn't have print-specific styles applied
           padding: '2rem',
