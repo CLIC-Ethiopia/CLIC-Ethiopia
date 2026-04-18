@@ -2264,6 +2264,14 @@ const Projects = () => {
 const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const [amount, setAmount] = useState('');
   const [customAmount, setCustomAmount] = useState('');
+  
+  // New dynamic fields
+  const [corpPartnershipType, setCorpPartnershipType] = useState('');
+  const [equipmentType, setEquipmentType] = useState('');
+  const [donationFrequency, setDonationFrequency] = useState('One-time');
+  const [currency, setCurrency] = useState('ETB');
+  const [financialAmount, setFinancialAmount] = useState('');
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -2288,10 +2296,41 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
     return phone === '' || /^\d{10}$/.test(phone.replace(/\D/g, ''));
   };
 
+  const getFinalAmountString = () => {
+    if (amount === 'Corporate Partner') {
+      if (corpPartnershipType === 'Financial Donation') {
+        return `Corporate Partner: Financial Donation - ${financialAmount} ${currency}`;
+      } else {
+        return `Corporate Partner: ${corpPartnershipType}`;
+      }
+    } else if (amount === 'Equipment Donation') {
+      return `Equipment Donation: ${equipmentType}`;
+    } else if (amount === 'Individual Donor') {
+      return `Individual Donor: ${donationFrequency} - ${financialAmount} ${currency}`;
+    } else if (amount === 'Custom') {
+      return `Custom: ${customAmount}`;
+    }
+    return amount;
+  };
+
   const isFormValid = () => {
-    const finalAmount = amount === 'Custom' ? customAmount : amount;
+    let isLevelValid = false;
+    if (amount === 'Corporate Partner') {
+      if (corpPartnershipType === 'Financial Donation') {
+        isLevelValid = financialAmount.trim().length > 0;
+      } else {
+        isLevelValid = corpPartnershipType.trim().length > 0;
+      }
+    } else if (amount === 'Equipment Donation') {
+      isLevelValid = equipmentType.trim().length > 0;
+    } else if (amount === 'Individual Donor') {
+      isLevelValid = financialAmount.trim().length > 0;
+    } else if (amount === 'Custom') {
+      isLevelValid = customAmount.trim().length > 0;
+    }
+
     return (
-      finalAmount &&
+      isLevelValid &&
       formData.name.trim().length > 0 &&
       validateEmail(formData.email) &&
       validatePhone(formData.phone)
@@ -2307,7 +2346,15 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
     setIsLoading(true);
     setError(null);
     
-    const finalAmount = amount === 'Custom' ? customAmount : amount;
+    const finalAmount = getFinalAmountString();
+    
+    // Determine specific type based on selection
+    const specificType = amount === 'Corporate Partner' ? corpPartnershipType : 
+                         amount === 'Equipment Donation' ? equipmentType : 
+                         amount === 'Custom' ? customAmount : '';
+                         
+    // Determine if financial fields apply
+    const isFinancial = amount === 'Individual Donor' || (amount === 'Corporate Partner' && corpPartnershipType === 'Financial Donation');
 
     try {
       const response = await fetch(GOOGLE_SCRIPT_URL, {
@@ -2317,7 +2364,12 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
         },
         body: new URLSearchParams({
           action: 'donate',
-          amount: finalAmount,
+          amount: finalAmount, // Keeping legacy amount for backward compatibility
+          partnershipLevel: amount,
+          specificType: specificType,
+          frequency: amount === 'Individual Donor' ? donationFrequency : '',
+          currency: isFinancial ? currency : '',
+          financialAmount: isFinancial ? financialAmount : '',
           name: formData.name,
           email: formData.email,
           phone: formData.phone,
@@ -2346,22 +2398,27 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
     setFormData({ name: '', email: '', phone: '', message: '', paymentMethod: 'telebirr' });
     setAmount('');
     setCustomAmount('');
+    setCorpPartnershipType('');
+    setEquipmentType('');
+    setDonationFrequency('One-time');
+    setCurrency('ETB');
+    setFinancialAmount('');
     setTouched({ name: false, email: false, phone: false });
   };
 
-  const finalAmount = amount === 'Custom' ? customAmount : amount;
+  const finalAmount = getFinalAmountString();
 
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div 
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 bg-black/60 backdrop-blur-sm"
           onClick={handleClose}
         >
           <motion.div 
             initial={{ scale: 0.95, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            className="bg-white dark:bg-gray-800 rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl relative flex flex-col max-h-[90vh]"
+            className="bg-white dark:bg-gray-800 rounded-3xl max-w-lg w-full shadow-2xl relative flex flex-col max-h-[calc(100dvh-2rem)] sm:max-h-[85vh] overflow-hidden"
             onClick={e => e.stopPropagation()}
           >
             {isSubmitted ? (
@@ -2380,39 +2437,148 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
               </div>
             ) : (
               <>
-                <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800/50 shrink-0">
-                  <h3 className="text-xl font-bold font-serif text-gray-900 dark:text-white">Make a Donation</h3>
-                  <button onClick={handleClose} aria-label="Close Donation Modal" className="p-3 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
+                <div className="p-4 sm:p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-800/50 shrink-0">
+                  <h3 className="text-xl font-bold font-serif text-gray-900 dark:text-white">Support Our Mission</h3>
+                  <button onClick={handleClose} aria-label="Close Donation Modal" className="p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center">
                     <X size={20} className="text-gray-600 dark:text-gray-400" />
                   </button>
                 </div>
                 
-                <form onSubmit={handleDonate} className="flex flex-col overflow-hidden flex-grow">
-                  <div className="overflow-y-auto p-6 md:p-8 space-y-4 flex-grow">
+                <form onSubmit={handleDonate} className="flex flex-col flex-1 min-h-0 overflow-hidden">
+                  <div className="overflow-y-auto p-4 sm:p-6 md:p-8 space-y-4 flex-1">
                     <div>
-                      <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Select Amount</label>
-                    <div className="grid grid-cols-4 gap-2 mb-3">
-                      {['500', '2500', '10000', 'Custom'].map((opt) => (
+                      <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Select Partnership Level</label>
+                    <div className="grid grid-cols-2 gap-2 mb-3">
+                      {['Corporate Partner', 'Individual Donor', 'Equipment Donation', 'Custom'].map((opt) => (
                         <button
                           key={opt}
                           type="button"
                           onClick={() => { setAmount(opt); if(opt !== 'Custom') setCustomAmount(''); }}
-                          className={`py-2 px-1 rounded-lg text-sm font-bold border transition-all ${
+                          className={`py-2 px-2 rounded-lg text-sm font-bold border transition-all ${
                             amount === opt
                               ? 'bg-[var(--color-clic-red)] text-white border-[var(--color-clic-red)]'
                               : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500'
-                          }`}
+                          } ${opt === 'Custom' ? 'col-span-2' : ''}`}
                         >
-                          {opt === 'Custom' ? 'Custom' : `ETB ${opt}`}
+                          {opt}
                         </button>
                       ))}
                     </div>
+
+                    {amount === 'Corporate Partner' && (
+                      <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700">
+                        <div>
+                          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Type of Partnership</label>
+                          <select
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none"
+                            value={corpPartnershipType}
+                            onChange={e => setCorpPartnershipType(e.target.value)}
+                          >
+                            <option value="">Select type...</option>
+                            <option value="Strategic Funding">Strategic Funding</option>
+                            <option value="Employee Matching Gifts">Employee Matching Gifts</option>
+                            <option value="In-Kind Services">In-Kind Services</option>
+                            <option value="Joint Marketing/Sponsorship">Joint Marketing/Sponsorship</option>
+                            <option value="Program Co-Development">Program Co-Development</option>
+                            <option value="Financial Donation">Financial Donation</option>
+                          </select>
+                        </div>
+                        {corpPartnershipType === 'Financial Donation' && (
+                          <div className="grid grid-cols-3 gap-3">
+                            <div className="col-span-1">
+                              <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Currency</label>
+                              <select
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none"
+                                value={currency}
+                                onChange={e => setCurrency(e.target.value)}
+                              >
+                                <option value="ETB">ETB</option>
+                                <option value="USD">USD</option>
+                                <option value="EUR">EUR</option>
+                              </select>
+                            </div>
+                            <div className="col-span-2">
+                              <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Amount</label>
+                              <input
+                                type="number"
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none"
+                                placeholder="Enter amount"
+                                value={financialAmount}
+                                onChange={e => setFinancialAmount(e.target.value)}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {amount === 'Equipment Donation' && (
+                      <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700">
+                        <div>
+                          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Equipment Type</label>
+                          <select
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none"
+                            value={equipmentType}
+                            onChange={e => setEquipmentType(e.target.value)}
+                          >
+                            <option value="">Select equipment...</option>
+                            <option value="Computers & Laptops">Computers & Laptops</option>
+                            <option value="Electronics & Microcontrollers">Electronics & Microcontrollers</option>
+                            <option value="3D Printers & Machines">3D Printers & Machines</option>
+                            <option value="Lab Equipment & Sensors">Lab Equipment & Sensors</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+                      </div>
+                    )}
+
+                    {amount === 'Individual Donor' && (
+                      <div className="space-y-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-xl border border-gray-100 dark:border-gray-700">
+                        <div>
+                          <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Donation Frequency</label>
+                          <select
+                            className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none"
+                            value={donationFrequency}
+                            onChange={e => setDonationFrequency(e.target.value)}
+                          >
+                            <option value="One-time">One-time</option>
+                            <option value="Monthly">Monthly</option>
+                            <option value="Annually">Annually</option>
+                          </select>
+                        </div>
+                        <div className="grid grid-cols-3 gap-3">
+                          <div className="col-span-1">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Currency</label>
+                            <select
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none"
+                              value={currency}
+                              onChange={e => setCurrency(e.target.value)}
+                            >
+                              <option value="ETB">ETB</option>
+                              <option value="USD">USD</option>
+                              <option value="EUR">EUR</option>
+                            </select>
+                          </div>
+                          <div className="col-span-2">
+                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">Amount</label>
+                            <input
+                              type="number"
+                              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none"
+                              placeholder="Enter amount"
+                              value={financialAmount}
+                              onChange={e => setFinancialAmount(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     {amount === 'Custom' && (
                       <input 
                         required
-                        type="number" 
+                        type="text" 
                         className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-[var(--color-clic-red)] outline-none"
-                        placeholder="Enter amount in ETB"
+                        placeholder="Enter custom partnership details"
                         value={customAmount}
                         onChange={e => setCustomAmount(e.target.value)}
                       />
@@ -2498,44 +2664,48 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Payment Method</label>
-                    <div className="grid grid-cols-2 gap-3">
-                      <button
-                        type="button"
-                        onClick={() => setFormData({...formData, paymentMethod: 'telebirr'})}
-                        className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all ${
-                          formData.paymentMethod === 'telebirr'
-                            ? 'border-[var(--color-clic-red)] bg-red-50 dark:bg-red-900/20 text-[var(--color-clic-red)]'
-                            : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600'
-                        }`}
-                      >
-                        <span className="font-bold">Telebirr</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setFormData({...formData, paymentMethod: 'chapa'})}
-                        className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all ${
-                          formData.paymentMethod === 'chapa'
-                            ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-600'
-                            : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600'
-                        }`}
-                      >
-                        <span className="font-bold">Chapa</span>
-                      </button>
+                  {((amount === 'Individual Donor') || 
+                    (amount === 'Corporate Partner' && corpPartnershipType === 'Financial Donation') || 
+                    (amount === 'Custom')) && (
+                    <div>
+                      <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Payment Method</label>
+                      <div className="grid grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setFormData({...formData, paymentMethod: 'telebirr'})}
+                          className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all ${
+                            formData.paymentMethod === 'telebirr'
+                              ? 'border-[var(--color-clic-red)] bg-red-50 dark:bg-red-900/20 text-[var(--color-clic-red)]'
+                              : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600'
+                          }`}
+                        >
+                          <span className="font-bold">Telebirr</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setFormData({...formData, paymentMethod: 'chapa'})}
+                          className={`p-3 rounded-xl border flex flex-col items-center justify-center gap-2 transition-all ${
+                            formData.paymentMethod === 'chapa'
+                              ? 'border-green-500 bg-green-50 dark:bg-green-900/20 text-green-600'
+                              : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600'
+                          }`}
+                        >
+                          <span className="font-bold">Chapa</span>
+                        </button>
+                      </div>
+                      {formData.paymentMethod === 'telebirr' && (
+                        <div className="mt-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg text-sm text-red-800 dark:text-red-200">
+                          <p>Please send <strong>your donation</strong> to Telebirr account: <strong>+251 911 69 2277</strong></p>
+                          <p className="mt-1 text-xs opacity-80">We will verify your payment and send a receipt.</p>
+                        </div>
+                      )}
+                      {formData.paymentMethod === 'chapa' && (
+                        <div className="mt-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg text-sm text-green-800 dark:text-green-200">
+                          <p>You will be redirected to the Chapa payment gateway to complete your donation securely.</p>
+                        </div>
+                      )}
                     </div>
-                    {formData.paymentMethod === 'telebirr' && (
-                      <div className="mt-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-lg text-sm text-red-800 dark:text-red-200">
-                        <p>Please send <strong>{finalAmount ? `ETB ${finalAmount}` : 'your donation'}</strong> to Telebirr account: <strong>+251 911 69 2277</strong></p>
-                        <p className="mt-1 text-xs opacity-80">We will verify your payment and send a receipt.</p>
-                      </div>
-                    )}
-                    {formData.paymentMethod === 'chapa' && (
-                      <div className="mt-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg text-sm text-green-800 dark:text-green-200">
-                        <p>You will be redirected to the Chapa payment gateway to complete your donation securely.</p>
-                      </div>
-                    )}
-                  </div>
+                  )}
                   </div>
 
                   <div className="p-6 border-t border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 shrink-0">
@@ -2544,7 +2714,7 @@ const DonateModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void
                       disabled={!isFormValid() || isLoading}
                       className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-red)] hover:bg-opacity-90 transition-colors shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
-                      {isLoading ? 'Processing...' : `Donate ${finalAmount ? `ETB ${finalAmount}` : ''}`} {!isLoading && <ArrowRight size={18} />}
+                      {isLoading ? 'Processing...' : `Submit Request`} {!isLoading && <ArrowRight size={18} />}
                     </button>
                     {error && <p className="text-red-500 text-sm mt-2 text-center">{error}</p>}
                   </div>
@@ -2570,16 +2740,15 @@ const DonateContent = () => {
               <HeartHandshake size={32} />
             </div>
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 font-serif">Support Our Mission</h2>
-            <p className="text-lg text-gray-600 mb-8">
-              Your donation helps us build smart creative laboratories, provide course kits, and train the next generation of Ethiopian innovators and entrepreneurs.
+            <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
+              Join us in transforming Ethiopia's future. Your partnership enables us to build state-of-the-art STEAM laboratories, develop comprehensive curriculum, and empower the next generation of innovators and entrepreneurs.
             </p>
             
-            <div className="grid grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
               {[
-                { amount: 'ETB 500', desc: 'Provides basic course kits' },
-                { amount: 'ETB 2,500', desc: 'Sponsors one student training' },
-                { amount: 'ETB 10,000', desc: 'Annual lab membership' },
-                { amount: 'Custom', desc: 'Any amount helps' }
+                { amount: 'Corporate Partner', desc: 'Sponsor labs and programs' },
+                { amount: 'Individual Donor', desc: 'Support student scholarships' },
+                { amount: 'Equipment Donation', desc: 'Provide tools and hardware' }
               ].map((tier, i) => (
                 <button 
                   key={i} 
@@ -2587,7 +2756,7 @@ const DonateContent = () => {
                   className="p-4 rounded-xl border-2 border-gray-100 dark:border-gray-700 hover:border-[var(--color-clic-red)] hover:bg-[var(--color-clic-red)]/5 transition-all text-left group"
                 >
                   <div className="font-bold text-gray-900 dark:text-white group-hover:text-[var(--color-clic-red)]">{tier.amount}</div>
-                  <div className="text-xs text-gray-500 mt-1">{tier.desc}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{tier.desc}</div>
                 </button>
               ))}
             </div>
@@ -2596,7 +2765,7 @@ const DonateContent = () => {
               onClick={() => setIsDonateModalOpen(true)}
               className="w-full py-4 rounded-xl font-bold text-white bg-[var(--color-clic-red)] hover:bg-opacity-90 transition-colors shadow-md flex items-center justify-center gap-2"
             >
-              Donate Now <ArrowRight size={18} />
+              Become a Partner <ArrowRight size={18} />
             </button>
           </div>
           
@@ -3186,7 +3355,7 @@ const GetInvolved = () => {
             <motion.div
               key={role.id}
               whileHover={{ y: -10 }}
-              className={`bg-white rounded-3xl p-8 shadow-lg cursor-pointer border-2 transition-all ${activeRole === role.id ? 'ring-4 ring-opacity-20' : 'border-transparent hover:border-gray-200'}`}
+              className={`bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-lg cursor-pointer border-2 transition-all ${activeRole === role.id ? 'ring-4 ring-opacity-20' : 'border-transparent hover:border-gray-200 dark:hover:border-gray-700'}`}
               onClick={() => setActiveRole(role.id as any)}
               style={{ 
                 borderColor: activeRole === role.id ? role.color : undefined,
@@ -3200,7 +3369,7 @@ const GetInvolved = () => {
                 <role.icon size={32} />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">{role.title}</h3>
-              <p className="text-gray-600 mb-6">{role.desc}</p>
+              <p className="text-gray-600 dark:text-gray-300 mb-6">{role.desc}</p>
               <div className="flex items-center font-bold text-sm uppercase tracking-wider" style={{ color: role.color }}>
                 {role.cta} <ArrowRight size={16} className="ml-2" />
               </div>
@@ -3588,7 +3757,6 @@ export default function App() {
           
           {/* Phase 5: Support & Engagement */}
           <GetInvolved />
-          <DonationPortal />
           <MerchSection />
         </main>
         <Footer />

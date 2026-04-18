@@ -158,7 +158,7 @@ const AdminPortal = ({ isOpen, onClose, user }: AdminPortalProps) => {
     
     if (activeSheet === 'Donations') {
       const total = data.reduce((sum, row) => {
-        const amount = parseFloat(row.amount || 0);
+        const amount = parseFloat(row.financial_amount || row.amount || row.legacy_amount || 0);
         return sum + (isNaN(amount) ? 0 : amount);
       }, 0);
       return { label: 'Total Donations', value: `${total.toLocaleString()} ETB` };

@@ -48,6 +48,10 @@ const SHEETS = {
 function setupDatabase() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   
+  if (!ss) {
+    throw new Error("Could not get active spreadsheet. Make sure this script is bound to a Google Sheet.");
+  }
+  
   // 1. Content: STEAM Section
   createSheetIfNotExists(ss, SHEETS.CONTENT_STEAM, [
     'id', 'title', 'description', 'icon_name', 'color_hex', 'detailed_content_markdown'
@@ -105,7 +109,7 @@ function setupDatabase() {
 
   // 11. Donations
   createSheetIfNotExists(ss, SHEETS.DONATIONS, [
-    'donation_id', 'date', 'donor_name', 'email', 'phone', 'amount', 'message', 'payment_status'
+    'donation_id', 'date', 'donor_name', 'email', 'phone', 'partnership_level', 'specific_type', 'frequency', 'currency', 'financial_amount', 'payment_method', 'message', 'legacy_amount', 'payment_status'
   ]);
   
   // 12. Messages
@@ -132,6 +136,23 @@ function setupDatabase() {
   createSheetIfNotExists(ss, SHEETS.SITE_ADMIN, [
     'admin_id', 'email', 'password', 'role', 'name'
   ]);
+}
+
+function forceRecreateDonationsSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  if (!ss) throw new Error("No active spreadsheet found.");
+  
+  let sheet = ss.getSheetByName(SHEETS.DONATIONS);
+  if (sheet) {
+    // Rename old sheet to keep backup
+    sheet.setName(SHEETS.DONATIONS + '_backup_' + Date.now());
+  }
+  
+  createSheetIfNotExists(ss, SHEETS.DONATIONS, [
+    'donation_id', 'date', 'donor_name', 'email', 'phone', 'partnership_level', 'specific_type', 'frequency', 'currency', 'financial_amount', 'payment_method', 'message', 'legacy_amount', 'payment_status'
+  ]);
+  
+  fillSampleData();
 }
 
 function createSheetIfNotExists(ss, sheetName, headers) {
@@ -275,6 +296,17 @@ function fillSampleData() {
       ['reg_2', new Date().toISOString(), 'Tirunesh Dibaba', 'tirunesh@example.com', '+251911234568', 'Hawassa Uni', '4', 'AI for Agriculture Symposium']
     ];
     eventRegData.forEach(row => eventRegSheet.appendRow(row));
+  }
+
+  // 10. Donations Data
+  const donationsSheet = ss.getSheetByName(SHEETS.DONATIONS);
+  if (donationsSheet && donationsSheet.getLastRow() === 1) {
+    const donationsData = [
+      ['DON-1', new Date().toISOString(), 'John Doe', 'john@example.com', '+1234567890', 'Corporate Partner', 'Financial Donation', '', 'USD', '5000', 'telebirr', 'Happy to support!', 'Corporate Partner: Financial Donation - 5000 USD', 'Confirmed'],
+      ['DON-2', new Date().toISOString(), 'Jane Smith', 'jane@example.com', '+0987654321', 'Individual Donor', '', 'Monthly', 'ETB', '1000', 'chapa', 'Keep up the good work.', 'Individual Donor: Monthly - 1000 ETB', 'Confirmed'],
+      ['DON-3', new Date().toISOString(), 'Tech Corp', 'contact@techcorp.com', '+1122334455', 'Equipment Donation', 'Computers & Laptops', '', '', '', '', 'Donating 10 laptops.', 'Equipment Donation: Computers & Laptops', 'Confirmed']
+    ];
+    donationsData.forEach(row => donationsSheet.appendRow(row));
   }
 }
 
@@ -435,11 +467,17 @@ function doPost(e) {
       const newRow = [
         donationId,
         new Date(),
-        postData.name,
-        postData.email,
-        postData.phone,
-        postData.amount,
-        postData.message,
+        postData.name || '',
+        postData.email || '',
+        postData.phone || '',
+        postData.partnershipLevel || '',
+        postData.specificType || '',
+        postData.frequency || '',
+        postData.currency || '',
+        postData.financialAmount || '',
+        postData.paymentMethod || '',
+        postData.message || '',
+        postData.amount || '', // legacy_amount
         'Confirmed' // Mock success
       ];
       sheet.appendRow(newRow);
